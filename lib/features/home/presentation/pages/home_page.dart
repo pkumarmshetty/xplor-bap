@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xplor/core/app_router.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,8 +11,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("Welcome to Xplor!")),
+    return Scaffold(
+      body: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text("Welcome to Xplor!"),
+          const SizedBox(height: 50),
+          ElevatedButton(
+              onPressed: () => AppRouter.routes.dynamic,
+              child: const Text('Dynamic Json UI form'))
+        ],
+      )),
     );
   }
 }
