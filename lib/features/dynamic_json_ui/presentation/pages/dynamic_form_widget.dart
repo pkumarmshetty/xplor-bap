@@ -75,7 +75,7 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
 
   /// Print the form data to the console.
   void printFormData() {
-    print(formData);
+    //print(formData);
   }
 
   /// Generate the widgets based on the [FormFieldDataModel] list.

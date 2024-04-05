@@ -1,4 +1,4 @@
-export 'extensions/color.dart';
+export 'extensions/color/color.dart';
 export 'extensions/padding.dart';
 export 'extensions/space.dart';
 export 'extensions/validation.dart';
