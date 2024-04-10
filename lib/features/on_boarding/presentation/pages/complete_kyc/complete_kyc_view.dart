@@ -13,7 +13,6 @@ import '../../../../../utils/extensions/font_style/font_styles.dart';
 import '../../../../../utils/extensions/padding.dart';
 import '../../../../../utils/extensions/space.dart';
 import '../../../../../config/routes/path_routing.dart';
-import '../../../../../config/services/app_services.dart';
 import '../../../../../utils/app_colors.dart';
 
 /// Importing necessary paths and services
@@ -171,9 +170,10 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
               align: TextAlign.center),
           onConfirmPressed: () {
             // Implement the action when OK button is pressed
-            Navigator.pushReplacementNamed(
-              AppServices.navState.currentContext!,
+            Navigator.pushNamedAndRemoveUntil(
+              context,
               Routes.home,
+              (route) => false, // Do not allow back navigation
             ); // Close the dialog
           },
           assetPath: 'assets/images/success_icon.svg',
