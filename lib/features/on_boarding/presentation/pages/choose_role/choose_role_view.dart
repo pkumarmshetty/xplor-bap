@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../../config/routes/path_routing.dart';
-import '../../widgets/build_button.dart';
-import '../../widgets/build_single_selection_choose_role.dart';
-import '../../widgets/build_welcome.dart';
+import '../../../../../const/app_state.dart';
+import '../../../../../utils/app_dimensions.dart';
 import '../../../../../utils/app_utils.dart';
 import '../../../../../utils/extensions/padding.dart';
 import '../../../../../utils/extensions/space.dart';
-import '../../../../../const/app_state.dart';
-import '../../../../../utils/app_dimensions.dart';
 import '../../../../../utils/widgets/loading_animation.dart';
 import '../../blocs/select_role_bloc/select_role_bloc.dart';
 import '../../blocs/select_role_bloc/select_role_event.dart';
 import '../../blocs/select_role_bloc/select_role_state.dart'; // Import SelectRoleState
+import '../../widgets/build_button.dart';
+import '../../widgets/build_single_selection_choose_role.dart';
+import '../../widgets/build_welcome.dart';
 
 /// Class for the ChooseRoleView widget
 class ChooseRoleView extends StatefulWidget {
@@ -83,7 +84,7 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
                     ],
                   );
                 } else {
-                  return Container();
+                  return const SizedBox();
                 }
               }
             },
