@@ -1,24 +1,25 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:xplor/features/on_boarding/presentation/blocs/otp_bloc/otp_bloc.dart';
 import 'package:xplor/features/on_boarding/presentation/widgets/common_pin_code_text_field_view.dart';
 import 'package:xplor/utils/app_colors.dart';
 import 'package:xplor/utils/extensions/conversion.dart';
 import 'package:xplor/utils/extensions/font_style/font_styles.dart';
 import 'package:xplor/utils/extensions/padding.dart';
 import 'package:xplor/utils/extensions/space.dart';
-import '../../../../../config/routes/path_routing.dart';
 import '../../../../../config/services/app_services.dart';
+import '../../../../../core/check_route.dart';
 import '../../../../../utils/app_dimensions.dart';
-import '../../../domain/entities/on_boarding_entity.dart';
+import '../../../../../utils/widgets/loading_animation.dart';
 import '../../widgets/build_button.dart';
 import '../../widgets/build_welcome.dart';
 
 /// This class represents the OTP verification view.
 class OtpView extends StatefulWidget {
-  const OtpView({super.key, this.loginEntity});
-
-  final OnBoardingEntity? loginEntity;
+  const OtpView({super.key});
 
   @override
   State<OtpView> createState() => _OtpViewState();
@@ -28,7 +29,6 @@ class OtpView extends StatefulWidget {
 class _OtpViewState extends State<OtpView> {
   bool isValid = false;
   final TextEditingController textEditingController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   late Timer resendTimer;
   int remainingTime = 30;
 
@@ -42,14 +42,37 @@ class _OtpViewState extends State<OtpView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: CustomScrollView(
-            slivers: <Widget>[
-              SliverToBoxAdapter(
-                child: _buildMainContent(context),
-              ),
-            ],
+        child: BlocListener<OtpBloc, OtpState>(
+          listener: (context, state) {
+            if (state is SuccessOtpState) {
+              Navigator.pushNamedAndRemoveUntil(
+                AppServices.navState.currentContext!,
+                checkRouteBasedOnUserJourney(),
+                (routes) => false,
+              );
+            }
+          },
+          child: BlocBuilder<OtpBloc, OtpState>(
+            builder: (context, state) {
+              return Form(
+                // key: state.formKey,
+                child: Stack(
+                  children: [
+                    CustomScrollView(
+                      slivers: <Widget>[
+                        SliverToBoxAdapter(
+                          child: _buildMainContent(
+                            context,
+                            state,
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (state is OtpLoadingState) const LoadingAnimation(),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -57,40 +80,54 @@ class _OtpViewState extends State<OtpView> {
   }
 
   /// Builds the main content of the OTP view.
-  Widget _buildMainContent(BuildContext context) {
+  Widget _buildMainContent(BuildContext context, OtpState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// Display the welcome content with the title and subtitle.
-        WelcomeContentWidget(
-          title: 'OTP Verification',
-          subTitle:
-              'Enter the 6 digit OTP that we have sent to ${Conversion.maskPhoneNumber(widget.loginEntity!.countryCode!, widget.loginEntity!.phoneNumber!)}',
+        BlocBuilder<OtpBloc, OtpState>(
+          builder: (context, state) {
+            //print("Phone Number: ${context.read<OtpBloc>().phoneNumber}");
+            return WelcomeContentWidget(
+              title: 'OTP Verification',
+              subTitle:
+                  'Enter the 6 digit OTP that we have sent to ${context.read<OtpBloc>().phoneNumber}',
+            );
+          },
         ),
         AppDimensions.large.vSpace(),
 
         /// Build the OTP digit field.
         CommonPinCodeTextField(
           textEditingController: textEditingController,
-          onChanged: (value) {
-            setState(() {
-              isValid = value.length == 6;
-            });
-          },
+          onChanged: (value) =>
+              context.read<OtpBloc>().add(PhoneOtpValidatorEvent(otp: value)),
         ),
+        if (state is FailureOtpState)
+          Column(
+            children: [
+              state.message
+                  .toString()
+                  .titleSemiBold(size: 12.sp, color: AppColors.errorColor),
+              AppDimensions.smallXL.vSpace(),
+            ],
+          ),
 
         /// Display the resend OTP option.
-        _resendOtp(),
+        _resendOtp(context, state),
         AppDimensions.smallXL.vSpace(),
 
         /// Build the verification button.
-        ButtonWidget(
-          title: 'Verify',
-          isValid: isValid,
-          onPressed: () {
-            Navigator.pushNamed(
-              AppServices.navState.currentContext!,
-              Routes.chooseRole,
+        BlocBuilder<OtpBloc, OtpState>(
+          builder: (context, state) {
+            return ButtonWidget(
+              title: 'Verify',
+              isValid: state is OtpValidState,
+              onPressed: () {
+                context
+                    .read<OtpBloc>()
+                    .add(PhoneOtpVerifyEvent(otp: textEditingController.text));
+              },
             );
           },
         )
@@ -101,7 +138,7 @@ class _OtpViewState extends State<OtpView> {
   }
 
   /// Builds the resend OTP option.
-  Widget _resendOtp() {
+  Widget _resendOtp(BuildContext context, OtpState state) {
     return GestureDetector(
       child: remainingTime > 0
           ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -120,6 +157,8 @@ class _OtpViewState extends State<OtpView> {
       onTap: () {
         if (remainingTime == 0) {
           textEditingController.clear();
+
+          context.read<OtpBloc>().add(const SendOtpEvent());
           setState(() {
             remainingTime = 30;
           });

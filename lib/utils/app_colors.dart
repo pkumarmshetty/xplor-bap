@@ -14,4 +14,5 @@ class AppColors {
   static const Color alertDialogMessageColor = Color(0xFF434343);
   static const Color crossIconColor = Color(0xFFAEAEBC);
   static const Color black100 = Color(0xFF171616);
+  static const Color errorColor = Color(0xFFD51F1F);
 }

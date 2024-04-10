@@ -1,19 +1,22 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:xplor/features/on_boarding/presentation/widgets/build_button.dart';
-import 'package:xplor/features/on_boarding/presentation/widgets/build_welcome.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/padding.dart';
-import 'package:xplor/utils/extensions/space.dart';
+import '../../../../../utils/app_colors.dart';
 
+import '../../../../../utils/widgets/loading_animation.dart';
+import '../../../presentation/blocs/otp_bloc/otp_bloc.dart';
+import '../../../presentation/blocs/phone_bloc/phone_bloc.dart';
+import '../../../presentation/widgets/build_button.dart';
+import '../../../presentation/widgets/build_welcome.dart';
+import '../../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../../utils/extensions/padding.dart';
+import '../../../../../utils/extensions/space.dart';
 import '../../../../../config/routes/path_routing.dart';
 import '../../../../../config/services/app_services.dart';
 import '../../../../../utils/app_dimensions.dart';
-import '../../../domain/entities/on_boarding_entity.dart';
 import '../../widgets/phone_number_formatter.dart';
 
 /// Widget for the sign-in view.
@@ -27,32 +30,42 @@ class SignInView extends StatefulWidget {
 /// State class for the sign-in view.
 class _SignInViewState extends State<SignInView> {
   bool isValid = false;
-  String countryCode = "+91";
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController mobileNumberController = TextEditingController();
 
-  /// Validates the phone number input.
-  void _validatePhoneNumber(String phoneNumber) {
-    // Simple validation example: Check if phone number is not empty
-    setState(() {
-      isValid = phoneNumber.isNotEmpty &&
-          phoneNumber.replaceAll(' ', '').length == 10;
-    });
-  }
-
+  // Inside the build method of your StatefulWidget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: CustomScrollView(
-            slivers: <Widget>[
-              SliverToBoxAdapter(
-                child: _buildMainContent(context),
-              ),
-            ],
+        child: BlocListener<PhoneBloc, PhoneState>(
+          listener: (context, state) {
+            if (state is SuccessPhoneState) {
+              context.read<OtpBloc>().add(PhoneNumberSaveEvent(
+                  phoneNumber: state.phoneNumber, key: state.key));
+              Navigator.pushNamed(
+                AppServices.navState.currentContext!,
+                Routes.otp,
+              );
+            }
+          },
+          child: BlocBuilder<PhoneBloc, PhoneState>(
+            builder: (context, state) {
+              return Form(
+                child: Stack(
+                  children: [
+                    CustomScrollView(
+                      slivers: <Widget>[
+                        SliverToBoxAdapter(
+                          child: _buildMainContent(context, state),
+                        ),
+                      ],
+                    ),
+                    if (state is PhoneLoadingState) const LoadingAnimation(),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -60,30 +73,36 @@ class _SignInViewState extends State<SignInView> {
   }
 
   /// Builds the main content of the sign-in view.
-  Widget _buildMainContent(BuildContext context) {
+  Widget _buildMainContent(BuildContext context, PhoneState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const WelcomeContentWidget(),
         AppDimensions.large.vSpace(),
-        _buildPhoneNumberForm(),
+        _buildPhoneNumberForm(context),
         AppDimensions.smallXL.vSpace(),
+        if (state is FailurePhoneState)
+          Column(
+            children: [
+              state.message
+                  .toString()
+                  .titleSemiBold(size: 12.sp, color: AppColors.errorColor),
+              AppDimensions.smallXL.vSpace(),
+            ],
+          ),
         _buildSuggestionTitle(),
         AppDimensions.smallXL.vSpace(),
         ButtonWidget(
           title: 'Send OTP',
-          isValid: isValid,
+          isValid: state is PhoneValidState || state is SuccessPhoneState,
           onPressed: () {
-            Navigator.pushNamed(
-              AppServices.navState.currentContext!,
-              Routes.otp,
-              arguments: OnBoardingEntity(
-                phoneNumber: mobileNumberController.text,
-                countryCode: countryCode,
-              ),
-            );
+            context.read<PhoneBloc>().add(
+                  PhoneSubmitEvent(
+                    phone: mobileNumberController.text,
+                  ),
+                );
           },
-        )
+        ),
       ],
     ).symmetricPadding(
       horizontal: AppDimensions.large,
@@ -97,7 +116,7 @@ class _SignInViewState extends State<SignInView> {
   }
 
   /// Builds the phone number input form field.
-  Widget _buildPhoneNumberForm() {
+  Widget _buildPhoneNumberForm(BuildContext context) {
     return TextFormField(
       controller: mobileNumberController,
       keyboardType: TextInputType.phone,
@@ -111,14 +130,19 @@ class _SignInViewState extends State<SignInView> {
         hintStyle:
             GoogleFonts.manrope(fontSize: 14.sp, fontWeight: FontWeight.w600),
         prefixIcon: CountryCodePicker(
-          onChanged: (countryCode) {
-            setState(() {
-              this.countryCode = countryCode.dialCode ?? "+91";
-            });
+          onInit: (val) => context
+              .read<PhoneBloc>()
+              .add(CountryCodeEvent(countryCode: val!)),
+          onChanged: (val) {
+            context.read<PhoneBloc>().add(CountryCodeEvent(countryCode: val));
+            context
+                .read<PhoneBloc>()
+                .add(CheckPhoneEvent(phone: mobileNumberController.text));
           },
           initialSelection: 'IN',
           favorite: const ['+91'],
           showCountryOnly: false,
+          showDropDownButton: false,
           showOnlyCountryWhenClosed: false,
           alignLeft: false,
         ),
@@ -134,7 +158,8 @@ class _SignInViewState extends State<SignInView> {
         contentPadding: const EdgeInsets.symmetric(
             vertical: AppDimensions.medium), // Height of the TextFormField
       ),
-      onChanged: _validatePhoneNumber,
+      onChanged: (val) =>
+          context.read<PhoneBloc>().add(CheckPhoneEvent(phone: val.trim())),
     );
   }
 }

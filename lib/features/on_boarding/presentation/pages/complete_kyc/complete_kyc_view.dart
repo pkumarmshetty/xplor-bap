@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
-
-///
-import 'package:xplor/features/on_boarding/presentation/widgets/build_button.dart';
-import 'package:xplor/features/on_boarding/presentation/widgets/build_custom_checkbox.dart';
-import 'package:xplor/features/on_boarding/presentation/widgets/build_single_selection_wallet.dart';
-import 'package:xplor/features/on_boarding/presentation/widgets/build_welcome.dart';
-import 'package:xplor/utils/custom_confirmation_dialog.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/padding.dart';
-import 'package:xplor/utils/extensions/space.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:xplor/features/on_boarding/presentation/blocs/kyc_bloc/kyc_bloc.dart';
+import 'package:xplor/utils/app_utils.dart';
+import 'package:xplor/utils/widgets/loading_animation.dart';
+import '../../widgets/build_button.dart';
+import '../../widgets/build_custom_checkbox.dart';
+import '../../widgets/build_single_selection_wallet.dart';
+import '../../widgets/build_welcome.dart';
+import '../../../../../utils/custom_confirmation_dialog.dart';
+import '../../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../../utils/extensions/padding.dart';
+import '../../../../../utils/extensions/space.dart';
+import '../../../../../config/routes/path_routing.dart';
+import '../../../../../config/services/app_services.dart';
+import '../../../../../utils/app_colors.dart';
 
 /// Importing necessary paths and services
 import '../../../../../utils/app_dimensions.dart';
@@ -38,29 +44,49 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const WelcomeContentWidget(
-                  title: 'Complete your KYC', subTitle: 'Select one to proceed')
-              .symmetricPadding(
-            horizontal: AppDimensions.large,
-          ),
-          AppDimensions.large.vSpace(),
-          Expanded(
-              child: SingleSelectionWallet(
-            selectedIndex: selectedIndex,
-            onIndexChanged: setSelectedIndex,
-          )),
-          _bottomViewContent(context)
-        ],
-      )),
-    );
+        body: SafeArea(
+      child: BlocListener<KycBloc, KycState>(listener: (context, state) {
+        // show loader until response of KYC api
+        if (state is KycLoadingState) {
+          const LoadingAnimation();
+        }
+        // show success dialog if KYC verified successfully
+        else if (state is KycSuccessState) {
+          _showKYCConfirmationDialog(context);
+        }
+        // show failure dialog if KYC verification failed
+        else if (state is KycFailedState) {
+          _showKYCFailDialog(context);
+        }
+        // show error snackbar if an error occurred
+        else if (state is KycErrorState) {
+          AppUtils.showSnackBar(context, state.error);
+        }
+      }, child: BlocBuilder<KycBloc, KycState>(builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const WelcomeContentWidget(
+                    title: 'Complete your KYC',
+                    subTitle: 'Select one to proceed')
+                .symmetricPadding(
+              horizontal: AppDimensions.large,
+            ),
+            AppDimensions.large.vSpace(),
+            Expanded(
+                child: SingleSelectionWallet(
+              selectedIndex: selectedIndex,
+              onIndexChanged: setSelectedIndex,
+            )),
+            _bottomViewContent(context, state)
+          ],
+        );
+      })),
+    ));
   }
 
   /// Widget for building the bottom view content
-  Widget _bottomViewContent(BuildContext context) {
+  Widget _bottomViewContent(BuildContext context, KycState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.end,
@@ -71,7 +97,10 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
           title: 'Continue',
           isValid: isValid && selectedIndex != -1,
           onPressed: () {
-            _showKYCConfirmationDialog(context);
+            context.read<KycBloc>().add(const UpdateUserKycEvent());
+            // _authBloc.updateKyc
+            //     ? _showKYCConfirmationDialog(context)
+            //     : _showKYCFailDialog(context);
           },
         ),
         AppDimensions.mediumXL.vSpace(),
@@ -136,11 +165,56 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
       builder: (BuildContext context) {
         return CustomConfirmationDialog(
           title: 'KYC Successful!',
-          message: 'You have been successfully verified.',
+          message: 'You have been successfully verified.'.titleRegular(
+              size: 14.sp,
+              color: AppColors.alertDialogMessageColor,
+              align: TextAlign.center),
+          onConfirmPressed: () {
+            // Implement the action when OK button is pressed
+            Navigator.pushReplacementNamed(
+              AppServices.navState.currentContext!,
+              Routes.home,
+            ); // Close the dialog
+          },
+          assetPath: 'assets/images/success_icon.svg',
+        );
+      },
+    );
+  }
+
+  /// Method to show the KYC confirmation dialog
+  void _showKYCFailDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomConfirmationDialog(
+          title: 'KYC Verification Failed!',
+          message: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              'Please review your information and documents, ensuring accuracy.'
+                  .titleRegular(
+                      size: 14.sp,
+                      color: AppColors.alertDialogMessageColor,
+                      align: TextAlign.center),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    'For assistance, '.textSpanRegular(),
+                    'contact support.'
+                        .textSpanSemiBold(decoration: TextDecoration.underline),
+                  ],
+                ),
+              ),
+            ],
+          ),
           onConfirmPressed: () {
             // Implement the action when OK button is pressed
             Navigator.of(context).pop(); // Close the dialog
           },
+          assetPath: 'assets/images/kyc_fail_icon.svg',
         );
       },
     );

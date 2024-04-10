@@ -12,11 +12,14 @@ import 'app_colors.dart';
 
 /// Custom dialog for confirmation
 class CustomConfirmationDialog extends StatelessWidget {
+  /// Asset path of the dialog
+  final String assetPath;
+
   /// Title of the dialog
   final String title;
 
   /// Message body of the dialog
-  final String message;
+  final Widget message;
 
   /// Callback function for OK button press
   final VoidCallback onConfirmPressed;
@@ -27,6 +30,7 @@ class CustomConfirmationDialog extends StatelessWidget {
     required this.title,
     required this.message,
     required this.onConfirmPressed,
+    required this.assetPath,
   });
 
   @override
@@ -40,8 +44,7 @@ class CustomConfirmationDialog extends StatelessWidget {
       backgroundColor: AppColors.white,
       elevation: 0,
       // Adjusting padding inside the dialog
-      insetPadding:
-          const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
+      insetPadding: const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
       child: Container(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -59,7 +62,7 @@ class CustomConfirmationDialog extends StatelessWidget {
             ),
             // Success icon
             SvgPicture.asset(
-              'assets/images/success_icon.svg',
+              assetPath,
               height: 64.w,
               width: 64.w,
             ),
@@ -71,10 +74,7 @@ class CustomConfirmationDialog extends StatelessWidget {
             ),
             AppDimensions.small.vSpace(),
             // Dialog message
-            message.titleRegular(
-              size: 14.sp,
-              color: AppColors.alertDialogMessageColor,
-            ),
+            message,
             AppDimensions.mediumXL.vSpace(),
             // OK button
             ButtonWidget(

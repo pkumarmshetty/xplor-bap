@@ -9,9 +9,7 @@ extension TitleStyles on String {
     return Text(
       this,
       style: GoogleFonts.manrope(
-          fontSize: size ?? 28.sp,
-          fontWeight: FontWeight.w100,
-          color: color ?? AppColors.textColor),
+          fontSize: size ?? 28.sp, fontWeight: FontWeight.w100, color: color ?? AppColors.textColor),
     );
   }
 
@@ -23,9 +21,7 @@ extension TitleStyles on String {
     return Text(
       this,
       style: GoogleFonts.manrope(
-          fontSize: size ?? 28.sp,
-          fontWeight: FontWeight.w200,
-          color: color ?? AppColors.textColor),
+          fontSize: size ?? 28.sp, fontWeight: FontWeight.w200, color: color ?? AppColors.textColor),
     );
   }
 
@@ -37,9 +33,7 @@ extension TitleStyles on String {
     return Text(
       this,
       style: GoogleFonts.manrope(
-          fontSize: size ?? 28.sp,
-          fontWeight: FontWeight.w300,
-          color: color ?? AppColors.textColor),
+          fontSize: size ?? 28.sp, fontWeight: FontWeight.w300, color: color ?? AppColors.textColor),
     );
   }
 
@@ -47,13 +41,14 @@ extension TitleStyles on String {
   Text titleRegular({
     Color? color,
     double? size,
+    TextAlign? align,
   }) {
     return Text(
       this,
+      textAlign: align,
       style: GoogleFonts.manrope(
-          fontSize: size ?? 28.sp,
-          fontWeight: FontWeight.w400,
-          color: color ?? AppColors.textColor),
+          fontSize: size ?? 28.sp, fontWeight: FontWeight.w400, color: color ?? AppColors.textColor,
+      ),
     );
   }
 
@@ -65,9 +60,7 @@ extension TitleStyles on String {
     return Text(
       this,
       style: GoogleFonts.manrope(
-          fontSize: size ?? 28.sp,
-          fontWeight: FontWeight.w500,
-          color: color ?? AppColors.textColor),
+          fontSize: size ?? 28.sp, fontWeight: FontWeight.w500, color: color ?? AppColors.textColor),
     );
   }
 
@@ -79,9 +72,7 @@ extension TitleStyles on String {
     return Text(
       this,
       style: GoogleFonts.manrope(
-          fontSize: size ?? 28.sp,
-          fontWeight: FontWeight.w600,
-          color: color ?? AppColors.textColor),
+          fontSize: size ?? 28.sp, fontWeight: FontWeight.w600, color: color ?? AppColors.textColor),
     );
   }
 
@@ -93,9 +84,7 @@ extension TitleStyles on String {
     return Text(
       this,
       style: GoogleFonts.manrope(
-          fontSize: size ?? 28.sp,
-          fontWeight: FontWeight.w700,
-          color: color ?? AppColors.textColor),
+          fontSize: size ?? 28.sp, fontWeight: FontWeight.w700, color: color ?? AppColors.textColor),
     );
   }
 
@@ -107,9 +96,7 @@ extension TitleStyles on String {
     return Text(
       this,
       style: GoogleFonts.manrope(
-          fontSize: size ?? 28.sp,
-          fontWeight: FontWeight.w800,
-          color: color ?? AppColors.textColor),
+          fontSize: size ?? 28.sp, fontWeight: FontWeight.w800, color: color ?? AppColors.textColor),
     );
   }
 
@@ -121,9 +108,7 @@ extension TitleStyles on String {
     return Text(
       this,
       style: GoogleFonts.manrope(
-          fontSize: size ?? 28.sp,
-          fontWeight: FontWeight.w900,
-          color: color ?? AppColors.textColor),
+          fontSize: size ?? 28.sp, fontWeight: FontWeight.w900, color: color ?? AppColors.textColor),
     );
   }
 }

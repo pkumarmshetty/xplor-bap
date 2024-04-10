@@ -25,9 +25,7 @@ class SingleSelectionWallet extends StatefulWidget {
 class _SingleSelectionWalletState extends State<SingleSelectionWallet> {
   List<WalletSelectionEntity> items = [
     WalletSelectionEntity(
-        icon: 'assets/images/digilocker.png',
-        title: 'Digilocker',
-        message: 'Continue with Digilocker'),
+        icon: 'assets/images/digilocker.png', title: 'Digilocker', message: 'Continue with Digilocker'),
   ];
 
   @override
@@ -40,13 +38,9 @@ class _SingleSelectionWalletState extends State<SingleSelectionWallet> {
           /// Container styling
           margin: const EdgeInsets.symmetric(vertical: AppDimensions.small),
           decoration: BoxDecoration(
-            color: widget.selectedIndex == index
-                ? Colors.transparent
-                : Colors.white,
+            color: widget.selectedIndex == index ? Colors.transparent : Colors.white,
             border: Border.all(
-              color: widget.selectedIndex == index
-                  ? AppColors.primaryColor
-                  : AppColors.hintColor,
+              color: widget.selectedIndex == index ? AppColors.primaryColor : AppColors.hintColor,
               width: 2.w,
             ),
             borderRadius: BorderRadius.circular(AppDimensions.smallXL),
@@ -60,8 +54,7 @@ class _SingleSelectionWalletState extends State<SingleSelectionWallet> {
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 activeColor: AppColors.primaryColor,
                 fillColor: MaterialStateProperty.resolveWith(
-                  (states) =>
-                      states.getFillColor(), // Use the extension function
+                  (states) => states.getFillColor(), // Use the extension function
                 ),
                 value: index,
                 groupValue: widget.selectedIndex,
@@ -81,13 +74,11 @@ class _SingleSelectionWalletState extends State<SingleSelectionWallet> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       /// Title styling
-                      item.title.titleBold(
-                          size: 16.sp, color: AppColors.countryCodeColor),
+                      item.title.titleBold(size: 16.sp, color: AppColors.countryCodeColor),
                       AppDimensions.extraSmall.vSpace(),
 
                       /// Message styling
-                      item.message.titleRegular(
-                          size: 14.sp, color: AppColors.countryCodeColor)
+                      item.message.titleRegular(size: 14.sp, color: AppColors.countryCodeColor)
                     ],
                   )
                 ],
