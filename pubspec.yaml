@@ -46,8 +46,6 @@ dependencies:
 
   #google font
   google_fonts: ^6.1.0
-  # Country code picker
-  country_code_picker: ^3.0.0
   #otp widget
   pin_code_fields: ^8.0.1
   #svg
