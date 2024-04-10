@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/dependency_injection.dart';
 import '../blocs/select_role_bloc/select_role_bloc.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
@@ -103,7 +104,7 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
                         if (kDebugMode) {
                           print("Role ID: ${role.id}");
                         }
-                        SharedPreferencesHelper()
+                        sl<SharedPreferencesHelper>()
                             .setString(PrefConstKeys.roleID, role.id ?? '');
                         setState(() {
                           widget.onIndexChanged(index);

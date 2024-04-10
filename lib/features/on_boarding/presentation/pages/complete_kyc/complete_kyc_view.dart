@@ -43,46 +43,51 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: BlocListener<KycBloc, KycState>(listener: (context, state) {
-        // show loader until response of KYC api
-        if (state is KycLoadingState) {
-          const LoadingAnimation();
-        }
-        // show success dialog if KYC verified successfully
-        else if (state is KycSuccessState) {
-          _showKYCConfirmationDialog(context);
-        }
-        // show failure dialog if KYC verification failed
-        else if (state is KycFailedState) {
-          _showKYCFailDialog(context);
-        }
-        // show error snackbar if an error occurred
-        else if (state is KycErrorState) {
-          AppUtils.showSnackBar(context, state.error);
-        }
-      }, child: BlocBuilder<KycBloc, KycState>(builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const WelcomeContentWidget(
-                    title: 'Complete your KYC',
-                    subTitle: 'Select one to proceed')
-                .symmetricPadding(
-              horizontal: AppDimensions.large,
-            ),
-            AppDimensions.large.vSpace(),
-            Expanded(
-                child: SingleSelectionWallet(
-              selectedIndex: selectedIndex,
-              onIndexChanged: setSelectedIndex,
-            )),
-            _bottomViewContent(context, state)
-          ],
-        );
-      })),
-    ));
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (bool val) {
+          AppUtils.showAlertDialog(context);
+        },
+        child: Scaffold(
+            body: SafeArea(
+          child: BlocListener<KycBloc, KycState>(listener: (context, state) {
+            // show loader until response of KYC api
+            if (state is KycLoadingState) {
+              const LoadingAnimation();
+            }
+            // show success dialog if KYC verified successfully
+            else if (state is KycSuccessState) {
+              _showKYCConfirmationDialog(context);
+            }
+            // show failure dialog if KYC verification failed
+            else if (state is KycFailedState) {
+              _showKYCFailDialog(context);
+            }
+            // show error snackbar if an error occurred
+            else if (state is KycErrorState) {
+              AppUtils.showSnackBar(context, state.error);
+            }
+          }, child: BlocBuilder<KycBloc, KycState>(builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const WelcomeContentWidget(
+                        title: 'Complete your KYC',
+                        subTitle: 'Select one to proceed')
+                    .symmetricPadding(
+                  horizontal: AppDimensions.large,
+                ),
+                AppDimensions.large.vSpace(),
+                Expanded(
+                    child: SingleSelectionWallet(
+                  selectedIndex: selectedIndex,
+                  onIndexChanged: setSelectedIndex,
+                )),
+                _bottomViewContent(context, state)
+              ],
+            );
+          })),
+        )));
   }
 
   /// Widget for building the bottom view content

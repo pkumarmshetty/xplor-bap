@@ -6,6 +6,7 @@ import 'package:xplor/features/on_boarding/data/repositories/on_boarding_reposit
 import 'package:xplor/features/on_boarding/domain/repository/on_boarding_repository.dart';
 import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.dart';
 
+import '../const/local_storage/shared_preferences_helper.dart';
 import 'connection/network_info.dart';
 
 final sl = GetIt.instance;
@@ -14,6 +15,8 @@ Future<void> initializeDependencies() async {
   //Dio
   sl.registerSingleton<Dio>(Dio());
   //Add more dependencies as needed
+  sl.registerSingleton<SharedPreferencesHelper>(
+      SharedPreferencesHelper()..init());
 
   // Data sources
   sl.registerSingleton<NetworkInfo>(NetworkInfoImpl(Connectivity()));
@@ -22,7 +25,8 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<OnBoardingApiService>(OnBoardingApiService());
 
   // Repository
-  sl.registerLazySingleton<OnBoardingRepository>(() => OnBoardingRepositoryImpl());
+  sl.registerLazySingleton<OnBoardingRepository>(
+      () => OnBoardingRepositoryImpl());
 
   // Use cases
   sl.registerSingleton<OnBoardingUseCase>(OnBoardingUseCase());

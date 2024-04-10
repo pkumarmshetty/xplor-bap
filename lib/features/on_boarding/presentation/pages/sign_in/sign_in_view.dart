@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:xplor/utils/app_utils.dart';
 import '../../../../../utils/app_colors.dart';
 
 import '../../../../../utils/widgets/loading_animation.dart';
@@ -44,36 +46,42 @@ class _SignInViewState extends State<SignInView> {
   // Inside the build method of your StatefulWidget
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: BlocListener<PhoneBloc, PhoneState>(
-          listener: (context, state) {
-            if (state is SuccessPhoneState) {
-              context.read<OtpBloc>().add(PhoneNumberSaveEvent(
-                  phoneNumber: state.phoneNumber, key: state.key));
-              Navigator.pushNamed(
-                AppServices.navState.currentContext!,
-                Routes.otp,
-              );
-            }
-          },
-          child: BlocBuilder<PhoneBloc, PhoneState>(
-            builder: (context, state) {
-              return Form(
-                child: Stack(
-                  children: [
-                    CustomScrollView(
-                      slivers: <Widget>[
-                        SliverToBoxAdapter(
-                          child: _buildMainContent(context, state),
-                        ),
-                      ],
-                    ),
-                    if (state is PhoneLoadingState) const LoadingAnimation(),
-                  ],
-                ),
-              );
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool val) {
+        AppUtils.showAlertDialog(context);
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: BlocListener<PhoneBloc, PhoneState>(
+            listener: (context, state) {
+              if (state is SuccessPhoneState) {
+                context.read<OtpBloc>().add(PhoneNumberSaveEvent(
+                    phoneNumber: state.phoneNumber, key: state.key));
+                Navigator.pushNamed(
+                  AppServices.navState.currentContext!,
+                  Routes.otp,
+                );
+              }
             },
+            child: BlocBuilder<PhoneBloc, PhoneState>(
+              builder: (context, state) {
+                return Form(
+                  child: Stack(
+                    children: [
+                      CustomScrollView(
+                        slivers: <Widget>[
+                          SliverToBoxAdapter(
+                            child: _buildMainContent(context, state),
+                          ),
+                        ],
+                      ),
+                      if (state is PhoneLoadingState) const LoadingAnimation(),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -179,7 +187,7 @@ class _SignInViewState extends State<SignInView> {
       },
       disableLengthCheck: true,
       inputFormatters: [
-        LengthLimitingTextInputFormatter(12),
+        LengthLimitingTextInputFormatter(20),
         FilteringTextInputFormatter.digitsOnly, // Allow only digits
         PhoneNumberFormatter(),
       ],

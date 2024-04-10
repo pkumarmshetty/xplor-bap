@@ -27,4 +27,7 @@ final class FailureOtpState extends OtpState {
   final String? message;
 
   const FailureOtpState(this.message);
+
+  @override
+  List<Object> get props => [message!];
 }

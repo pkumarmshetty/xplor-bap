@@ -35,6 +35,7 @@ class _OtpViewState extends State<OtpView> {
   @override
   void initState() {
     super.initState();
+
     startResendTimer();
   }
 
@@ -116,7 +117,7 @@ class _OtpViewState extends State<OtpView> {
           onChanged: (value) =>
               context.read<OtpBloc>().add(PhoneOtpValidatorEvent(otp: value)),
         ),
-        if (state is FailureOtpState)
+        if (state is FailureOtpState && state.message!.isNotEmpty)
           Column(
             children: [
               state.message
@@ -134,7 +135,7 @@ class _OtpViewState extends State<OtpView> {
         BlocBuilder<OtpBloc, OtpState>(
           builder: (context, state) {
             return ButtonWidget(
-              title: 'Verify',
+              title: 'Continue',
               isValid: state is OtpValidState,
               onPressed: () {
                 context
@@ -163,7 +164,7 @@ class _OtpViewState extends State<OtpView> {
                   .titleRegular(size: 12.sp, color: AppColors.subTitleText)
             ])
           : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              ("I didn’t receive to code. ")
+              ("I didn’t receive code. ")
                   .titleMedium(size: 12.sp, color: AppColors.subTitleText),
               ('Resend').titleBold(size: 12.sp, color: AppColors.primaryColor)
             ]),

@@ -1,15 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
-  static SharedPreferencesHelper? _instance;
   late SharedPreferences _sharedPreferences;
-
-  factory SharedPreferencesHelper() {
-    _instance ??= SharedPreferencesHelper._();
-    return _instance!;
-  }
-
-  SharedPreferencesHelper._();
 
   Future<void> init() async {
     _sharedPreferences = await SharedPreferences.getInstance();

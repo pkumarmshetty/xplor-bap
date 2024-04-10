@@ -29,6 +29,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
   _onPhoneNumberSaved(PhoneNumberSaveEvent event, Emitter<OtpState> emit) {
     phoneNumber = event.phoneNumber;
     key = event.key;
+    emit(const FailureOtpState(""));
   }
 
   _onVerifyValidOtp(PhoneOtpValidatorEvent event, Emitter<OtpState> emit) {

@@ -49,10 +49,17 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
 }
 
 bool _checkPhone(String phone) {
-  if (phone.length < 12) {
+  final phoneRegExp = RegExp(r"^(?:[+0]9)?[0-9]{10}$");
+  var phoneNumber = phone.replaceAll(' ', '');
+  print("phoneNumber  $phoneNumber");
+  if (phoneNumber.length < 6 || phoneNumber.length > 16) {
+    print("phoneNumber  length issues");
     return false;
-  } else if (phone.startsWith('0')) {
+  } else if (phoneNumber.startsWith('0')) {
     return false;
-  }
+  } /* else if (!phoneRegExp.hasMatch(phoneNumber)) {
+    print("phoneNumber  ${!phoneRegExp.hasMatch(phoneNumber)}");
+    return false;
+  }*/
   return true;
 }

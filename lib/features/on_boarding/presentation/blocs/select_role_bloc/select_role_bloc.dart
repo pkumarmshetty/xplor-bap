@@ -35,7 +35,7 @@ class SelectRoleBloc extends Bloc<SelectRoleEvent, SelectRoleState> {
   Future<void> _onAssignRoleSubmit(
       AssignRoleEvent event, Emitter<SelectRoleState> emit) async {
     OnBoardingAssignRoleEntity entity = OnBoardingAssignRoleEntity(
-      roleId: SharedPreferencesHelper().getString(PrefConstKeys.roleID),
+      roleId: sl<SharedPreferencesHelper>().getString(PrefConstKeys.roleID),
     );
     //emit(const SelectRoleLoadingState(status: AppPageStatus.loading));
 

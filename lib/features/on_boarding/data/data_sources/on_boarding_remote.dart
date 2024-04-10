@@ -47,7 +47,7 @@ class OnBoardingApiService {
   Future<void> resendOtpOnBoarding() async {
     try {
       Map<String, dynamic> entity = {
-        "key": SharedPreferencesHelper().getString(PrefConstKeys.userKey),
+        "key": sl<SharedPreferencesHelper>().getString(PrefConstKeys.userKey),
       };
 
       if (kDebugMode) {
@@ -102,9 +102,9 @@ class OnBoardingApiService {
         print(
             "verifyOtpOnBoarding---->Response of sendOtpOnBoarding  ${response.data}");
       }
-      await SharedPreferencesHelper()
+      await sl<SharedPreferencesHelper>()
           .setString(PrefConstKeys.token, response.data["data"]["token"]);
-      await SharedPreferencesHelper()
+      await sl<SharedPreferencesHelper>()
           .setString(PrefConstKeys.userId, response.data["data"]["userId"]);
     } catch (e) {
       if (kDebugMode) {
@@ -115,7 +115,7 @@ class OnBoardingApiService {
   }
 
   Future<void> getUserJourney() async {
-    var token = SharedPreferencesHelper().getString(PrefConstKeys.token);
+    var token = sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
     if (kDebugMode) {
       print(token);
     }
@@ -139,9 +139,9 @@ class OnBoardingApiService {
         print(
             "getUserJourney---->Response of getUserJourney  ${response.data}");
       }
-      await SharedPreferencesHelper().setBoolean(
+      await sl<SharedPreferencesHelper>().setBoolean(
           PrefConstKeys.kycVerified, response.data["data"]["kycVerified"]);
-      await SharedPreferencesHelper().setBoolean(
+      await sl<SharedPreferencesHelper>().setBoolean(
           PrefConstKeys.roleAssigned, response.data["data"]["roleAssigned"]);
     } catch (e) {
       if (kDebugMode) {
@@ -160,7 +160,7 @@ class OnBoardingApiService {
       }
 
       final authToken =
-          SharedPreferencesHelper().getString(PrefConstKeys.token);
+          sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
 
       final response = await _dio.patch(
         "${baseUrl}user/role",
@@ -196,7 +196,7 @@ class OnBoardingApiService {
   Future<List<OnBoardingUserRoleEntity>> getUserRolesOnBoarding() async {
     try {
       final authToken =
-          SharedPreferencesHelper().getString(PrefConstKeys.token);
+          sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
 
       if (authToken.isEmpty) {
         throw Exception("Authorization token is missing or invalid.");
@@ -235,7 +235,7 @@ class OnBoardingApiService {
   Future<bool> updateUserKycOnBoarding() async {
     try {
       final authToken =
-          SharedPreferencesHelper().getString(PrefConstKeys.token);
+          sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
 
       if (authToken.isEmpty) {
         throw Exception("Authorization token is missing or invalid.");
