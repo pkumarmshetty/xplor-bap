@@ -25,7 +25,7 @@ class WelcomeContentWidget extends StatelessWidget {
         AppDimensions.xxl.vSpace(),
 
         /// Display the title using [titleBold] extension method.
-        (title ?? 'Welcome to Xplor 👋').titleBold(),
+        (title ?? 'Welcome').titleBold(),
 
         /// Display the subtitle using [titleMedium] extension method with a size of 16.sp.
         (subTitle ?? 'Log in to your account').titleMedium(size: 16.sp),

@@ -44,22 +44,14 @@ class CustomConfirmationDialog extends StatelessWidget {
       backgroundColor: AppColors.white,
       elevation: 0,
       // Adjusting padding inside the dialog
-      insetPadding: const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
+      insetPadding:
+          const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
       child: Container(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Close button on top right corner
-            Align(
-              alignment: Alignment.topRight,
-              child: IconButton(
-                icon: const Icon(Icons.close),
-                color: AppColors.crossIconColor,
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ),
             // Success icon
             SvgPicture.asset(
               assetPath,
