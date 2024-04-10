@@ -95,6 +95,19 @@ class _OtpViewState extends State<OtpView> {
             );
           },
         ),
+
+        AppDimensions.extraSmall.vSpace(),
+
+        GestureDetector(
+          onTap: () {
+            Navigator.pop(context); // Call method to show dialog
+          },
+          child: 'Wrong number?'.titleSemiBold(
+            size: 14.sp,
+            color: AppColors.primaryColor,
+          ),
+        ),
+
         AppDimensions.large.vSpace(),
 
         /// Build the OTP digit field.
