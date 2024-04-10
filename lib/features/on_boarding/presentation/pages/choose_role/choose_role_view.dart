@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../../config/routes/path_routing.dart';
-import '../../widgets/build_button.dart';
-import '../../widgets/build_single_selection_choose_role.dart';
-import '../../widgets/build_welcome.dart';
+import '../../../../../const/app_state.dart';
+import '../../../../../utils/app_dimensions.dart';
 import '../../../../../utils/app_utils.dart';
 import '../../../../../utils/extensions/padding.dart';
 import '../../../../../utils/extensions/space.dart';
-import '../../../../../const/app_state.dart';
-import '../../../../../utils/app_dimensions.dart';
 import '../../../../../utils/widgets/loading_animation.dart';
 import '../../blocs/select_role_bloc/select_role_bloc.dart';
 import '../../blocs/select_role_bloc/select_role_event.dart';
 import '../../blocs/select_role_bloc/select_role_state.dart'; // Import SelectRoleState
+import '../../widgets/build_button.dart';
+import '../../widgets/build_single_selection_choose_role.dart';
+import '../../widgets/build_welcome.dart';
 
 /// Class for the ChooseRoleView widget
 class ChooseRoleView extends StatefulWidget {
@@ -36,58 +37,57 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
   @override
   void initState() {
     super.initState();
-    context.read<SelectRoleBloc>().add(const GetUserRolesEvent()); // Use SelectRoleBloc
+    context
+        .read<SelectRoleBloc>()
+        .add(const GetUserRolesEvent()); // Use SelectRoleBloc
   }
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (bool val) {
-        AppUtils.showAlertDialog(context);
-      },
-      child: Scaffold(
-        body: SafeArea(
-          child: BlocListener<SelectRoleBloc, SelectRoleState>(
-            listener: (context, state) {
+    return Scaffold(
+      body: SafeArea(
+        child: BlocListener<SelectRoleBloc, SelectRoleState>(
+          listener: (context, state) {
+            // Handle state changes
+            if (state is SelectRoleErrorState) {
+              // Show error message
+              AppUtils.showSnackBar(context, state.errorMessage);
+            } else if (state is SelectRoleNavigationState) {
+              // Navigate to KYC screen
+              Navigator.pushNamedAndRemoveUntil(
+                  context, Routes.kyc, (routes) => false);
+            }
+          },
+          child: BlocBuilder<SelectRoleBloc, SelectRoleState>(
+            builder: (context, state) {
               // Handle state changes
-              if (state is SelectRoleErrorState) {
-                // Show error message
-                AppUtils.showSnackBar(context, state.errorMessage);
-              } else if (state is SelectRoleNavigationState) {
-                // Navigate to KYC screen
-                Navigator.pushNamedAndRemoveUntil(context, Routes.kyc, (routes) => false);
+              if (state is SelectRoleLoadingState &&
+                  state.status == AppPageStatus.loading) {
+                // Show loading animation
+                return const LoadingAnimation();
+              } else {
+                if (state is SelectRoleLoadedState &&
+                    state.userRoles.isNotEmpty) {
+                  // Show main content
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildMainContent(context),
+                      AppDimensions.large.vSpace(),
+                      Expanded(
+                        child: SingleSelectionChooseRole(
+                          selectedIndex: selectedIndex,
+                          onIndexChanged: setSelectedIndex,
+                        ),
+                      ),
+                      _bottomViewContent(context)
+                    ],
+                  );
+                } else {
+                  return const SizedBox();
+                }
               }
             },
-            child: BlocBuilder<SelectRoleBloc, SelectRoleState>(
-              builder: (context, state) {
-                // Handle state changes
-                if (state is SelectRoleLoadingState && state.status == AppPageStatus.loading) {
-                  // Show loading animation
-                  return const LoadingAnimation();
-                } else {
-                  if (state is SelectRoleLoadedState && state.userRoles.isNotEmpty) {
-                    // Show main content
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildMainContent(context),
-                        AppDimensions.large.vSpace(),
-                        Expanded(
-                          child: SingleSelectionChooseRole(
-                            selectedIndex: selectedIndex,
-                            onIndexChanged: setSelectedIndex,
-                          ),
-                        ),
-                        _bottomViewContent(context)
-                      ],
-                    );
-                  } else {
-                    return Container();
-                  }
-                }
-              },
-            ),
           ),
         ),
       ),
@@ -114,7 +114,9 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
           title: 'Continue',
           isValid: selectedIndex != -1,
           onPressed: () {
-            context.read<SelectRoleBloc>().add(const AssignRoleEvent()); // Use SelectRoleBloc
+            context
+                .read<SelectRoleBloc>()
+                .add(const AssignRoleEvent()); // Use SelectRoleBloc
           },
         ),
         AppDimensions.mediumXL.vSpace(),
