@@ -9,6 +9,5 @@ class WalletSelectionEntity {
 
   /// Message associated with the selection entity
 
-  WalletSelectionEntity(
-      {required this.icon, required this.title, required this.message});
+  WalletSelectionEntity({required this.icon, required this.title, required this.message});
 }

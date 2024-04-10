@@ -6,9 +6,7 @@ extension ButtonStyles on String {
     Color? color,
     double? size,
   }) {
-    return Text(this,
-        style: GoogleFonts.manrope(
-            fontSize: size ?? 14.sp, fontWeight: FontWeight.w100));
+    return Text(this, style: GoogleFonts.manrope(fontSize: size ?? 14.sp, fontWeight: FontWeight.w100));
   }
 
   /// Returns a Text widget with extra light font style.
@@ -16,9 +14,7 @@ extension ButtonStyles on String {
     Color? color,
     double? size,
   }) {
-    return Text(this,
-        style: GoogleFonts.manrope(
-            fontSize: size ?? 14.sp, fontWeight: FontWeight.w200));
+    return Text(this, style: GoogleFonts.manrope(fontSize: size ?? 14.sp, fontWeight: FontWeight.w200));
   }
 
   /// Returns a Text widget with light font style.
@@ -26,9 +22,7 @@ extension ButtonStyles on String {
     Color? color,
     double? size,
   }) {
-    return Text(this,
-        style: GoogleFonts.manrope(
-            fontSize: size ?? 14.sp, fontWeight: FontWeight.w300));
+    return Text(this, style: GoogleFonts.manrope(fontSize: size ?? 14.sp, fontWeight: FontWeight.w300));
   }
 
   /// Returns a Text widget with regular font style.
@@ -36,9 +30,7 @@ extension ButtonStyles on String {
     Color? color,
     double? size,
   }) {
-    return Text(this,
-        style: GoogleFonts.manrope(
-            fontSize: size ?? 14.sp, fontWeight: FontWeight.w400));
+    return Text(this, style: GoogleFonts.manrope(fontSize: size ?? 14.sp, fontWeight: FontWeight.w400));
   }
 
   /// Returns a Text widget with medium font style.
@@ -46,9 +38,7 @@ extension ButtonStyles on String {
     Color? color,
     double? size,
   }) {
-    return Text(this,
-        style: GoogleFonts.manrope(
-            fontSize: size ?? 14.sp, fontWeight: FontWeight.w500));
+    return Text(this, style: GoogleFonts.manrope(fontSize: size ?? 14.sp, fontWeight: FontWeight.w500));
   }
 
   /// Returns a Text widget with semi bold font style.
@@ -56,9 +46,7 @@ extension ButtonStyles on String {
     Color? color,
     double? size,
   }) {
-    return Text(this,
-        style: GoogleFonts.manrope(
-            fontSize: size ?? 14.sp, fontWeight: FontWeight.w600));
+    return Text(this, style: GoogleFonts.manrope(fontSize: size ?? 14.sp, fontWeight: FontWeight.w600));
   }
 
   /// Returns a Text widget with bold font style.
@@ -66,9 +54,7 @@ extension ButtonStyles on String {
     Color? color,
     double? size,
   }) {
-    return Text(this,
-        style: GoogleFonts.manrope(
-            fontSize: size ?? 14.sp, fontWeight: FontWeight.w700));
+    return Text(this, style: GoogleFonts.manrope(fontSize: size ?? 14.sp, fontWeight: FontWeight.w700));
   }
 
   /// Returns a Text widget with extra bold font style.
@@ -76,9 +62,7 @@ extension ButtonStyles on String {
     Color? color,
     double? size,
   }) {
-    return Text(this,
-        style: GoogleFonts.manrope(
-            fontSize: size ?? 14.sp, fontWeight: FontWeight.w800));
+    return Text(this, style: GoogleFonts.manrope(fontSize: size ?? 14.sp, fontWeight: FontWeight.w800));
   }
 
   /// Returns a Text widget with black font style.
@@ -86,8 +70,6 @@ extension ButtonStyles on String {
     Color? color,
     double? size,
   }) {
-    return Text(this,
-        style: GoogleFonts.manrope(
-            fontSize: size ?? 14.sp, fontWeight: FontWeight.w800));
+    return Text(this, style: GoogleFonts.manrope(fontSize: size ?? 14.sp, fontWeight: FontWeight.w800));
   }
 }

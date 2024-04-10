@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:xplor/features/home/presentation/pages/home_page.dart';
 import 'package:xplor/features/on_boarding/presentation/pages/choose_role/choose_role_view.dart';
 import 'package:xplor/features/on_boarding/presentation/pages/complete_kyc/complete_kyc_view.dart';
 import 'package:xplor/features/on_boarding/presentation/pages/sign_in/sign_in_view.dart';
-import '../../features/on_boarding/domain/entities/on_boarding_entity.dart';
+
 import '../../features/on_boarding/presentation/pages/otp/otp_view.dart';
 import 'path_routing.dart';
 
@@ -11,21 +12,28 @@ class AppRoutes {
   /// Generates and returns the appropriate route based on the provided [RouteSettings].
   static Route onGenerateRoutes(RouteSettings settings) {
     switch (settings.name) {
+      case Routes.main:
+        // Return a material route for the main route, displaying HomeTabs widget.
+        return _materialRoute(const SignInView());
       case Routes.login:
         //return _materialRoute(const SignInView());
         return customPageRoute(const SignInView());
       case Routes.otp:
-        OnBoardingEntity loginEntity;
-        Object? object = settings.arguments;
-        loginEntity = object as OnBoardingEntity;
+        // OnBoardingEntity loginEntity;
+        // Object? object = settings.arguments;
+        // loginEntity = object as OnBoardingEntity;
         // Return a material route for the OTP route, displaying OtpView widget.
-        return customPageRoute(OtpView(
-          loginEntity: loginEntity,
-        ));
+        return customPageRoute(
+          const OtpView(
+              // loginEntity: loginEntity,
+              ),
+        );
       case Routes.kyc:
         return customPageRoute(const CompleteKYCView());
       case Routes.chooseRole:
         return customPageRoute(const ChooseRoleView());
+      case Routes.home:
+        return customPageRoute(const HomePage());
       default:
         // Return a default material route, displaying SplashView for unknown routes.
         return customPageRoute(const SignInView());
@@ -33,9 +41,9 @@ class AppRoutes {
   }
 
   /// Private method to create a [MaterialPageRoute] with the provided widget.
-  /*static Route<dynamic> _materialRoute(Widget view) {
+  static Route<dynamic> _materialRoute(Widget view) {
     return MaterialPageRoute<dynamic>(builder: (_) => view);
-  }*/
+  }
 
   /// Private method to create a [customPageRoute] with the provided widget & animation.
   static Route<dynamic> customPageRoute(Widget view) {

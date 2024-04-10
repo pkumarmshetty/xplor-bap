@@ -46,10 +46,8 @@ class ButtonWidget extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isValid ? onPressed : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: buttonBackgroundColor ??
-              AppColors.primaryColor, // Button Background color
-          foregroundColor:
-              buttonForegroundColor ?? Colors.white, // To set button text color
+          backgroundColor: buttonBackgroundColor ?? AppColors.primaryColor, // Button Background color
+          foregroundColor: buttonForegroundColor ?? Colors.white, // To set button text color
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(radius ?? 8.0),

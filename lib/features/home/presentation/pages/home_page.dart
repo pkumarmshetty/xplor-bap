@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:xplor/core/app_router.dart';
+import 'package:xplor/utils/extensions/font_style/font_styles.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,11 +16,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text("Welcome to Xplor!"),
-          const SizedBox(height: 50),
-          ElevatedButton(
-              onPressed: () => AppRouter.routes.dynamic,
-              child: const Text('Dynamic Json UI form'))
+          "Welcome".titleBold(),
         ],
       )),
     );

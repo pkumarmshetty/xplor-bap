@@ -5,14 +5,14 @@ extension BoolExtension on String {
   }
 
   bool get isValidName {
-    final nameRegExp =
-        RegExp(r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$");
+    final nameRegExp = RegExp(r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$");
     return nameRegExp.hasMatch(this);
   }
 
   bool get isValidPhone {
-    final phoneRegExp = RegExp(r"^(?:[+0]9)?[0-9]{10}$");
-    return phoneRegExp.hasMatch(this);
+    /*final phoneRegExp = RegExp(r"^(?:[+0]9)?[0-9]{10}$");
+    return phoneRegExp.hasMatch(this);*/
+    return replaceAll(' ', '').length == 10;
   }
 
   bool get isNumeric {
@@ -54,8 +54,7 @@ class ValidationMessages {
 
   static String get passwordError => errorText("password");
 
-  static String get passwordLimitError =>
-      "Password should be more than 8 characters";
+  static String get passwordLimitError => "Password should be more than 8 characters";
 
   static String get nameError => errorText("name");
 
@@ -91,8 +90,7 @@ class ValidationMessages {
 
   static String get accNoError => errorText("account number");
 
-  static String get previousMarksheetError =>
-      "Please select previous class marksheet file";
+  static String get previousMarksheetError => "Please select previous class marksheet file";
 }
 
 extension StringExtension on String {

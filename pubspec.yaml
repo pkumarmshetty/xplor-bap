@@ -52,6 +52,16 @@ dependencies:
   pin_code_fields: ^8.0.1
   #svg
   flutter_svg: ^2.0.10+1
+  #connectivity_plus check for network availability
+  connectivity_plus: ^5.0.2
+  #comparing dart objects
+  equatable: ^2.0.5
+  #local storage
+  shared_preferences: ^2.2.2
+  #bloc test
+  bloc_test: ^9.1.7
+  #mockito
+  mockito: ^5.4.4
 
 dev_dependencies:
   flutter_test:

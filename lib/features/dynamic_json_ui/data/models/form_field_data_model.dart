@@ -4,16 +4,12 @@ class FormFieldData {
   final String type; // Type of the form field
   final bool required; // Indicates if the field is required
   final String? text; // Text associated with the form field (if applicable)
-  final String?
-      hintText; // Hint text to display in the form field (if applicable)
-  final String?
-      imageUrl; // URL of an image associated with the form field (if applicable)
-  final List<String>?
-      items; // List of items for dropdown or radio button (if applicable)
+  final String? hintText; // Hint text to display in the form field (if applicable)
+  final String? imageUrl; // URL of an image associated with the form field (if applicable)
+  final List<String>? items; // List of items for dropdown or radio button (if applicable)
   final String? value; // Value of the form field (if applicable)
   final bool? groupValue; // Group value for radio buttons (if applicable)
-  final int?
-      functionId; // ID of a function associated with the form field (if applicable)
+  final int? functionId; // ID of a function associated with the form field (if applicable)
 
   /// Constructor for creating a FormFieldData instance.
   FormFieldData({

@@ -9,8 +9,7 @@ class FormBloc {
   final _formValidationController = StreamController<bool>();
 
   /// Stream to expose the current state of the form.
-  Stream<Map<String, String>> get formStateStream =>
-      _formStateController.stream;
+  Stream<Map<String, String>> get formStateStream => _formStateController.stream;
 
   /// Stream to expose the validation status of the form.
   Stream<bool> get formValidationStream => _formValidationController.stream;
@@ -46,9 +45,7 @@ class FormBloc {
     }
 
     // Set the error message
-    final errorMessageString = errorMessages.isNotEmpty
-        ? errorMessages.join('\n')
-        : ''; // Empty string if no error
+    final errorMessageString = errorMessages.isNotEmpty ? errorMessages.join('\n') : ''; // Empty string if no error
     _formValidationController.sink.add(isValid);
     if (!isValid) {
       // Send error message only if the form is not valid

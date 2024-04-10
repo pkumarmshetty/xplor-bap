@@ -36,8 +36,7 @@ class CustomDialogView extends StatelessWidget {
       ),
       backgroundColor: AppColors.white,
       elevation: 0,
-      insetPadding:
-          const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
+      insetPadding: const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -49,14 +48,12 @@ class CustomDialogView extends StatelessWidget {
             children: [
               /// Title with custom styling
               title
-                  .titleExtraBold(
-                      color: AppColors.countryCodeColor, size: 20.sp)
+                  .titleExtraBold(color: AppColors.countryCodeColor, size: 20.sp)
                   .symmetricPadding(horizontal: AppDimensions.medium),
 
               /// Close button
               IconButton(
-                icon: const Icon(Icons.close,
-                    color: AppColors.crossIconColor), // Set custom close icon
+                icon: const Icon(Icons.close, color: AppColors.crossIconColor), // Set custom close icon
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -75,8 +72,7 @@ class CustomDialogView extends StatelessWidget {
 
           /// Message with custom styling
           message
-              .titleRegular(
-                  color: AppColors.alertDialogMessageColor, size: 14.sp)
+              .titleRegular(color: AppColors.alertDialogMessageColor, size: 14.sp)
               .symmetricPadding(horizontal: AppDimensions.medium),
 
           /// Vertical space below the message
