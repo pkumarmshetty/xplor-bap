@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:equatable/equatable.dart';
 import '../../../../../core/dependency_injection.dart';
 import '../../../../../utils/app_utils.dart';
@@ -26,7 +25,6 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
 
   _validatePhoneNumber(CheckPhoneEvent event, Emitter<PhoneState> emit) {
     if (_checkPhone(event.phone.trim())) {
-      print("event.phone  ${event.phone}");
       emit(PhoneValidState());
     } else {
       emit(PhoneInvalidState());
