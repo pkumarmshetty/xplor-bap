@@ -21,11 +21,12 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
 
   Future<void> _onCountryCodeChange(
       CountryCodeEvent event, Emitter<PhoneState> emit) async {
-    countryCode = event.countryCode.dialCode!;
+    countryCode = event.countryCode;
   }
 
   _validatePhoneNumber(CheckPhoneEvent event, Emitter<PhoneState> emit) {
     if (_checkPhone(event.phone.trim())) {
+      print("event.phone  ${event.phone}");
       emit(PhoneValidState());
     } else {
       emit(PhoneInvalidState());

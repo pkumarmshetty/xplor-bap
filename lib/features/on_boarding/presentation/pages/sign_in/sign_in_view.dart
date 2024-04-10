@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl_phone_field/countries.dart';
+import 'package:intl_phone_field/country_picker_dialog.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import '../../../../../utils/app_colors.dart';
 
 import '../../../../../utils/widgets/loading_animation.dart';
@@ -32,6 +36,12 @@ class _SignInViewState extends State<SignInView> {
   bool isValid = false;
 
   final TextEditingController mobileNumberController = TextEditingController();
+
+  @override
+  void initState() {
+    context.read<PhoneBloc>().add(const CountryCodeEvent(countryCode: "+91"));
+    super.initState();
+  }
 
   // Inside the build method of your StatefulWidget
   @override
@@ -79,7 +89,7 @@ class _SignInViewState extends State<SignInView> {
       children: [
         const WelcomeContentWidget(),
         AppDimensions.large.vSpace(),
-        _buildPhoneNumberForm(context),
+        _buildPhoneNumberForm(),
         AppDimensions.smallXL.vSpace(),
         if (state is FailurePhoneState)
           Column(
@@ -116,36 +126,75 @@ class _SignInViewState extends State<SignInView> {
   }
 
   /// Builds the phone number input form field.
-  Widget _buildPhoneNumberForm(BuildContext context) {
-    return TextFormField(
+  Widget _buildPhoneNumberForm() {
+    return IntlPhoneField(
       controller: mobileNumberController,
-      keyboardType: TextInputType.phone,
+      pickerDialogStyle: PickerDialogStyle(
+          countryCodeStyle: GoogleFonts.manrope(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.countryCodeColor),
+          countryNameStyle: GoogleFonts.manrope(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.countryCodeColor),
+          listTileDivider: const SizedBox(),
+          listTilePadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+          padding: const EdgeInsets.all(12),
+          searchFieldPadding:
+              const EdgeInsets.only(left: 8, right: 8, top: 20, bottom: 8),
+          searchFieldInputDecoration: InputDecoration(
+              hintText: "Search any country...",
+              hintStyle: GoogleFonts.manrope(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.countryCodeColor),
+              prefixIcon: const Icon(
+                Icons.search,
+                size: 24,
+              ),
+              suffixIcon: GestureDetector(
+                child: const Icon(Icons.cancel),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              )),
+          width: double.infinity),
+      flagsButtonPadding: const EdgeInsets.all(8),
+      dropdownIconPosition: IconPosition.trailing,
+      dropdownTextStyle: GoogleFonts.manrope(
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w600,
+          color: AppColors.countryCodeColor),
+      style: GoogleFonts.manrope(
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w600,
+          color: AppColors.countryCodeColor),
+      onCountryChanged: (Country country) {
+        context
+            .read<PhoneBloc>()
+            .add(CountryCodeEvent(countryCode: "+${country.dialCode}"));
+        context
+            .read<PhoneBloc>()
+            .add(CheckPhoneEvent(phone: mobileNumberController.text));
+      },
+      disableLengthCheck: true,
       inputFormatters: [
         LengthLimitingTextInputFormatter(12),
         FilteringTextInputFormatter.digitsOnly, // Allow only digits
         PhoneNumberFormatter(),
       ],
+      dropdownIcon: Icon(
+        Icons.keyboard_arrow_down,
+        size: 22.w,
+        color: AppColors.countryCodeColor,
+      ),
       decoration: InputDecoration(
         hintText: 'Mobile Number',
         hintStyle:
-            GoogleFonts.manrope(fontSize: 14.sp, fontWeight: FontWeight.w600),
-        prefixIcon: CountryCodePicker(
-          onInit: (val) => context
-              .read<PhoneBloc>()
-              .add(CountryCodeEvent(countryCode: val!)),
-          onChanged: (val) {
-            context.read<PhoneBloc>().add(CountryCodeEvent(countryCode: val));
-            context
-                .read<PhoneBloc>()
-                .add(CheckPhoneEvent(phone: mobileNumberController.text));
-          },
-          initialSelection: 'IN',
-          favorite: const ['+91'],
-          showCountryOnly: false,
-          showDropDownButton: false,
-          showOnlyCountryWhenClosed: false,
-          alignLeft: false,
-        ),
+            GoogleFonts.manrope(fontSize: 14.sp, fontWeight: FontWeight.w400),
+
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
           borderSide: BorderSide(color: AppColors.hintColor),
@@ -158,8 +207,9 @@ class _SignInViewState extends State<SignInView> {
         contentPadding: const EdgeInsets.symmetric(
             vertical: AppDimensions.medium), // Height of the TextFormField
       ),
-      onChanged: (val) =>
-          context.read<PhoneBloc>().add(CheckPhoneEvent(phone: val.trim())),
+      initialCountryCode: 'IN',
+      onChanged: (phone) =>
+          context.read<PhoneBloc>().add(CheckPhoneEvent(phone: phone.number)),
     );
   }
 }
