@@ -1,10 +1,9 @@
 stages:
    - build:android
   
-# variables:
-  # buildNumber:
-  #   value: ""      
-  #   description: "buildNumber will update after every build"
+variables:
+  APP_NAME:
+    value: "Xplor-App"      
 
   # infoplist_name:
   #   value: ""
