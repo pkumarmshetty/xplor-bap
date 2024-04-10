@@ -14,7 +14,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await initializeDependencies();
-  //runApp(const XplorApp());
 
   bootstrap(() {
     return ScreenUtilInit(

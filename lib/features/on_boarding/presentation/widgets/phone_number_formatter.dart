@@ -2,8 +2,7 @@ import 'package:flutter/services.dart';
 
 class PhoneNumberFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     /// Implement logic to format phone number as desired
     final text = newValue.text.replaceAll(RegExp(r'\s+'), '');
 

@@ -36,9 +36,7 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<SelectRoleBloc>()
-        .add(const GetUserRolesEvent()); // Use SelectRoleBloc
+    context.read<SelectRoleBloc>().add(const GetUserRolesEvent()); // Use SelectRoleBloc
   }
 
   @override
@@ -58,20 +56,17 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
                 AppUtils.showSnackBar(context, state.errorMessage);
               } else if (state is SelectRoleNavigationState) {
                 // Navigate to KYC screen
-                Navigator.pushNamedAndRemoveUntil(
-                    context, Routes.kyc, (routes) => false);
+                Navigator.pushNamedAndRemoveUntil(context, Routes.kyc, (routes) => false);
               }
             },
             child: BlocBuilder<SelectRoleBloc, SelectRoleState>(
               builder: (context, state) {
                 // Handle state changes
-                if (state is SelectRoleLoadingState &&
-                    state.status == AppPageStatus.loading) {
+                if (state is SelectRoleLoadingState && state.status == AppPageStatus.loading) {
                   // Show loading animation
                   return const LoadingAnimation();
                 } else {
-                  if (state is SelectRoleLoadedState &&
-                      state.userRoles.isNotEmpty) {
+                  if (state is SelectRoleLoadedState && state.userRoles.isNotEmpty) {
                     // Show main content
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,9 +114,7 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
           title: 'Continue',
           isValid: selectedIndex != -1,
           onPressed: () {
-            context
-                .read<SelectRoleBloc>()
-                .add(const AssignRoleEvent()); // Use SelectRoleBloc
+            context.read<SelectRoleBloc>().add(const AssignRoleEvent()); // Use SelectRoleBloc
           },
         ),
         AppDimensions.mediumXL.vSpace(),

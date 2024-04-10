@@ -15,8 +15,7 @@ Future<void> initializeDependencies() async {
   //Dio
   sl.registerSingleton<Dio>(Dio());
   //Add more dependencies as needed
-  sl.registerSingleton<SharedPreferencesHelper>(
-      SharedPreferencesHelper()..init());
+  sl.registerSingleton<SharedPreferencesHelper>(SharedPreferencesHelper()..init());
 
   // Data sources
   sl.registerSingleton<NetworkInfo>(NetworkInfoImpl(Connectivity()));
@@ -25,8 +24,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<OnBoardingApiService>(OnBoardingApiService());
 
   // Repository
-  sl.registerLazySingleton<OnBoardingRepository>(
-      () => OnBoardingRepositoryImpl());
+  sl.registerLazySingleton<OnBoardingRepository>(() => OnBoardingRepositoryImpl());
 
   // Use cases
   sl.registerSingleton<OnBoardingUseCase>(OnBoardingUseCase());

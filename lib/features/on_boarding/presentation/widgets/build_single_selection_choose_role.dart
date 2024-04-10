@@ -25,8 +25,7 @@ class SingleSelectionChooseRole extends StatefulWidget {
   });
 
   @override
-  State<SingleSelectionChooseRole> createState() =>
-      _SingleSelectionChooseRoleState();
+  State<SingleSelectionChooseRole> createState() => _SingleSelectionChooseRoleState();
 }
 
 /// _SingleSelectionChooseRoleState class
@@ -35,8 +34,7 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
   Widget build(BuildContext context) {
     return BlocListener<SelectRoleBloc, SelectRoleState>(
         listener: (context, state) {},
-        child: BlocBuilder<SelectRoleBloc, SelectRoleState>(
-            builder: (context, state) {
+        child: BlocBuilder<SelectRoleBloc, SelectRoleState>(builder: (context, state) {
           // Handle state changes
           if (state is SelectRoleLoadedState) {
             return ListView.builder(
@@ -44,16 +42,11 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
               itemBuilder: (BuildContext context, int index) {
                 final role = state.userRoles[index];
                 return Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: AppDimensions.small),
+                  margin: const EdgeInsets.symmetric(vertical: AppDimensions.small),
                   decoration: BoxDecoration(
-                    color: widget.selectedIndex == index
-                        ? Colors.transparent
-                        : Colors.white,
+                    color: widget.selectedIndex == index ? Colors.transparent : Colors.white,
                     border: Border.all(
-                      color: widget.selectedIndex == index
-                          ? AppColors.primaryColor
-                          : AppColors.hintColor,
+                      color: widget.selectedIndex == index ? AppColors.primaryColor : AppColors.hintColor,
                       width: 2.w,
                     ),
                     borderRadius: BorderRadius.circular(AppDimensions.smallXL),
@@ -67,8 +60,7 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         activeColor: AppColors.primaryColor,
                         fillColor: MaterialStateProperty.resolveWith(
-                          (states) => states
-                              .getFillColor(), // Use the extension function
+                          (states) => states.getFillColor(), // Use the extension function
                         ),
                         value: index,
                         groupValue: widget.selectedIndex,
@@ -89,12 +81,9 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
                               child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              role.title?.titleBold(
-                                      size: 20.sp, color: AppColors.black100) ??
-                                  const SizedBox(),
+                              role.title?.titleBold(size: 20.sp, color: AppColors.black100) ?? const SizedBox(),
                               AppDimensions.smallXL.vSpace(),
-                              role.description?.titleRegular(
-                                      size: 12.sp, color: AppColors.black100) ??
+                              role.description?.titleRegular(size: 12.sp, color: AppColors.black100) ??
                                   const SizedBox(),
                             ],
                           ))
@@ -104,8 +93,7 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
                         if (kDebugMode) {
                           print("Role ID: ${role.id}");
                         }
-                        sl<SharedPreferencesHelper>()
-                            .setString(PrefConstKeys.roleID, role.id ?? '');
+                        sl<SharedPreferencesHelper>().setString(PrefConstKeys.roleID, role.id ?? '');
                         setState(() {
                           widget.onIndexChanged(index);
                         });

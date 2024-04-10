@@ -71,9 +71,7 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const WelcomeContentWidget(
-                        title: 'Complete your KYC',
-                        subTitle: 'Select one to proceed')
+                const WelcomeContentWidget(title: 'Complete your KYC', subTitle: 'Select one to proceed')
                     .symmetricPadding(
                   horizontal: AppDimensions.large,
                 ),
@@ -135,8 +133,7 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             text: TextSpan(
               children: [
                 'I hereby confirm my '.textSpanRegular(),
-                'consent to authorize'
-                    .textSpanSemiBold(decoration: TextDecoration.underline),
+                'consent to authorize'.textSpanSemiBold(decoration: TextDecoration.underline),
               ],
             ),
           ),
@@ -170,10 +167,8 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
       builder: (BuildContext context) {
         return CustomConfirmationDialog(
           title: 'KYC Successful!',
-          message: 'You have been successfully verified.'.titleRegular(
-              size: 14.sp,
-              color: AppColors.alertDialogMessageColor,
-              align: TextAlign.center),
+          message: 'You have been successfully verified.'
+              .titleRegular(size: 14.sp, color: AppColors.alertDialogMessageColor, align: TextAlign.center),
           onConfirmPressed: () {
             // Implement the action when OK button is pressed
             Navigator.pushReplacementNamed(
@@ -200,16 +195,12 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               'Please review your information and documents, ensuring accuracy.'
-                  .titleRegular(
-                      size: 14.sp,
-                      color: AppColors.alertDialogMessageColor,
-                      align: TextAlign.center),
+                  .titleRegular(size: 14.sp, color: AppColors.alertDialogMessageColor, align: TextAlign.center),
               RichText(
                 text: TextSpan(
                   children: [
                     'For assistance, '.textSpanRegular(),
-                    'contact support.'
-                        .textSpanSemiBold(decoration: TextDecoration.underline),
+                    'contact support.'.textSpanSemiBold(decoration: TextDecoration.underline),
                   ],
                 ),
               ),

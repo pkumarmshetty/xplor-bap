@@ -18,8 +18,7 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
     on<PhoneSubmitEvent>(_onFormSubmitted);
   }
 
-  Future<void> _onCountryCodeChange(
-      CountryCodeEvent event, Emitter<PhoneState> emit) async {
+  Future<void> _onCountryCodeChange(CountryCodeEvent event, Emitter<PhoneState> emit) async {
     countryCode = event.countryCode;
   }
 
@@ -40,8 +39,7 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
     );
     try {
       String res = await sl<OnBoardingUseCase>().call(params: entity);
-      emit(SuccessPhoneState(
-          phoneNumber: '$countryCode ${event.phone}', key: res));
+      emit(SuccessPhoneState(phoneNumber: '$countryCode ${event.phone}', key: res));
     } catch (e) {
       emit(FailurePhoneState(AppUtils.getErrorMessage(e.toString())));
     }
@@ -49,17 +47,11 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
 }
 
 bool _checkPhone(String phone) {
-  final phoneRegExp = RegExp(r"^(?:[+0]9)?[0-9]{10}$");
   var phoneNumber = phone.replaceAll(' ', '');
-  print("phoneNumber  $phoneNumber");
   if (phoneNumber.length < 6 || phoneNumber.length > 16) {
-    print("phoneNumber  length issues");
     return false;
   } else if (phoneNumber.startsWith('0')) {
     return false;
-  } /* else if (!phoneRegExp.hasMatch(phoneNumber)) {
-    print("phoneNumber  ${!phoneRegExp.hasMatch(phoneNumber)}");
-    return false;
-  }*/
+  }
   return true;
 }

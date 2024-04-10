@@ -45,8 +45,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
     AppUtils.closeKeyword;
     emit(OtpLoadingState());
 
-    OnBoardingVerifyOtpEntity entity =
-        OnBoardingVerifyOtpEntity(otp: otp, key: key);
+    OnBoardingVerifyOtpEntity entity = OnBoardingVerifyOtpEntity(otp: otp, key: key);
 
     try {
       await sl<OnBoardingUseCase>().verifyOtpOnBoarding(entity);
@@ -73,8 +72,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
     }
   }
 
-  Future<void> _getUserJourney(
-      GetUserJourneyEvent event, Emitter<OtpState> emit) async {
+  Future<void> _getUserJourney(GetUserJourneyEvent event, Emitter<OtpState> emit) async {
     emit(OtpLoadingState());
     try {
       await sl<OnBoardingUseCase>().getUserJourney();

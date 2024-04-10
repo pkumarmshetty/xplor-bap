@@ -91,8 +91,7 @@ class _OtpViewState extends State<OtpView> {
             //print("Phone Number: ${context.read<OtpBloc>().phoneNumber}");
             return WelcomeContentWidget(
               title: 'OTP Verification',
-              subTitle:
-                  'Enter the 6 digit OTP that we have sent to ${context.read<OtpBloc>().phoneNumber}',
+              subTitle: 'Enter the 6 digit OTP that we have sent to ${context.read<OtpBloc>().phoneNumber}',
             );
           },
         ),
@@ -114,15 +113,12 @@ class _OtpViewState extends State<OtpView> {
         /// Build the OTP digit field.
         CommonPinCodeTextField(
           textEditingController: textEditingController,
-          onChanged: (value) =>
-              context.read<OtpBloc>().add(PhoneOtpValidatorEvent(otp: value)),
+          onChanged: (value) => context.read<OtpBloc>().add(PhoneOtpValidatorEvent(otp: value)),
         ),
         if (state is FailureOtpState && state.message!.isNotEmpty)
           Column(
             children: [
-              state.message
-                  .toString()
-                  .titleSemiBold(size: 12.sp, color: AppColors.errorColor),
+              state.message.toString().titleSemiBold(size: 12.sp, color: AppColors.errorColor),
               AppDimensions.smallXL.vSpace(),
             ],
           ),
@@ -138,9 +134,7 @@ class _OtpViewState extends State<OtpView> {
               title: 'Continue',
               isValid: state is OtpValidState,
               onPressed: () {
-                context
-                    .read<OtpBloc>()
-                    .add(PhoneOtpVerifyEvent(otp: textEditingController.text));
+                context.read<OtpBloc>().add(PhoneOtpVerifyEvent(otp: textEditingController.text));
               },
             );
           },
@@ -160,12 +154,10 @@ class _OtpViewState extends State<OtpView> {
                 size: 12.sp,
                 color: AppColors.subTitleText,
               ),
-              (Conversion.formatSeconds(remainingTime))
-                  .titleRegular(size: 12.sp, color: AppColors.subTitleText)
+              (Conversion.formatSeconds(remainingTime)).titleRegular(size: 12.sp, color: AppColors.subTitleText)
             ])
           : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              ("I didn’t receive code. ")
-                  .titleMedium(size: 12.sp, color: AppColors.subTitleText),
+              ("I didn’t receive code. ").titleMedium(size: 12.sp, color: AppColors.subTitleText),
               ('Resend').titleBold(size: 12.sp, color: AppColors.primaryColor)
             ]),
       onTap: () {

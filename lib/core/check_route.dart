@@ -5,10 +5,8 @@ import 'dependency_injection.dart';
 
 String checkRouteBasedOnUserJourney() {
   var route = Routes.chooseRole;
-  var kycVerified =
-      sl<SharedPreferencesHelper>().getBoolean(PrefConstKeys.kycVerified);
-  var roleAssigned =
-      sl<SharedPreferencesHelper>().getBoolean(PrefConstKeys.roleAssigned);
+  var kycVerified = sl<SharedPreferencesHelper>().getBoolean(PrefConstKeys.kycVerified);
+  var roleAssigned = sl<SharedPreferencesHelper>().getBoolean(PrefConstKeys.roleAssigned);
 
   if (roleAssigned && !kycVerified) {
     route = Routes.kyc;
