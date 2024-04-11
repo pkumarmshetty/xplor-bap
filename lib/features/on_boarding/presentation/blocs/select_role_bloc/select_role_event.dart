@@ -15,5 +15,5 @@ class GetUserRolesEvent extends SelectRoleEvent {
 
 /// Event class for the SelectRoleBloc.
 class AssignRoleEvent extends SelectRoleEvent {
-  const AssignRoleEvent();
+  AssignRoleEvent();
 }

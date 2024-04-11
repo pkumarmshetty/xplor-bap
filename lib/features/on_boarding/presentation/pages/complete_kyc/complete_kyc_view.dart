@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:xplor/core/api_constants.dart';
 import 'package:xplor/features/on_boarding/presentation/blocs/kyc_bloc/kyc_bloc.dart';
 import 'package:xplor/utils/app_utils.dart';
 import 'package:xplor/utils/widgets/loading_animation.dart';
@@ -56,28 +57,29 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             body: SafeArea(
           child: BlocListener<KycBloc, KycState>(listener: (context, state) {
             print(state);
-            // show loader until response of KYC api
-            if (state is KycLoadingState) {
-              const LoadingAnimation();
-            }
             // show success dialog if KYC verified successfully
-            else if (state is KycSuccessState) {
+            if (state is AuthorizedUserState) {
               _showKYCConfirmationDialog(context);
             }
-
+            else if(state is AuthorizeUserEvent) {
+              _showKYCConfirmationDialog(context);
+            }
             // shows the WebView to open the callback from API
             else if (state is ShowWebViewState) {
               webViewController.setNavigationDelegate(
                 NavigationDelegate(
                   onProgress: (int progress) {},
                   onPageStarted: (String url) {
+                    print('onPageStarted ${url}');
                   },
                   onPageFinished: (String url) {
                     // Do the task here
+                    print('onPageFinished ${url}');
                   },
                   onWebResourceError: (WebResourceError error) {},
                   onNavigationRequest: (NavigationRequest request) {
-                    if (request.url.startsWith('https://m.youtube.com/')) {
+                    print('onNavigationRequest ${request.url}');
+                    if (request.url.startsWith(webhookUrl)) {
                       context.read<KycBloc>().add(const AuthorizeUserEvent());
                       return NavigationDecision.prevent;
                     }
@@ -115,6 +117,7 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
                   horizontal: AppDimensions.large,
                 ),
                 AppDimensions.large.vSpace(),
+                if (state is KycLoadingState) const LoadingAnimation(),
                 Expanded(
                     child: SingleSelectionWallet(
                   selectedIndex: selectedIndex,

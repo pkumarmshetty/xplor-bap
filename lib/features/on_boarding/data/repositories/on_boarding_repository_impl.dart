@@ -59,10 +59,9 @@ class OnBoardingRepositoryImpl implements OnBoardingRepository {
   }
 
   @override
-  Future<List<EAuthProviderEntity>> getEAuthProviders() async {
+  Future<EAuthProviderEntity?> getEAuthProviders() async {
     if (await networkInfo.isConnected!) {
-      return (await _apiService.getEAuthProviders()).map((provider) =>
-      EAuthProviderEntity.fromJson(provider.toJson())).toList();
+      return EAuthProviderEntity.fromJson((await _apiService.getEAuthProviders())?.toJson() ?? {});
     } else {
       throw Exception("Check your internet connection");
     }

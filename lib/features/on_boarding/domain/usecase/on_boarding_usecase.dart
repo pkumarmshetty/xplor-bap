@@ -32,7 +32,7 @@ class OnBoardingUseCase implements UseCase<void, OnBoardingSendOtpEntity> {
     return await _repository.updateUserKycOnBoarding();
   }
 
-  Future<List<EAuthProviderEntity>> getEAuthProviders() async {
+  Future<EAuthProviderEntity?> getEAuthProviders() async {
     return await _repository.getEAuthProviders();
   }
 

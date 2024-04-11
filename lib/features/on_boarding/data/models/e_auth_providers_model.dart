@@ -34,25 +34,25 @@ class EAuthProviderModel {
   }
 }
 
-class AuthProviderListModel {
+class AuthProviderResponseModel {
   final bool success;
   final String message;
-  final List<EAuthProviderModel> providers;
+  final EAuthProviderModel providers;
 
-  AuthProviderListModel({
+  AuthProviderResponseModel({
     required this.success,
     required this.message,
     required this.providers,
   });
 
-  factory AuthProviderListModel.fromJson(Map<String, dynamic> json) {
-    List<EAuthProviderModel> providers = (json['data'] as List<dynamic>)
-        .map((provider) => EAuthProviderModel.fromJson(provider))
-        .toList();
-    return AuthProviderListModel(
+  factory AuthProviderResponseModel.fromJson(Map<String, dynamic> json) {
+    // List<EAuthProviderModel> providers = (json['data'] as List<dynamic>)
+    //     .map((provider) => EAuthProviderModel.fromJson(provider))
+    //     .toList();
+    return AuthProviderResponseModel(
       success: json['success'],
       message: json['message'],
-      providers: providers,
+      providers: EAuthProviderModel.fromJson(json['data']),
     );
   }
 }

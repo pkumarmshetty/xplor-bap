@@ -20,19 +20,7 @@ class KycBloc extends Bloc<KycEvent, KycState> {
     /// emit loading state
     emit(KycLoadingState());
     try {
-      // call getEAuthProviders api
-      //  List<EAuthProviderEntity> providersList =
-      // await sl<OnBoardingUseCase>().getEAuthProviders();
-      // if (providersList.isNotEmpty) {
-      //   emit(ShowWebViewState(providersList
-      //       .where((provider) => provider.code == 'googleAuth')
-      //       .first
-      //       .redirectUrl));
-      emit(const KycErrorState('Authorization Complete!'));
-      // } else {
-      //   emit(KycFailedState());
-      // }
-
+      emit(AuthorizedUserState());
       return true;
     } catch (e) {
       /// emit error state for any error encountered
@@ -48,17 +36,13 @@ class KycBloc extends Bloc<KycEvent, KycState> {
     emit(KycLoadingState());
     try {
       /// call getEAuthProviders api
-      //  List<EAuthProviderEntity> providersList =
-      // await sl<OnBoardingUseCase>().getEAuthProviders();
-      // if (providersList.isNotEmpty) {
-      //   emit(ShowWebViewState(providersList
-      //       .where((provider) => provider.code == 'googleAuth')
-      //       .first
-      //       .redirectUrl));
-      emit(const ShowWebViewState('https://www.google.com/'));
-      // } else {
-      //   emit(KycFailedState());
-      // }
+       EAuthProviderEntity? provider =
+      await sl<OnBoardingUseCase>().getEAuthProviders();
+      if (provider != null) {
+        emit(ShowWebViewState(provider.redirectUrl));
+      } else {
+        emit(KycFailedState());
+      }
 
       return true;
     } catch (e) {

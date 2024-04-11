@@ -18,7 +18,7 @@ abstract class OnBoardingRepository {
 
   Future<List<OnBoardingUserRoleEntity>> getUserRolesOnBoarding();
 
-  Future<List<EAuthProviderEntity>> getEAuthProviders();
+  Future<EAuthProviderEntity?> getEAuthProviders();
 
   Future<void> getUserJourney();
 }

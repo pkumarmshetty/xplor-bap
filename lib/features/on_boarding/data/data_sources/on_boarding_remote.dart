@@ -219,7 +219,7 @@ class OnBoardingApiService {
     }
   }
 
-  Future<List<EAuthProviderModel>> getEAuthProviders() async {
+  Future<EAuthProviderModel?> getEAuthProviders() async {
     try {
       final authToken = sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
 
@@ -239,9 +239,10 @@ class OnBoardingApiService {
       if (response.statusCode == 200) {
         if (kDebugMode) {
           print("getEAuthProviders----> Success 200 ${response.data}");
-          return (response.data as AuthProviderListModel).providers;
+
+          return AuthProviderResponseModel.fromJson(response.data).providers;
         }
-        return [];
+        return null;
       }
 
       if (response.statusCode == 400) {
@@ -255,7 +256,7 @@ class OnBoardingApiService {
       if (kDebugMode) {
         print("getEAuthProviders----> Catch $e");
       }
-      return []; // Return false for any error
+      return null; // Return false for any error
     }
   }
 
