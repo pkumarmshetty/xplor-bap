@@ -11,6 +11,7 @@ import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/api_constants.dart';
 import '../../../../core/dependency_injection.dart';
 import '../../domain/entities/on_boarding_user_role_entity.dart';
+import '../models/e_auth_providers_model.dart';
 
 class OnBoardingApiService {
   final Dio _dio = sl<Dio>();
@@ -215,6 +216,46 @@ class OnBoardingApiService {
         print("getUserRolesOnBoarding----> Catch $e");
       }
       throw Exception(handleError(e));
+    }
+  }
+
+  Future<List<EAuthProviderModel>> getEAuthProviders() async {
+    try {
+      final authToken = sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
+
+      if (authToken.isEmpty) {
+        throw Exception("Authorization token is missing or invalid.");
+      }
+      final response = await _dio.get(
+        "${baseUrl}e-auth",
+        options: Options(
+          contentType: Headers.jsonContentType,
+          headers: {
+            "Authorization": authToken,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print("getEAuthProviders----> Success 200 ${response.data}");
+          return (response.data as AuthProviderListModel).providers;
+        }
+        return [];
+      }
+
+      if (response.statusCode == 400) {
+        final Map<String, dynamic> responseData = json.decode(response.data);
+        final String errorMessage = responseData['message'] ?? 'Unknown error';
+        throw Exception(errorMessage);
+      } else {
+        throw Exception('Unknown error occurred');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("getEAuthProviders----> Catch $e");
+      }
+      return []; // Return false for any error
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:xplor/features/on_boarding/presentation/blocs/kyc_bloc/kyc_bloc.dart';
 import 'package:xplor/utils/app_utils.dart';
 import 'package:xplor/utils/widgets/loading_animation.dart';
@@ -40,6 +41,10 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
     });
   }
 
+  WebViewController webViewController = WebViewController()
+    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+    ..setBackgroundColor(AppColors.white);
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -58,6 +63,31 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             else if (state is KycSuccessState) {
               _showKYCConfirmationDialog(context);
             }
+
+            // shows the WebView to open the callback from API
+            else if(state is ShowWebViewState) {
+              webViewController.setNavigationDelegate(
+                NavigationDelegate(
+                  onProgress: (int progress) {
+
+                  },
+                  onPageStarted: (String url) {},
+                  onPageFinished: (String url) {
+                    // Do the task here
+                  },
+                  onWebResourceError: (WebResourceError error) {},
+                  onNavigationRequest: (NavigationRequest request) {
+                    if (request.url.startsWith('https://www.youtube.com/')) {
+                      return NavigationDecision.prevent;
+                    }
+                    return NavigationDecision.navigate;
+                  },
+                ),
+              );
+              webViewController.loadRequest(Uri.parse(state.requestUrl));
+              WebViewWidget(controller: webViewController);
+            }
+
             // show failure dialog if KYC verification failed
             else if (state is KycFailedState) {
               _showKYCFailDialog(context);

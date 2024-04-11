@@ -1,3 +1,4 @@
+import 'package:xplor/features/on_boarding/domain/entities/e_auth_providers_entity.dart';
 import 'package:xplor/features/on_boarding/domain/entities/ob_boarding_verify_otp_entity.dart';
 import 'package:xplor/features/on_boarding/domain/entities/on_boarding_assign_role_entity.dart';
 import 'package:xplor/features/on_boarding/domain/entities/on_boarding_send_otp_entity.dart';
@@ -16,6 +17,8 @@ abstract class OnBoardingRepository {
   Future<bool> updateUserKycOnBoarding();
 
   Future<List<OnBoardingUserRoleEntity>> getUserRolesOnBoarding();
+
+  Future<List<EAuthProviderEntity>> getEAuthProviders();
 
   Future<void> getUserJourney();
 }
