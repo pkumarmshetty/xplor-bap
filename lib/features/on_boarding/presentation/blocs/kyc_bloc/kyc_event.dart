@@ -10,3 +10,7 @@ sealed class KycEvent extends Equatable {
 class UpdateUserKycEvent extends KycEvent {
   const UpdateUserKycEvent();
 }
+
+class AuthorizeUserEvent extends KycEvent {
+  const AuthorizeUserEvent();
+}

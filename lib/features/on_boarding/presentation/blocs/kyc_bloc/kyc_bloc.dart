@@ -12,6 +12,33 @@ class KycBloc extends Bloc<KycEvent, KycState> {
   KycBloc() : super(KycInitial()) {
     /// call _onUpdateUserKycSubmit on UpdateUserKycEvent
     on<UpdateUserKycEvent>(_getEAuthProviders);
+    on<AuthorizeUserEvent>(authorize);
+  }
+
+  Future<bool> authorize(
+      AuthorizeUserEvent event, Emitter<KycState> emit) async {
+    /// emit loading state
+    emit(KycLoadingState());
+    try {
+      // call getEAuthProviders api
+      //  List<EAuthProviderEntity> providersList =
+      // await sl<OnBoardingUseCase>().getEAuthProviders();
+      // if (providersList.isNotEmpty) {
+      //   emit(ShowWebViewState(providersList
+      //       .where((provider) => provider.code == 'googleAuth')
+      //       .first
+      //       .redirectUrl));
+      emit(const KycErrorState('Authorization Complete!'));
+      // } else {
+      //   emit(KycFailedState());
+      // }
+
+      return true;
+    } catch (e) {
+      /// emit error state for any error encountered
+      emit(KycErrorState(e.toString()));
+      return false;
+    }
   }
 
   /// Handles the update user kyc submit event.
@@ -21,16 +48,17 @@ class KycBloc extends Bloc<KycEvent, KycState> {
     emit(KycLoadingState());
     try {
       /// call getEAuthProviders api
-      List<EAuthProviderEntity> providersList =
-      await sl<OnBoardingUseCase>().getEAuthProviders();
-      if (providersList.isNotEmpty) {
-        emit(ShowWebViewState(providersList
-            .where((provider) => provider.code == 'googleAuth')
-            .first
-            .redirectUrl));
-      } else {
-        emit(KycFailedState());
-      }
+      //  List<EAuthProviderEntity> providersList =
+      // await sl<OnBoardingUseCase>().getEAuthProviders();
+      // if (providersList.isNotEmpty) {
+      //   emit(ShowWebViewState(providersList
+      //       .where((provider) => provider.code == 'googleAuth')
+      //       .first
+      //       .redirectUrl));
+      emit(const ShowWebViewState('https://www.google.com/'));
+      // } else {
+      //   emit(KycFailedState());
+      // }
 
       return true;
     } catch (e) {

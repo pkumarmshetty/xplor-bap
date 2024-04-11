@@ -55,6 +55,7 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
         child: Scaffold(
             body: SafeArea(
           child: BlocListener<KycBloc, KycState>(listener: (context, state) {
+            print(state);
             // show loader until response of KYC api
             if (state is KycLoadingState) {
               const LoadingAnimation();
@@ -65,19 +66,19 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             }
 
             // shows the WebView to open the callback from API
-            else if(state is ShowWebViewState) {
+            else if (state is ShowWebViewState) {
               webViewController.setNavigationDelegate(
                 NavigationDelegate(
-                  onProgress: (int progress) {
-
+                  onProgress: (int progress) {},
+                  onPageStarted: (String url) {
                   },
-                  onPageStarted: (String url) {},
                   onPageFinished: (String url) {
                     // Do the task here
                   },
                   onWebResourceError: (WebResourceError error) {},
                   onNavigationRequest: (NavigationRequest request) {
-                    if (request.url.startsWith('https://www.youtube.com/')) {
+                    if (request.url.startsWith('https://m.youtube.com/')) {
+                      context.read<KycBloc>().add(const AuthorizeUserEvent());
                       return NavigationDecision.prevent;
                     }
                     return NavigationDecision.navigate;
@@ -85,7 +86,6 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
                 ),
               );
               webViewController.loadRequest(Uri.parse(state.requestUrl));
-              WebViewWidget(controller: webViewController);
             }
 
             // show failure dialog if KYC verification failed
@@ -97,10 +97,20 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
               AppUtils.showSnackBar(context, state.error);
             }
           }, child: BlocBuilder<KycBloc, KycState>(builder: (context, state) {
+            if (state is ShowWebViewState) {
+              return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                        child: WebViewWidget(controller: webViewController))
+                  ]);
+            }
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const WelcomeContentWidget(title: 'Complete your KYC', subTitle: 'Select one to proceed')
+                const WelcomeContentWidget(
+                        title: 'Complete your KYC',
+                        subTitle: 'Select one to proceed')
                     .symmetricPadding(
                   horizontal: AppDimensions.large,
                 ),
@@ -162,7 +172,8 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             text: TextSpan(
               children: [
                 'I hereby confirm my '.textSpanRegular(),
-                'consent to authorize'.textSpanSemiBold(decoration: TextDecoration.underline),
+                'consent to authorize'
+                    .textSpanSemiBold(decoration: TextDecoration.underline),
               ],
             ),
           ),
@@ -196,8 +207,10 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
       builder: (BuildContext context) {
         return CustomConfirmationDialog(
           title: 'KYC Successful!',
-          message: 'You have been successfully verified.'
-              .titleRegular(size: 14.sp, color: AppColors.alertDialogMessageColor, align: TextAlign.center),
+          message: 'You have been successfully verified.'.titleRegular(
+              size: 14.sp,
+              color: AppColors.alertDialogMessageColor,
+              align: TextAlign.center),
           onConfirmPressed: () {
             // Implement the action when OK button is pressed
             Navigator.pushNamedAndRemoveUntil(
@@ -225,12 +238,16 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               'Please review your information and documents, ensuring accuracy.'
-                  .titleRegular(size: 14.sp, color: AppColors.alertDialogMessageColor, align: TextAlign.center),
+                  .titleRegular(
+                      size: 14.sp,
+                      color: AppColors.alertDialogMessageColor,
+                      align: TextAlign.center),
               RichText(
                 text: TextSpan(
                   children: [
                     'For assistance, '.textSpanRegular(),
-                    'contact support.'.textSpanSemiBold(decoration: TextDecoration.underline),
+                    'contact support.'
+                        .textSpanSemiBold(decoration: TextDecoration.underline),
                   ],
                 ),
               ),
