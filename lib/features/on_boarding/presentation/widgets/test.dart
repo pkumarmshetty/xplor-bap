@@ -23,8 +23,7 @@ class SingleSelectionChooseRole extends StatefulWidget {
   });
 
   @override
-  State<SingleSelectionChooseRole> createState() =>
-      _SingleSelectionChooseRoleState();
+  State<SingleSelectionChooseRole> createState() => _SingleSelectionChooseRoleState();
 }
 
 /// _SingleSelectionChooseRoleState class
@@ -33,8 +32,7 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
     WalletSelectionEntity(
         icon: 'assets/images/i_am_agent.png',
         title: 'I am an Agent',
-        message:
-            'An intermediary who helps in the distribution of the service'),
+        message: 'An intermediary who helps in the distribution of the service'),
     WalletSelectionEntity(
         icon: 'assets/images/i_am_seeker.png',
         title: 'I am a Seeker',
@@ -50,13 +48,9 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
         return Container(
           margin: const EdgeInsets.symmetric(vertical: AppDimensions.small),
           decoration: BoxDecoration(
-            color: widget.selectedIndex == index
-                ? Colors.transparent
-                : Colors.white,
+            color: widget.selectedIndex == index ? Colors.transparent : Colors.white,
             border: Border.all(
-              color: widget.selectedIndex == index
-                  ? AppColors.primaryColor
-                  : AppColors.hintColor,
+              color: widget.selectedIndex == index ? AppColors.primaryColor : AppColors.hintColor,
               width: 2.w,
             ),
             borderRadius: BorderRadius.circular(AppDimensions.smallXL),
@@ -70,8 +64,7 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 activeColor: AppColors.primaryColor,
                 fillColor: MaterialStateProperty.resolveWith(
-                  (states) =>
-                      states.getFillColor(), // Use the extension function
+                  (states) => states.getFillColor(), // Use the extension function
                 ),
                 value: index,
                 groupValue: widget.selectedIndex,
@@ -91,11 +84,9 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      item.title
-                          .titleBold(size: 20.sp, color: AppColors.black100),
+                      item.title.titleBold(size: 20.sp, color: AppColors.black100),
                       AppDimensions.smallXL.vSpace(),
-                      item.message
-                          .titleRegular(size: 12.sp, color: AppColors.black100)
+                      item.message.titleRegular(size: 12.sp, color: AppColors.black100)
                     ],
                   ))
                 ],

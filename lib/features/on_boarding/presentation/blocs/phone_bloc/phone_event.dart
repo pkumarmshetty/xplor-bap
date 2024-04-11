@@ -21,5 +21,5 @@ class CheckPhoneEvent extends PhoneEvent {
 class CountryCodeEvent extends PhoneEvent {
   const CountryCodeEvent({required this.countryCode});
 
-  final CountryCode countryCode;
+  final String countryCode;
 }

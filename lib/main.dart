@@ -8,15 +8,12 @@ import 'config/theme/theme_cubit.dart';
 import 'config/theme/theme_data.dart';
 import 'const/bloc_providers.dart';
 import 'const/bootstrap.dart';
-import 'const/local_storage/shared_preferences_helper.dart';
 import 'core/dependency_injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final sharedPreferences = SharedPreferencesHelper();
-  await sharedPreferences.init();
+
   await initializeDependencies();
-  //runApp(const XplorApp());
 
   bootstrap(() {
     return ScreenUtilInit(

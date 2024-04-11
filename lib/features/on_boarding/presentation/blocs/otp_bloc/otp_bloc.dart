@@ -29,6 +29,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
   _onPhoneNumberSaved(PhoneNumberSaveEvent event, Emitter<OtpState> emit) {
     phoneNumber = event.phoneNumber;
     key = event.key;
+    emit(const FailureOtpState(""));
   }
 
   _onVerifyValidOtp(PhoneOtpValidatorEvent event, Emitter<OtpState> emit) {
@@ -44,8 +45,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
     AppUtils.closeKeyword;
     emit(OtpLoadingState());
 
-    OnBoardingVerifyOtpEntity entity =
-        OnBoardingVerifyOtpEntity(otp: otp, key: key);
+    OnBoardingVerifyOtpEntity entity = OnBoardingVerifyOtpEntity(otp: otp, key: key);
 
     try {
       await sl<OnBoardingUseCase>().verifyOtpOnBoarding(entity);
@@ -72,8 +72,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
     }
   }
 
-  Future<void> _getUserJourney(
-      GetUserJourneyEvent event, Emitter<OtpState> emit) async {
+  Future<void> _getUserJourney(GetUserJourneyEvent event, Emitter<OtpState> emit) async {
     emit(OtpLoadingState());
     try {
       await sl<OnBoardingUseCase>().getUserJourney();

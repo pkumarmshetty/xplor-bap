@@ -10,17 +10,16 @@ class KycBloc extends Bloc<KycEvent, KycState> {
   KycBloc() : super(KycInitial()) {
     /// call _onUpdateUserKycSubmit on UpdateUserKycEvent
     on<UpdateUserKycEvent>(_onUpdateUserKycSubmit);
-
   }
 
   /// Handles the update user kyc submit event.
-  Future<bool> _onUpdateUserKycSubmit(
-      UpdateUserKycEvent event, Emitter<KycState> emit) async {
+  Future<bool> _onUpdateUserKycSubmit(UpdateUserKycEvent event, Emitter<KycState> emit) async {
     /// emit loading state
     emit(KycLoadingState());
     try {
       /// call updateUserKyc api
       bool success = await sl<OnBoardingUseCase>().updateUserKycOnBoarding();
+
       ///emit success state if KYC verification is successful else emit failure state
       success ? emit(KycSuccessState()) : emit(KycFailedState());
       return true;

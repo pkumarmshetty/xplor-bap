@@ -1,12 +1,10 @@
 import 'dart:convert';
 
 /// Converts a JSON string to a [OnBoardingAssignRoleEntity] object.
-OnBoardingAssignRoleEntity authEntityFromJson(String str) =>
-    OnBoardingAssignRoleEntity.fromJson(json.decode(str));
+OnBoardingAssignRoleEntity authEntityFromJson(String str) => OnBoardingAssignRoleEntity.fromJson(json.decode(str));
 
 /// Converts a [OnBoardingAssignRoleEntity] object to a JSON string.
-String authEntityToJson(OnBoardingAssignRoleEntity data) =>
-    json.encode(data.toJson());
+String authEntityToJson(OnBoardingAssignRoleEntity data) => json.encode(data.toJson());
 
 class OnBoardingAssignRoleEntity {
   String? roleId;
@@ -16,8 +14,7 @@ class OnBoardingAssignRoleEntity {
   });
 
   /// Creates a [OnBoardingAssignRoleEntity] object from a JSON map.
-  factory OnBoardingAssignRoleEntity.fromJson(Map<String, dynamic> json) =>
-      OnBoardingAssignRoleEntity(
+  factory OnBoardingAssignRoleEntity.fromJson(Map<String, dynamic> json) => OnBoardingAssignRoleEntity(
         roleId: json["roleId"],
       );
 

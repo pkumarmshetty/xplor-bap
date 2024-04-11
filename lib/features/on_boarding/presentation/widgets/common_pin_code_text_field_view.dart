@@ -8,8 +8,7 @@ import '../../../../utils/app_dimensions.dart';
 class CommonPinCodeTextField extends StatelessWidget {
   final TextEditingController? textEditingController;
   final Function(String value)? onChanged;
-  const CommonPinCodeTextField(
-      {super.key, this.textEditingController, this.onChanged});
+  const CommonPinCodeTextField({super.key, this.textEditingController, this.onChanged});
 
   @override
   Widget build(BuildContext context) {

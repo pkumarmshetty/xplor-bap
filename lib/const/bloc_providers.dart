@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../features/on_boarding/presentation/blocs/auth_bloc.dart';
-import '../features/on_boarding/presentation/blocs/auth_event.dart';
 import '../features/on_boarding/presentation/blocs/kyc_bloc/kyc_bloc.dart';
 import '../features/on_boarding/presentation/blocs/otp_bloc/otp_bloc.dart';
 import '../features/on_boarding/presentation/pages/complete_kyc/complete_kyc_view.dart';
@@ -20,12 +18,6 @@ class AppBlocProviders {
   /// themeCubit: Provides the application theme Cubit.
   static final _themeCubit = BlocProvider<ThemeCubit>(
     create: (BuildContext context) => ThemeCubit(),
-    child: const SignInView(), // Initial screen with the application theme
-  );
-
-  /// signUp: Provides the application theme Cubit.
-  static final _auth = BlocProvider<AuthBloc>(
-    create: (BuildContext context) => AuthBloc()..add(const AuthInitEvent()),
     child: const SignInView(), // Initial screen with the application theme
   );
 
@@ -56,7 +48,6 @@ class AppBlocProviders {
   /// appBlocs: A list containing all the BlocProviders used in the application.
   static List<BlocProvider> get appBlocs => [
         _themeCubit,
-        _auth,
         _phoneBloc,
         _otpBloc,
         _selectRoleBloc,

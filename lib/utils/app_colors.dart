@@ -15,4 +15,6 @@ class AppColors {
   static const Color crossIconColor = Color(0xFFAEAEBC);
   static const Color black100 = Color(0xFF171616);
   static const Color errorColor = Color(0xFFD51F1F);
+  static Color cancelButtonBgColor = Color(int.parse('#F3F3F3'.substring(1, 7),radix: 16) + 0xFF000000);
+
 }
