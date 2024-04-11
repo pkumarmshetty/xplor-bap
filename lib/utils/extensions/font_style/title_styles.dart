@@ -47,7 +47,9 @@ extension TitleStyles on String {
       this,
       textAlign: align,
       style: GoogleFonts.manrope(
-          fontSize: size ?? 28.sp, fontWeight: FontWeight.w400, color: color ?? AppColors.textColor,
+        fontSize: size ?? 28.sp,
+        fontWeight: FontWeight.w400,
+        color: color ?? AppColors.textColor,
       ),
     );
   }

@@ -42,46 +42,49 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: BlocListener<KycBloc, KycState>(listener: (context, state) {
-        // show loader until response of KYC api
-        if (state is KycLoadingState) {
-          const LoadingAnimation();
-        }
-        // show success dialog if KYC verified successfully
-        else if (state is KycSuccessState) {
-          _showKYCConfirmationDialog(context);
-        }
-        // show failure dialog if KYC verification failed
-        else if (state is KycFailedState) {
-          _showKYCFailDialog(context);
-        }
-        // show error snackbar if an error occurred
-        else if (state is KycErrorState) {
-          AppUtils.showSnackBar(context, state.error);
-        }
-      }, child: BlocBuilder<KycBloc, KycState>(builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const WelcomeContentWidget(
-                    title: 'Complete your KYC',
-                    subTitle: 'Select one to proceed')
-                .symmetricPadding(
-              horizontal: AppDimensions.large,
-            ),
-            AppDimensions.large.vSpace(),
-            Expanded(
-                child: SingleSelectionWallet(
-              selectedIndex: selectedIndex,
-              onIndexChanged: setSelectedIndex,
-            )),
-            _bottomViewContent(context, state)
-          ],
-        );
-      })),
-    ));
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (bool val) {
+          AppUtils.showAlertDialog(context);
+        },
+        child: Scaffold(
+            body: SafeArea(
+          child: BlocListener<KycBloc, KycState>(listener: (context, state) {
+            // show loader until response of KYC api
+            if (state is KycLoadingState) {
+              const LoadingAnimation();
+            }
+            // show success dialog if KYC verified successfully
+            else if (state is KycSuccessState) {
+              _showKYCConfirmationDialog(context);
+            }
+            // show failure dialog if KYC verification failed
+            else if (state is KycFailedState) {
+              _showKYCFailDialog(context);
+            }
+            // show error snackbar if an error occurred
+            else if (state is KycErrorState) {
+              AppUtils.showSnackBar(context, state.error);
+            }
+          }, child: BlocBuilder<KycBloc, KycState>(builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const WelcomeContentWidget(title: 'Complete your KYC', subTitle: 'Select one to proceed')
+                    .symmetricPadding(
+                  horizontal: AppDimensions.large,
+                ),
+                AppDimensions.large.vSpace(),
+                Expanded(
+                    child: SingleSelectionWallet(
+                  selectedIndex: selectedIndex,
+                  onIndexChanged: setSelectedIndex,
+                )),
+                _bottomViewContent(context, state)
+              ],
+            );
+          })),
+        )));
   }
 
   /// Widget for building the bottom view content
@@ -129,8 +132,7 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             text: TextSpan(
               children: [
                 'I hereby confirm my '.textSpanRegular(),
-                'consent to authorize'
-                    .textSpanSemiBold(decoration: TextDecoration.underline),
+                'consent to authorize'.textSpanSemiBold(decoration: TextDecoration.underline),
               ],
             ),
           ),
@@ -164,10 +166,8 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
       builder: (BuildContext context) {
         return CustomConfirmationDialog(
           title: 'KYC Successful!',
-          message: 'You have been successfully verified.'.titleRegular(
-              size: 14.sp,
-              color: AppColors.alertDialogMessageColor,
-              align: TextAlign.center),
+          message: 'You have been successfully verified.'
+              .titleRegular(size: 14.sp, color: AppColors.alertDialogMessageColor, align: TextAlign.center),
           onConfirmPressed: () {
             // Implement the action when OK button is pressed
             Navigator.pushNamedAndRemoveUntil(
@@ -195,16 +195,12 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               'Please review your information and documents, ensuring accuracy.'
-                  .titleRegular(
-                      size: 14.sp,
-                      color: AppColors.alertDialogMessageColor,
-                      align: TextAlign.center),
+                  .titleRegular(size: 14.sp, color: AppColors.alertDialogMessageColor, align: TextAlign.center),
               RichText(
                 text: TextSpan(
                   children: [
                     'For assistance, '.textSpanRegular(),
-                    'contact support.'
-                        .textSpanSemiBold(decoration: TextDecoration.underline),
+                    'contact support.'.textSpanSemiBold(decoration: TextDecoration.underline),
                   ],
                 ),
               ),

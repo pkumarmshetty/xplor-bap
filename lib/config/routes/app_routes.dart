@@ -19,14 +19,9 @@ class AppRoutes {
         //return _materialRoute(const SignInView());
         return customPageRoute(const SignInView());
       case Routes.otp:
-        // OnBoardingEntity loginEntity;
-        // Object? object = settings.arguments;
-        // loginEntity = object as OnBoardingEntity;
         // Return a material route for the OTP route, displaying OtpView widget.
         return customPageRoute(
-          const OtpView(
-              // loginEntity: loginEntity,
-              ),
+          const OtpView(),
         );
       case Routes.kyc:
         return customPageRoute(const CompleteKYCView());

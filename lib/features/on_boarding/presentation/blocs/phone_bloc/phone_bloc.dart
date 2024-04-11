@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:equatable/equatable.dart';
 import '../../../../../core/dependency_injection.dart';
 import '../../../../../utils/app_utils.dart';
@@ -19,9 +18,8 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
     on<PhoneSubmitEvent>(_onFormSubmitted);
   }
 
-  Future<void> _onCountryCodeChange(
-      CountryCodeEvent event, Emitter<PhoneState> emit) async {
-    countryCode = event.countryCode.dialCode!;
+  Future<void> _onCountryCodeChange(CountryCodeEvent event, Emitter<PhoneState> emit) async {
+    countryCode = event.countryCode;
   }
 
   _validatePhoneNumber(CheckPhoneEvent event, Emitter<PhoneState> emit) {
@@ -41,8 +39,7 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
     );
     try {
       String res = await sl<OnBoardingUseCase>().call(params: entity);
-      emit(SuccessPhoneState(
-          phoneNumber: '$countryCode ${event.phone}', key: res));
+      emit(SuccessPhoneState(phoneNumber: '$countryCode ${event.phone}', key: res));
     } catch (e) {
       emit(FailurePhoneState(AppUtils.getErrorMessage(e.toString())));
     }
@@ -50,9 +47,10 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
 }
 
 bool _checkPhone(String phone) {
-  if (phone.length < 12) {
+  var phoneNumber = phone.replaceAll(' ', '');
+  if (phoneNumber.length < 6 || phoneNumber.length > 16) {
     return false;
-  } else if (phone.startsWith('0')) {
+  } else if (phoneNumber.startsWith('0')) {
     return false;
   }
   return true;

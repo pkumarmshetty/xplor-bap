@@ -9,11 +9,17 @@ class PhoneNumberFormatter extends TextInputFormatter {
     /// Remove spaces
     final buffer = StringBuffer();
     for (var i = 0; i < text.length; i++) {
-      if (i == 3 || i == 6) {
-        buffer.write(' ');
-
-        /// Add space after third and sixth character
+      if (text.length == 10) {
+        if (i == 3 || i == 6) {
+          buffer.write(' ');
+        }
+      } else {
+        if (i == 3 || i == 6 || i == 9 || i == 12) {
+          buffer.write(' ');
+        }
       }
+
+      /// Add space after third and sixth character
       buffer.write(text[i]);
     }
     return newValue.copyWith(

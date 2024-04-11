@@ -22,8 +22,7 @@ class OnBoardingUserRoleEntity {
   });
 
   /// Creates a [OnBoardingUserRoleEntity] object from a JSON map.
-  factory OnBoardingUserRoleEntity.fromJson(Map<String, dynamic> json) =>
-      OnBoardingUserRoleEntity(
+  factory OnBoardingUserRoleEntity.fromJson(Map<String, dynamic> json) => OnBoardingUserRoleEntity(
         id: json["_id"],
         type: json["type"],
         title: json["title"],
@@ -52,5 +51,4 @@ OnBoardingUserRoleEntity onBoardingUserRoleEntityFromJson(String str) =>
     OnBoardingUserRoleEntity.fromJson(json.decode(str));
 
 /// Converts a [OnBoardingUserRoleEntity] object to a JSON string.
-String onBoardingUserRoleEntityToJson(OnBoardingUserRoleEntity data) =>
-    json.encode(data.toJson());
+String onBoardingUserRoleEntityToJson(OnBoardingUserRoleEntity data) => json.encode(data.toJson());
