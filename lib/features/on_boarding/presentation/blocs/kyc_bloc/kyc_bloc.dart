@@ -12,11 +12,26 @@ class KycBloc extends Bloc<KycEvent, KycState> {
   KycBloc() : super(KycInitial()) {
     /// call _onUpdateUserKycSubmit on UpdateUserKycEvent
     on<UpdateUserKycEvent>(_getEAuthProviders);
-    on<AuthorizeUserEvent>(authorize);
+    on<EAuthSuccessEvent>(authorize);
+    on<CloseEauthWebView>(closeEAuthWebView);
+  }
+
+  Future<bool> closeEAuthWebView(
+      CloseEauthWebView event, Emitter<KycState> emit) async {
+    /// emit loading state
+    emit(KycLoadingState());
+    try {
+      emit(KycInitial());
+      return true;
+    } catch (e) {
+      /// emit error state for any error encountered
+      emit(KycErrorState(e.toString()));
+      return false;
+    }
   }
 
   Future<bool> authorize(
-      AuthorizeUserEvent event, Emitter<KycState> emit) async {
+      EAuthSuccessEvent event, Emitter<KycState> emit) async {
     /// emit loading state
     emit(KycLoadingState());
     try {

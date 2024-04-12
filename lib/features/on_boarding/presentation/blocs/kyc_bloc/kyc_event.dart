@@ -11,6 +11,10 @@ class UpdateUserKycEvent extends KycEvent {
   const UpdateUserKycEvent();
 }
 
-class AuthorizeUserEvent extends KycEvent {
-  const AuthorizeUserEvent();
+class EAuthSuccessEvent extends KycEvent {
+  const EAuthSuccessEvent();
+}
+
+class CloseEauthWebView extends KycEvent {
+  const CloseEauthWebView();
 }

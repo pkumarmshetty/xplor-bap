@@ -56,12 +56,10 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
         child: Scaffold(
             body: SafeArea(
           child: BlocListener<KycBloc, KycState>(listener: (context, state) {
-            print(state);
             // show success dialog if KYC verified successfully
             if (state is AuthorizedUserState) {
               _showKYCConfirmationDialog(context);
-            }
-            else if(state is AuthorizeUserEvent) {
+            } else if (state is EAuthSuccessEvent) {
               _showKYCConfirmationDialog(context);
             }
             // shows the WebView to open the callback from API
@@ -79,8 +77,8 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
                   onWebResourceError: (WebResourceError error) {},
                   onNavigationRequest: (NavigationRequest request) {
                     print('onNavigationRequest ${request.url}');
-                    if (request.url.startsWith(webhookUrl)) {
-                      context.read<KycBloc>().add(const AuthorizeUserEvent());
+                    if (request.url.startsWith(eAuthWebHook)) {
+                      context.read<KycBloc>().add(const EAuthSuccessEvent());
                       return NavigationDecision.prevent;
                     }
                     return NavigationDecision.navigate;
@@ -100,32 +98,46 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             }
           }, child: BlocBuilder<KycBloc, KycState>(builder: (context, state) {
             if (state is ShowWebViewState) {
-              return Column(
+              return Stack(
+                children: [
+                  Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                         child: WebViewWidget(controller: webViewController))
-                  ]);
+                  ]),
+                  Positioned(
+                    right: AppDimensions.medium,
+                      top: AppDimensions.medium,
+                      child: GestureDetector(
+                        onTap: () {
+                          context.read<KycBloc>().add(const CloseEauthWebView());
+                        },
+                    child: const Icon(Icons.close, color: AppColors.black),
+                  ))
+                ]);
             }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const WelcomeContentWidget(
-                        title: 'Complete your KYC',
-                        subTitle: 'Select one to proceed')
-                    .symmetricPadding(
-                  horizontal: AppDimensions.large,
-                ),
-                AppDimensions.large.vSpace(),
-                if (state is KycLoadingState) const LoadingAnimation(),
-                Expanded(
-                    child: SingleSelectionWallet(
-                  selectedIndex: selectedIndex,
-                  onIndexChanged: setSelectedIndex,
-                )),
-                _bottomViewContent(context, state)
-              ],
-            );
+            return Stack(children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const WelcomeContentWidget(
+                          title: 'Complete your KYC',
+                          subTitle: 'Select one to proceed')
+                      .symmetricPadding(
+                    horizontal: AppDimensions.large,
+                  ),
+                  AppDimensions.large.vSpace(),
+                  Expanded(
+                      child: SingleSelectionWallet(
+                    selectedIndex: selectedIndex,
+                    onIndexChanged: setSelectedIndex,
+                  )),
+                  _bottomViewContent(context, state)
+                ],
+              ),
+              if (state is KycLoadingState) const LoadingAnimation(),
+            ]);
           })),
         )));
   }
