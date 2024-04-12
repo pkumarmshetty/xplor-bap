@@ -7,6 +7,7 @@ import 'package:xplor/features/on_boarding/domain/repository/on_boarding_reposit
 
 import '../../../../core/connection/network_info.dart';
 import '../../../../core/dependency_injection.dart';
+import '../../domain/entities/e_auth_providers_entity.dart';
 
 class OnBoardingRepositoryImpl implements OnBoardingRepository {
   final OnBoardingApiService _apiService = sl<OnBoardingApiService>();
@@ -52,6 +53,15 @@ class OnBoardingRepositoryImpl implements OnBoardingRepository {
   Future<bool> updateUserKycOnBoarding() async {
     if (await networkInfo.isConnected!) {
       return _apiService.updateUserKycOnBoarding();
+    } else {
+      throw Exception("Check your internet connection");
+    }
+  }
+
+  @override
+  Future<EAuthProviderEntity?> getEAuthProviders() async {
+    if (await networkInfo.isConnected!) {
+      return EAuthProviderEntity.fromJson((await _apiService.getEAuthProviders())?.toJson() ?? {});
     } else {
       throw Exception("Check your internet connection");
     }

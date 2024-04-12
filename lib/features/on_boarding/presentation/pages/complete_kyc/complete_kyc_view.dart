@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:xplor/core/api_constants.dart';
 import 'package:xplor/features/on_boarding/presentation/blocs/kyc_bloc/kyc_bloc.dart';
 import 'package:xplor/utils/app_utils.dart';
 import 'package:xplor/utils/widgets/loading_animation.dart';
@@ -40,6 +42,10 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
     });
   }
 
+  WebViewController webViewController = WebViewController()
+    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+    ..setBackgroundColor(AppColors.white);
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -50,14 +56,38 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
         child: Scaffold(
             body: SafeArea(
           child: BlocListener<KycBloc, KycState>(listener: (context, state) {
-            // show loader until response of KYC api
-            if (state is KycLoadingState) {
-              const LoadingAnimation();
-            }
             // show success dialog if KYC verified successfully
-            else if (state is KycSuccessState) {
+            if (state is AuthorizedUserState) {
+              _showKYCConfirmationDialog(context);
+            } else if (state is EAuthSuccessEvent) {
               _showKYCConfirmationDialog(context);
             }
+            // shows the WebView to open the callback from API
+            else if (state is ShowWebViewState) {
+              webViewController.setNavigationDelegate(
+                NavigationDelegate(
+                  onProgress: (int progress) {},
+                  onPageStarted: (String url) {
+                    print('onPageStarted ${url}');
+                  },
+                  onPageFinished: (String url) {
+                    // Do the task here
+                    print('onPageFinished ${url}');
+                  },
+                  onWebResourceError: (WebResourceError error) {},
+                  onNavigationRequest: (NavigationRequest request) {
+                    print('onNavigationRequest ${request.url}');
+                    if (request.url.startsWith(eAuthWebHook)) {
+                      context.read<KycBloc>().add(const EAuthSuccessEvent());
+                      return NavigationDecision.prevent;
+                    }
+                    return NavigationDecision.navigate;
+                  },
+                ),
+              );
+              webViewController.loadRequest(Uri.parse(state.requestUrl));
+            }
+
             // show failure dialog if KYC verification failed
             else if (state is KycFailedState) {
               _showKYCFailDialog(context);
@@ -67,22 +97,47 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
               AppUtils.showSnackBar(context, state.error);
             }
           }, child: BlocBuilder<KycBloc, KycState>(builder: (context, state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const WelcomeContentWidget(title: 'Complete your KYC', subTitle: 'Select one to proceed')
-                    .symmetricPadding(
-                  horizontal: AppDimensions.large,
-                ),
-                AppDimensions.large.vSpace(),
-                Expanded(
-                    child: SingleSelectionWallet(
-                  selectedIndex: selectedIndex,
-                  onIndexChanged: setSelectedIndex,
-                )),
-                _bottomViewContent(context, state)
-              ],
-            );
+            if (state is ShowWebViewState) {
+              return Stack(
+                children: [
+                  Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                        child: WebViewWidget(controller: webViewController))
+                  ]),
+                  Positioned(
+                    right: AppDimensions.medium,
+                      top: AppDimensions.medium,
+                      child: GestureDetector(
+                        onTap: () {
+                          context.read<KycBloc>().add(const CloseEAuthWebView());
+                        },
+                    child: const Icon(Icons.close, color: AppColors.black),
+                  ))
+                ]);
+            }
+            return Stack(children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const WelcomeContentWidget(
+                          title: 'Complete your KYC',
+                          subTitle: 'Select one to proceed')
+                      .symmetricPadding(
+                    horizontal: AppDimensions.large,
+                  ),
+                  AppDimensions.large.vSpace(),
+                  Expanded(
+                      child: SingleSelectionWallet(
+                    selectedIndex: selectedIndex,
+                    onIndexChanged: setSelectedIndex,
+                  )),
+                  _bottomViewContent(context, state)
+                ],
+              ),
+              if (state is KycLoadingState) const LoadingAnimation(),
+            ]);
           })),
         )));
   }

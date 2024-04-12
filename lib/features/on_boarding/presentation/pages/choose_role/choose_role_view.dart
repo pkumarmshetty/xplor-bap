@@ -121,7 +121,7 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
           onPressed: () {
             context
                 .read<SelectRoleBloc>()
-                .add(const AssignRoleEvent()); // Use SelectRoleBloc
+                .add(AssignRoleEvent()); // Use SelectRoleBloc
           },
         ),
         AppDimensions.mediumXL.vSpace(),
