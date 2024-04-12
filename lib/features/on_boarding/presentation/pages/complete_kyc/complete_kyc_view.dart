@@ -111,7 +111,7 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
                       top: AppDimensions.medium,
                       child: GestureDetector(
                         onTap: () {
-                          context.read<KycBloc>().add(const CloseEauthWebView());
+                          context.read<KycBloc>().add(const CloseEAuthWebView());
                         },
                     child: const Icon(Icons.close, color: AppColors.black),
                   ))
