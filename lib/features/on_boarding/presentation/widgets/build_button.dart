@@ -26,10 +26,14 @@ class ButtonWidget extends StatelessWidget {
   /// The callback function to be executed when the button is pressed.
   final VoidCallback? onPressed;
 
+  /// The callback function to be executed when the button is pressed.
+  final Text? customText;
+
   /// Constructs a [ButtonWidget] with the given properties.
   const ButtonWidget({
     super.key,
     this.title,
+    this.customText,
     this.buttonBackgroundColor,
     this.buttonForegroundColor,
     this.radius,
@@ -54,7 +58,7 @@ class ButtonWidget extends StatelessWidget {
             ), // To remove the default radius.
           ),
         ),
-        child: (title ?? '').buttonTextBold(size: fontSize ?? 14.sp),
+        child: customText ?? (title ?? '').buttonTextBold(size: fontSize ?? 14.sp),
       ),
     );
   }
