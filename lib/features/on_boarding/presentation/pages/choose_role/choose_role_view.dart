@@ -44,50 +44,55 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: BlocListener<SelectRoleBloc, SelectRoleState>(
-          listener: (context, state) {
-            // Handle state changes
-            if (state is SelectRoleErrorState) {
-              // Show error message
-              AppUtils.showSnackBar(context, state.errorMessage);
-            } else if (state is SelectRoleNavigationState) {
-              // Navigate to KYC screen
-              Navigator.pushNamedAndRemoveUntil(
-                  context, Routes.kyc, (routes) => false);
-            }
-          },
-          child: BlocBuilder<SelectRoleBloc, SelectRoleState>(
-            builder: (context, state) {
+    return PopScope(canPop: false,
+      onPopInvoked: (bool val) {
+        AppUtils.showAlertDialog(context);
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: BlocListener<SelectRoleBloc, SelectRoleState>(
+            listener: (context, state) {
               // Handle state changes
-              if (state is SelectRoleLoadingState &&
-                  state.status == AppPageStatus.loading) {
-                // Show loading animation
-                return const LoadingAnimation();
-              } else {
-                if (state is SelectRoleLoadedState &&
-                    state.userRoles.isNotEmpty) {
-                  // Show main content
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildMainContent(context),
-                      AppDimensions.large.vSpace(),
-                      Expanded(
-                        child: SingleSelectionChooseRole(
-                          selectedIndex: selectedIndex,
-                          onIndexChanged: setSelectedIndex,
-                        ),
-                      ),
-                      _bottomViewContent(context)
-                    ],
-                  );
-                } else {
-                  return const SizedBox();
-                }
+              if (state is SelectRoleErrorState) {
+                // Show error message
+                AppUtils.showSnackBar(context, state.errorMessage);
+              } else if (state is SelectRoleNavigationState) {
+                // Navigate to KYC screen
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Routes.kyc, (routes) => false);
               }
             },
+            child: BlocBuilder<SelectRoleBloc, SelectRoleState>(
+              builder: (context, state) {
+                // Handle state changes
+                if (state is SelectRoleLoadingState &&
+                    state.status == AppPageStatus.loading) {
+                  // Show loading animation
+                  return const LoadingAnimation();
+                } else {
+                  if (state is SelectRoleLoadedState &&
+                      state.userRoles.isNotEmpty) {
+                    // Show main content
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildMainContent(context),
+                        AppDimensions.large.vSpace(),
+                        Expanded(
+                          child: SingleSelectionChooseRole(
+                            selectedIndex: selectedIndex,
+                            onIndexChanged: setSelectedIndex,
+                          ),
+                        ),
+                        _bottomViewContent(context)
+                      ],
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                }
+              },
+            ),
           ),
         ),
       ),
