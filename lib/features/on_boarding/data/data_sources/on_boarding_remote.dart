@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import '../../../on_boarding/domain/entities/ob_boarding_verify_otp_entity.dart';
-import '../../../../features/on_boarding/domain/entities/on_boarding_assign_role_entity.dart';
-import '../../../../features/on_boarding/domain/entities/on_boarding_send_otp_entity.dart';
 
 import '../../../../const/local_storage/pref_const_key.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/api_constants.dart';
 import '../../../../core/dependency_injection.dart';
+import '../../../../features/on_boarding/domain/entities/on_boarding_assign_role_entity.dart';
+import '../../../../features/on_boarding/domain/entities/on_boarding_send_otp_entity.dart';
+import '../../../on_boarding/domain/entities/ob_boarding_verify_otp_entity.dart';
 import '../../domain/entities/on_boarding_user_role_entity.dart';
 import '../models/e_auth_providers_model.dart';
 
@@ -32,7 +32,8 @@ class OnBoardingApiService {
         ),
       );
       if (kDebugMode) {
-        print("sendOtpOnBoarding---->Response of sendOtpOnBoarding  ${response.data}");
+        print(
+            "sendOtpOnBoarding---->Response of sendOtpOnBoarding  ${response.data}");
       }
 
       return response.data != null ? response.data["data"]["key"] : "";
@@ -64,7 +65,8 @@ class OnBoardingApiService {
 
       if (response.statusCode != 200) {
         if (kDebugMode) {
-          print("resendOtpOnBoarding----> Success 200 not found  ${response.statusCode}");
+          print(
+              "resendOtpOnBoarding----> Success 200 not found  ${response.statusCode}");
         }
       }
     } catch (e) {
@@ -93,14 +95,18 @@ class OnBoardingApiService {
 
       if (response.statusCode != 200) {
         if (kDebugMode) {
-          print("verifyOtpOnBoarding----> Success 200 not found  ${response.statusCode}");
+          print(
+              "verifyOtpOnBoarding----> Success 200 not found  ${response.statusCode}");
         }
       }
       if (kDebugMode) {
-        print("verifyOtpOnBoarding---->Response of sendOtpOnBoarding  ${response.data}");
+        print(
+            "verifyOtpOnBoarding---->Response of sendOtpOnBoarding  ${response.data}");
       }
-      await sl<SharedPreferencesHelper>().setString(PrefConstKeys.token, response.data["data"]["token"]);
-      await sl<SharedPreferencesHelper>().setString(PrefConstKeys.userId, response.data["data"]["userId"]);
+      await sl<SharedPreferencesHelper>()
+          .setString(PrefConstKeys.token, response.data["data"]["token"]);
+      await sl<SharedPreferencesHelper>()
+          .setString(PrefConstKeys.userId, response.data["data"]["userId"]);
     } catch (e) {
       if (kDebugMode) {
         print("verifyOtpOnBoarding----> Catch ${handleError(e)}");
@@ -126,14 +132,18 @@ class OnBoardingApiService {
 
       if (response.statusCode != 200) {
         if (kDebugMode) {
-          print("getUserJourney----> Success 200 not found  ${response.statusCode}");
+          print(
+              "getUserJourney----> Success 200 not found  ${response.statusCode}");
         }
       }
       if (kDebugMode) {
-        print("getUserJourney---->Response of getUserJourney  ${response.data}");
+        print(
+            "getUserJourney---->Response of getUserJourney  ${response.data}");
       }
-      await sl<SharedPreferencesHelper>().setBoolean(PrefConstKeys.kycVerified, response.data["data"]["kycVerified"]);
-      await sl<SharedPreferencesHelper>().setBoolean(PrefConstKeys.roleAssigned, response.data["data"]["roleAssigned"]);
+      await sl<SharedPreferencesHelper>().setBoolean(
+          PrefConstKeys.kycVerified, response.data["data"]["kycVerified"]);
+      await sl<SharedPreferencesHelper>().setBoolean(
+          PrefConstKeys.roleAssigned, response.data["data"]["roleAssigned"]);
     } catch (e) {
       if (kDebugMode) {
         print("getUserJourney----> Catch ${handleError(e)}");
@@ -150,7 +160,8 @@ class OnBoardingApiService {
         print("assignRoleOnBoarding Body Data $entity");
       }
 
-      final authToken = sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
+      final authToken =
+          sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
 
       final response = await _dio.patch(
         "${baseUrl}user/role",
@@ -185,7 +196,8 @@ class OnBoardingApiService {
 
   Future<List<OnBoardingUserRoleEntity>> getUserRolesOnBoarding() async {
     try {
-      final authToken = sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
+      final authToken =
+          sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
 
       if (authToken.isEmpty) {
         throw Exception("Authorization token is missing or invalid.");
@@ -202,7 +214,9 @@ class OnBoardingApiService {
 
       if (response.statusCode == 200) {
         List<dynamic> data = response.data['data'];
-        List<OnBoardingUserRoleEntity> userRoles = data.map((json) => OnBoardingUserRoleEntity.fromJson(json)).toList();
+        List<OnBoardingUserRoleEntity> userRoles = data
+            .map((json) => OnBoardingUserRoleEntity.fromJson(json))
+            .toList();
         return userRoles;
       } else if (response.statusCode == 400) {
         final Map<String, dynamic> responseData = json.decode(response.data);
@@ -221,7 +235,8 @@ class OnBoardingApiService {
 
   Future<EAuthProviderModel?> getEAuthProviders() async {
     try {
-      final authToken = sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
+      final authToken =
+          sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
 
       if (authToken.isEmpty) {
         throw Exception("Authorization token is missing or invalid.");
@@ -262,7 +277,8 @@ class OnBoardingApiService {
 
   Future<bool> updateUserKycOnBoarding() async {
     try {
-      final authToken = sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
+      final authToken =
+          sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
 
       if (authToken.isEmpty) {
         throw Exception("Authorization token is missing or invalid.");
@@ -314,7 +330,8 @@ class OnBoardingApiService {
 
           return errorDescription;
         case DioExceptionType.unknown:
-          errorDescription = "Connection to API server failed due to internet connection";
+          errorDescription =
+              "Connection to API server failed due to internet connection";
 
           return errorDescription;
         case DioExceptionType.receiveTimeout:

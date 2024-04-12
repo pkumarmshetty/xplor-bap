@@ -2,24 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:xplor/core/api_constants.dart';
 import 'package:xplor/features/on_boarding/presentation/blocs/kyc_bloc/kyc_bloc.dart';
 import 'package:xplor/utils/app_utils.dart';
 import 'package:xplor/utils/widgets/loading_animation.dart';
-import '../../widgets/build_button.dart';
-import '../../widgets/build_custom_checkbox.dart';
-import '../../widgets/build_single_selection_wallet.dart';
-import '../../widgets/build_welcome.dart';
-import '../../../../../utils/custom_confirmation_dialog.dart';
-import '../../../../../utils/extensions/font_style/font_styles.dart';
-import '../../../../../utils/extensions/padding.dart';
-import '../../../../../utils/extensions/space.dart';
+
 import '../../../../../config/routes/path_routing.dart';
+import '../../../../../core/api_constants.dart';
 import '../../../../../utils/app_colors.dart';
 
 /// Importing necessary paths and services
 import '../../../../../utils/app_dimensions.dart';
+import '../../../../../utils/custom_confirmation_dialog.dart';
 import '../../../../../utils/custom_dialog_view.dart';
+import '../../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../../utils/extensions/padding.dart';
+import '../../../../../utils/extensions/space.dart';
+import '../../widgets/build_button.dart';
+import '../../widgets/build_custom_checkbox.dart';
+import '../../widgets/build_single_selection_wallet.dart';
+import '../../widgets/build_welcome.dart';
 
 /// Definition of the CompleteKYCView widget
 class CompleteKYCView extends StatefulWidget {
@@ -68,18 +69,18 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
                 NavigationDelegate(
                   onProgress: (int progress) {},
                   onPageStarted: (String url) {
-                    print('onPageStarted ${url}');
+                    print('onPageStarted $url');
                   },
                   onPageFinished: (String url) {
                     // Do the task here
-                    print('onPageFinished ${url}');
+                    print('onPageFinished $url');
                   },
                   onWebResourceError: (WebResourceError error) {},
                   onNavigationRequest: (NavigationRequest request) {
                     print('onNavigationRequest ${request.url}');
                     if (request.url.startsWith(eAuthWebHook)) {
                       context.read<KycBloc>().add(const EAuthSuccessEvent());
-                      return NavigationDecision.prevent;
+                      return NavigationDecision.navigate;
                     }
                     return NavigationDecision.navigate;
                   },
@@ -98,24 +99,20 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             }
           }, child: BlocBuilder<KycBloc, KycState>(builder: (context, state) {
             if (state is ShowWebViewState) {
-              return Stack(
-                children: [
-                  Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        child: WebViewWidget(controller: webViewController))
-                  ]),
-                  Positioned(
+              return Stack(children: [
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Expanded(child: WebViewWidget(controller: webViewController))
+                ]),
+                Positioned(
                     right: AppDimensions.medium,
-                      top: AppDimensions.medium,
-                      child: GestureDetector(
-                        onTap: () {
-                          context.read<KycBloc>().add(const CloseEAuthWebView());
-                        },
-                    child: const Icon(Icons.close, color: AppColors.black),
-                  ))
-                ]);
+                    top: AppDimensions.medium,
+                    child: GestureDetector(
+                      onTap: () {
+                        context.read<KycBloc>().add(const CloseEAuthWebView());
+                      },
+                      child: const Icon(Icons.close, color: AppColors.black),
+                    ))
+              ]);
             }
             return Stack(children: [
               Column(
@@ -187,7 +184,8 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             text: TextSpan(
               children: [
                 'I hereby confirm my '.textSpanRegular(),
-                'consent to authorize'.textSpanSemiBold(decoration: TextDecoration.underline),
+                'consent to authorize'
+                    .textSpanSemiBold(decoration: TextDecoration.underline),
               ],
             ),
           ),
@@ -221,8 +219,10 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
       builder: (BuildContext context) {
         return CustomConfirmationDialog(
           title: 'KYC Successful!',
-          message: 'You have been successfully verified.'
-              .titleRegular(size: 14.sp, color: AppColors.alertDialogMessageColor, align: TextAlign.center),
+          message: 'You have been successfully verified.'.titleRegular(
+              size: 14.sp,
+              color: AppColors.alertDialogMessageColor,
+              align: TextAlign.center),
           onConfirmPressed: () {
             // Implement the action when OK button is pressed
             Navigator.pushNamedAndRemoveUntil(
@@ -250,12 +250,16 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               'Please review your information and documents, ensuring accuracy.'
-                  .titleRegular(size: 14.sp, color: AppColors.alertDialogMessageColor, align: TextAlign.center),
+                  .titleRegular(
+                      size: 14.sp,
+                      color: AppColors.alertDialogMessageColor,
+                      align: TextAlign.center),
               RichText(
                 text: TextSpan(
                   children: [
                     'For assistance, '.textSpanRegular(),
-                    'contact support.'.textSpanSemiBold(decoration: TextDecoration.underline),
+                    'contact support.'
+                        .textSpanSemiBold(decoration: TextDecoration.underline),
                   ],
                 ),
               ),
