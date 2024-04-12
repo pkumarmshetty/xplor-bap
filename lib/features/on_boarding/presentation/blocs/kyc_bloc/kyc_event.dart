@@ -15,6 +15,6 @@ class EAuthSuccessEvent extends KycEvent {
   const EAuthSuccessEvent();
 }
 
-class CloseEauthWebView extends KycEvent {
-  const CloseEauthWebView();
+class CloseEAuthWebView extends KycEvent {
+  const CloseEAuthWebView();
 }
