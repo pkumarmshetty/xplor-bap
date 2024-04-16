@@ -44,7 +44,8 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(canPop: false,
+    return PopScope(
+      canPop: false,
       onPopInvoked: (bool val) {
         AppUtils.showAlertDialog(context);
       },
@@ -121,7 +122,7 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
           onPressed: () {
             context
                 .read<SelectRoleBloc>()
-                .add(AssignRoleEvent()); // Use SelectRoleBloc
+                .add(const AssignRoleEvent()); // Use SelectRoleBloc
           },
         ),
         AppDimensions.mediumXL.vSpace(),

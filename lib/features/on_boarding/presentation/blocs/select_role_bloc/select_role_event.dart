@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../domain/entities/on_boarding_assign_role_entity.dart';
+
 /// Event class for the SelectRoleBloc.
 sealed class SelectRoleEvent extends Equatable {
   const SelectRoleEvent();
@@ -15,5 +17,7 @@ class GetUserRolesEvent extends SelectRoleEvent {
 
 /// Event class for the SelectRoleBloc.
 class AssignRoleEvent extends SelectRoleEvent {
-  AssignRoleEvent();
+  final OnBoardingAssignRoleEntity? entity;
+
+  const AssignRoleEvent({this.entity});
 }

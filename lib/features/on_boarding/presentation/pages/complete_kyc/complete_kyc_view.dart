@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -69,15 +70,21 @@ class _CompleteKYCViewState extends State<CompleteKYCView> {
                 NavigationDelegate(
                   onProgress: (int progress) {},
                   onPageStarted: (String url) {
-                    print('onPageStarted $url');
+                    if (kDebugMode) {
+                      print('onPageStarted $url');
+                    }
                   },
                   onPageFinished: (String url) {
                     // Do the task here
-                    print('onPageFinished $url');
+                    if (kDebugMode) {
+                      print('onPageFinished $url');
+                    }
                   },
                   onWebResourceError: (WebResourceError error) {},
                   onNavigationRequest: (NavigationRequest request) {
-                    print('onNavigationRequest ${request.url}');
+                    if (kDebugMode) {
+                      print('onNavigationRequest ${request.url}');
+                    }
                     if (request.url.startsWith(eAuthWebHook)) {
                       context.read<KycBloc>().add(const EAuthSuccessEvent());
                       return NavigationDecision.navigate;

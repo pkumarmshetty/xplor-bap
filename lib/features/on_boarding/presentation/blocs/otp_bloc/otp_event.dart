@@ -25,7 +25,8 @@ class PhoneOtpResendEvent extends OtpEvent {
 }
 
 class SendOtpEvent extends OtpEvent {
-  const SendOtpEvent();
+  final String? phoneNumber;
+  const SendOtpEvent({this.phoneNumber});
 }
 
 class GetUserJourneyEvent extends OtpEvent {
@@ -34,6 +35,7 @@ class GetUserJourneyEvent extends OtpEvent {
 
 class PhoneOtpVerifyEvent extends OtpEvent {
   final String otp;
+  final String? key;
 
-  const PhoneOtpVerifyEvent({required this.otp});
+  const PhoneOtpVerifyEvent({required this.otp,this.key});
 }
