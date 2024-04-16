@@ -56,13 +56,14 @@ dependencies:
   #local storage
   shared_preferences: ^2.2.2
   #Country code picker
-  intl_phone_field:  ^3.2.0
+  intl_phone_field: ^3.2.0
   webview_flutter: ^4.7.0
+  build_runner: ^2.1.2
+  flutter_gen_runner: ^5.4.0
+  file_picker: ^6.1.1
 
 dev_dependencies:
   bloc_test: ^9.0.2
-  build_runner: ^2.1.2
-
   mockito: ^5.0.15
   mocktail: ^0.2.0
   flutter_test:

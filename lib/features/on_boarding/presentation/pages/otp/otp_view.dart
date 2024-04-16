@@ -14,7 +14,7 @@ import '../../../../../config/services/app_services.dart';
 import '../../../../../core/check_route.dart';
 import '../../../../../utils/app_dimensions.dart';
 import '../../../../../utils/widgets/loading_animation.dart';
-import '../../widgets/build_button.dart';
+import '../../../../../utils/widgets/build_button.dart';
 import '../../widgets/build_welcome.dart';
 
 /// This class represents the OTP verification view.

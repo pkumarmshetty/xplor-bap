@@ -18,7 +18,7 @@ import '../../../../../utils/extensions/space.dart';
 import '../../../../../utils/widgets/loading_animation.dart';
 import '../../../presentation/blocs/otp_bloc/otp_bloc.dart';
 import '../../../presentation/blocs/phone_bloc/phone_bloc.dart';
-import '../../../presentation/widgets/build_button.dart';
+import '../../../../../utils/widgets/build_button.dart';
 import '../../../presentation/widgets/build_welcome.dart';
 import '../../widgets/phone_number_formatter.dart';
 

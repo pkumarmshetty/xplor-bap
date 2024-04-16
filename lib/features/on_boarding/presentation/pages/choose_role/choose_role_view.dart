@@ -11,7 +11,7 @@ import '../../../../../utils/widgets/loading_animation.dart';
 import '../../blocs/select_role_bloc/select_role_bloc.dart';
 import '../../blocs/select_role_bloc/select_role_event.dart';
 import '../../blocs/select_role_bloc/select_role_state.dart'; // Import SelectRoleState
-import '../../widgets/build_button.dart';
+import '../../../../../utils/widgets/build_button.dart';
 import '../../widgets/build_single_selection_choose_role.dart';
 import '../../widgets/build_welcome.dart';
 
