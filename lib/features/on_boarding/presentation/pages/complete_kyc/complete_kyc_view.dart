@@ -18,7 +18,7 @@ import '../../../../../utils/custom_dialog_view.dart';
 import '../../../../../utils/extensions/font_style/font_styles.dart';
 import '../../../../../utils/extensions/padding.dart';
 import '../../../../../utils/extensions/space.dart';
-import '../../widgets/build_button.dart';
+import '../../../../../utils/widgets/build_button.dart';
 import '../../widgets/build_custom_checkbox.dart';
 import '../../widgets/build_single_selection_wallet.dart';
 import '../../widgets/build_welcome.dart';

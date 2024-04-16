@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:xplor/features/home/presentation/pages/home_page.dart';
+import 'package:xplor/features/home/presentation/widgets/tab_bar_widget.dart';
 import 'package:xplor/features/on_boarding/presentation/pages/choose_role/choose_role_view.dart';
 import 'package:xplor/features/on_boarding/presentation/pages/complete_kyc/complete_kyc_view.dart';
 import 'package:xplor/features/on_boarding/presentation/pages/sign_in/sign_in_view.dart';
@@ -28,7 +28,7 @@ class AppRoutes {
       case Routes.chooseRole:
         return customPageRoute(const ChooseRoleView());
       case Routes.home:
-        return customPageRoute(const HomePage());
+        return customPageRoute(const HomeTabBarWidget());
       default:
         // Return a default material route, displaying SplashView for unknown routes.
         return customPageRoute(const SignInView());

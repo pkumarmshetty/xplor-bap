@@ -7,7 +7,7 @@ import 'package:xplor/utils/extensions/padding.dart';
 import 'package:xplor/utils/extensions/space.dart';
 
 /// Importing custom widgets and resources
-import '../features/on_boarding/presentation/widgets/build_button.dart';
+import 'widgets/build_button.dart';
 import 'app_colors.dart';
 
 /// Custom dialog for confirmation
@@ -24,6 +24,9 @@ class CustomConfirmationDialog extends StatelessWidget {
   /// Callback function for OK button press
   final VoidCallback onConfirmPressed;
 
+  /// Button title
+  final String? buttonTitle;
+
   /// Constructor for CustomConfirmationDialog
   const CustomConfirmationDialog({
     super.key,
@@ -31,6 +34,7 @@ class CustomConfirmationDialog extends StatelessWidget {
     required this.message,
     required this.onConfirmPressed,
     required this.assetPath,
+    this.buttonTitle,
   });
 
   @override
@@ -60,9 +64,9 @@ class CustomConfirmationDialog extends StatelessWidget {
             ),
             AppDimensions.large.vSpace(),
             // Dialog title
-            title.titleSemiBold(
+            title.titleExtraBold(
               color: AppColors.countryCodeColor,
-              size: 18.sp,
+              size: 20.sp,
             ),
             AppDimensions.small.vSpace(),
             // Dialog message
@@ -70,11 +74,10 @@ class CustomConfirmationDialog extends StatelessWidget {
             AppDimensions.mediumXL.vSpace(),
             // OK button
             ButtonWidget(
-              title: 'Ok',
+              title: buttonTitle ?? 'Ok',
               isValid: true,
               onPressed: onConfirmPressed,
-            ).symmetricPadding(horizontal: AppDimensions.medium),
-            AppDimensions.medium.vSpace(),
+            ),
           ],
         ).paddingAll(padding: AppDimensions.mediumXL),
       ),

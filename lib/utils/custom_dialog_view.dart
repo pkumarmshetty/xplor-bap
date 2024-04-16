@@ -6,7 +6,7 @@ import 'package:xplor/utils/extensions/padding.dart';
 import 'package:xplor/utils/extensions/space.dart';
 
 /// Import color definitions and custom widget
-import '../features/on_boarding/presentation/widgets/build_button.dart';
+import 'widgets/build_button.dart';
 import 'app_colors.dart';
 
 /// Custom dialog view widget

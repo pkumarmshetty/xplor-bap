@@ -1,13 +1,16 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-
+import 'app_colors.dart';
+import 'extensions/font_style/font_styles.dart';
+import 'extensions/padding.dart';
 import '../config/services/app_services.dart';
-import '../features/on_boarding/presentation/widgets/build_button.dart';
+import '../const/user_define_function.dart';
+import 'widgets/build_button.dart';
 import 'app_dimensions.dart';
 
 class AppUtils {
@@ -105,5 +108,62 @@ class AppUtils {
             ],
           );
         });
+  }
+
+  /// Dialog to show choose file
+  static void chooseFileDialog({required GetMediaData getMediaData}) {
+    showCupertinoModalPopup(
+      context: AppServices.navState.currentContext!,
+      builder: (BuildContext context) {
+        return CupertinoActionSheet(
+          actions: <Widget>[
+            CupertinoActionSheetAction(
+              onPressed: () async => getMediaData.call(await getMediaFile()),
+              child: 'File Manager'.titleRegular(
+                color: AppColors.primaryColor,
+                size: 18.sp,
+              ),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () async => getMediaData.call(await getMediaFile()),
+              child: 'Photo Gallery'.titleRegular(
+                color: AppColors.primaryColor,
+                size: 18.sp,
+              ),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () async => getMediaData.call(await getMediaFile()),
+              child: 'Camera'.titleRegular(
+                color: AppColors.primaryColor,
+                size: 18.sp,
+              ),
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: () => Navigator.pop(context),
+            isDefaultAction: true,
+            child: 'Cancel'.titleBold(
+              color: AppColors.primaryColor,
+              size: 18.sp,
+            ),
+          ),
+        ).symmetricPadding(horizontal: AppDimensions.extraSmall.sp);
+      },
+    );
+  }
+
+  static Future<File?> getMediaFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'],
+    );
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+
+      return file;
+    } else {
+      return null;
+    }
   }
 }
