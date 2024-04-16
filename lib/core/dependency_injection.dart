@@ -9,23 +9,40 @@ import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.da
 import '../const/local_storage/shared_preferences_helper.dart';
 import 'connection/network_info.dart';
 
+// Import other necessary dependencies
+
 final sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
-  //Dio
+  /// Register [Dio] for network requests
   sl.registerSingleton<Dio>(Dio());
-  //Add more dependencies as needed
-  sl.registerSingleton<SharedPreferencesHelper>(SharedPreferencesHelper()..init());
 
-  // Data sources
+  /// Register [SharedPreferencesHelper] for local storage
+  sl.registerSingleton<SharedPreferencesHelper>(
+    SharedPreferencesHelper()..init(),
+  );
+
+  /// Register [NetworkInfo] for checking network status
   sl.registerSingleton<NetworkInfo>(NetworkInfoImpl(Connectivity()));
 
-  // Api Services
-  sl.registerSingleton<OnBoardingApiService>(OnBoardingApiService());
+  /// on_boarding: Register [OnBoardingApiService] for API calls in on-boarding module
+  sl.registerSingleton<OnBoardingApiService>(
+    OnBoardingApiServiceImpl(
+      dio: sl(), // Dio dependency
+      preferencesHelper: sl(), // SharedPreferencesHelper dependency
+    ),
+  );
 
-  // Repository
-  sl.registerLazySingleton<OnBoardingRepository>(() => OnBoardingRepositoryImpl());
+  /// on_boarding: Register [OnBoardingRepository] for data management in on-boarding module
+  sl.registerLazySingleton<OnBoardingRepository>(
+    () => OnBoardingRepositoryImpl(
+      apiService: sl(), // OnBoardingApiService dependency
+      networkInfo: sl(), // NetworkInfo dependency
+    ),
+  );
 
-  // Use cases
-  sl.registerSingleton<OnBoardingUseCase>(OnBoardingUseCase());
+  /// on_boarding: Register [OnBoardingUseCase] for business logic in on-boarding module
+  sl.registerSingleton<OnBoardingUseCase>(
+    OnBoardingUseCase(repository: sl()), // OnBoardingRepository dependency
+  );
 }

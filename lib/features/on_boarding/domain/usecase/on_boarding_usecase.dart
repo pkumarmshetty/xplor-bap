@@ -4,43 +4,40 @@ import 'package:xplor/features/on_boarding/domain/entities/on_boarding_assign_ro
 import 'package:xplor/features/on_boarding/domain/entities/on_boarding_send_otp_entity.dart';
 import 'package:xplor/features/on_boarding/domain/repository/on_boarding_repository.dart';
 
-import '../../../../core/dependency_injection.dart';
 import '../../../../core/use_case.dart';
 import '../entities/on_boarding_user_role_entity.dart';
 
 class OnBoardingUseCase implements UseCase<void, OnBoardingSendOtpEntity> {
-  final OnBoardingRepository _repository = sl<OnBoardingRepository>();
+  OnBoardingRepository repository;
+
+  OnBoardingUseCase({required this.repository});
 
   @override
   Future<String> call({OnBoardingSendOtpEntity? params}) async {
-    return await _repository.sendOtpOnBoarding(params!);
-  }
-
-  Future<void> resendOtpOnBoarding() async {
-    return await _repository.resendOtpOnBoarding();
+    return await repository.sendOtpOnBoarding(params!);
   }
 
   Future<void> verifyOtpOnBoarding(OnBoardingVerifyOtpEntity params) async {
-    return await _repository.verifyOtpOnBoarding(params);
+    return await repository.verifyOtpOnBoarding(params);
   }
 
   Future<bool> assignRoleOnBoarding(OnBoardingAssignRoleEntity params) async {
-    return await _repository.assignRoleOnBoarding(params);
+    return await repository.assignRoleOnBoarding(params);
   }
 
   Future<bool> updateUserKycOnBoarding() async {
-    return await _repository.updateUserKycOnBoarding();
+    return await repository.updateUserKycOnBoarding();
   }
 
   Future<EAuthProviderEntity?> getEAuthProviders() async {
-    return await _repository.getEAuthProviders();
+    return await repository.getEAuthProviders();
   }
 
   Future<List<OnBoardingUserRoleEntity>> getUserRolesOnBoarding() async {
-    return await _repository.getUserRolesOnBoarding();
+    return await repository.getUserRolesOnBoarding();
   }
 
   Future<void> getUserJourney() async {
-    return await _repository.getUserJourney();
+    return await repository.getUserJourney();
   }
 }

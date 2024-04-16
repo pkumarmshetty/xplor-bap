@@ -1,3 +1,4 @@
+import 'package:xplor/core/exception_errors.dart';
 import 'package:xplor/features/on_boarding/data/data_sources/on_boarding_remote.dart';
 import 'package:xplor/features/on_boarding/domain/entities/ob_boarding_verify_otp_entity.dart';
 import 'package:xplor/features/on_boarding/domain/entities/on_boarding_assign_role_entity.dart';
@@ -6,82 +7,76 @@ import 'package:xplor/features/on_boarding/domain/entities/on_boarding_user_role
 import 'package:xplor/features/on_boarding/domain/repository/on_boarding_repository.dart';
 
 import '../../../../core/connection/network_info.dart';
-import '../../../../core/dependency_injection.dart';
 import '../../domain/entities/e_auth_providers_entity.dart';
 
 class OnBoardingRepositoryImpl implements OnBoardingRepository {
-  final OnBoardingApiService _apiService = sl<OnBoardingApiService>();
-  final NetworkInfo networkInfo = sl<NetworkInfo>();
+  OnBoardingRepositoryImpl(
+      {required this.apiService, required this.networkInfo});
+
+  OnBoardingApiService apiService;
+  NetworkInfo networkInfo;
 
   @override
   Future<String> sendOtpOnBoarding(OnBoardingSendOtpEntity? entity) async {
     if (await networkInfo.isConnected!) {
-      return _apiService.sendOtpOnBoarding(entity!);
+      return apiService.sendOtpOnBoarding(entity!);
     } else {
-      throw Exception("Check your internet connection");
-    }
-  }
-
-  @override
-  Future<void> resendOtpOnBoarding() async {
-    if (await networkInfo.isConnected!) {
-      return _apiService.resendOtpOnBoarding();
-    } else {
-      throw Exception("Check your internet connection");
+      throw Exception(checkInternetConnection);
     }
   }
 
   @override
   Future<void> verifyOtpOnBoarding(OnBoardingVerifyOtpEntity entity) async {
     if (await networkInfo.isConnected!) {
-      return _apiService.verifyOtpOnBoarding(entity);
+      return apiService.verifyOtpOnBoarding(entity);
     } else {
-      throw Exception("Check your internet connection");
+      throw Exception(checkInternetConnection);
     }
   }
 
   @override
   Future<bool> assignRoleOnBoarding(OnBoardingAssignRoleEntity entity) async {
     if (await networkInfo.isConnected!) {
-      return _apiService.assignRoleOnBoarding(entity);
+      return apiService.assignRoleOnBoarding(entity);
     } else {
-      throw Exception("Check your internet connection");
+      throw Exception(checkInternetConnection);
     }
   }
 
   @override
   Future<bool> updateUserKycOnBoarding() async {
     if (await networkInfo.isConnected!) {
-      return _apiService.updateUserKycOnBoarding();
+      return apiService.updateUserKycOnBoarding();
     } else {
-      throw Exception("Check your internet connection");
+      throw Exception(checkInternetConnection);
     }
   }
 
   @override
   Future<EAuthProviderEntity?> getEAuthProviders() async {
     if (await networkInfo.isConnected!) {
-      return EAuthProviderEntity.fromJson((await _apiService.getEAuthProviders())?.toJson() ?? {});
+      return EAuthProviderEntity.fromJson(
+          (await apiService.getEAuthProviders())?.toJson() ?? {});
     } else {
-      throw Exception("Check your internet connection");
+      throw Exception(checkInternetConnection);
     }
   }
 
   @override
   Future<List<OnBoardingUserRoleEntity>> getUserRolesOnBoarding() async {
     if (await networkInfo.isConnected!) {
-      return _apiService.getUserRolesOnBoarding();
+      return apiService.getUserRolesOnBoarding();
     } else {
-      throw Exception("Check your internet connection");
+      throw Exception(checkInternetConnection);
     }
   }
 
   @override
   Future<void> getUserJourney() async {
     if (await networkInfo.isConnected!) {
-      return _apiService.getUserJourney();
+      return apiService.getUserJourney();
     } else {
-      throw Exception("Check your internet connection");
+      throw Exception(checkInternetConnection);
     }
   }
 }

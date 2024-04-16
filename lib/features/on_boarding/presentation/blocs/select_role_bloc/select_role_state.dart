@@ -21,14 +21,6 @@ class SelectRoleLoadingState extends SelectRoleState {
 
   @override
   List<Object> get props => [status];
-
-  SelectRoleLoadingState copyWith({
-    AppPageStatus? status,
-  }) {
-    return SelectRoleLoadingState(
-      status: status ?? this.status,
-    );
-  }
 }
 
 /// Loaded state
@@ -43,16 +35,6 @@ class SelectRoleLoadedState extends SelectRoleState {
 
   @override
   List<Object> get props => [userRoles, status];
-
-  SelectRoleLoadedState copyWith({
-    List<OnBoardingUserRoleEntity>? userRoles,
-    AppPageStatus? status,
-  }) {
-    return SelectRoleLoadedState(
-      userRoles: userRoles ?? this.userRoles,
-      status: status ?? this.status,
-    );
-  }
 }
 
 /// Error state
@@ -67,16 +49,6 @@ class SelectRoleErrorState extends SelectRoleState {
 
   @override
   List<Object> get props => [errorMessage, status];
-
-  SelectRoleErrorState copyWith({
-    String? errorMessage,
-    AppPageStatus? status,
-  }) {
-    return SelectRoleErrorState(
-      errorMessage: errorMessage ?? this.errorMessage,
-      status: status ?? this.status,
-    );
-  }
 }
 
 /// Navigation state

@@ -8,8 +8,6 @@ import '../entities/on_boarding_user_role_entity.dart';
 abstract class OnBoardingRepository {
   Future<String> sendOtpOnBoarding(OnBoardingSendOtpEntity? entity);
 
-  Future<void> resendOtpOnBoarding();
-
   Future<void> verifyOtpOnBoarding(OnBoardingVerifyOtpEntity entity);
 
   Future<bool> assignRoleOnBoarding(OnBoardingAssignRoleEntity entity);

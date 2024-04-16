@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../core/dependency_injection.dart';
 import '../features/on_boarding/presentation/blocs/kyc_bloc/kyc_bloc.dart';
 import '../features/on_boarding/presentation/blocs/otp_bloc/otp_bloc.dart';
 import '../features/on_boarding/presentation/pages/complete_kyc/complete_kyc_view.dart';
@@ -23,25 +24,25 @@ class AppBlocProviders {
 
   /// phone: Provides the application phone.
   static final _phoneBloc = BlocProvider<PhoneBloc>(
-    create: (BuildContext context) => PhoneBloc(),
+    create: (BuildContext context) => PhoneBloc(useCase: sl()),
     child: const SignInView(), // Initial screen with the application theme
   );
 
   /// otp: Provides the application otp.
   static final _otpBloc = BlocProvider(
-    create: (BuildContext context) => OtpBloc(),
+    create: (BuildContext context) => OtpBloc(useCase: sl()),
     child: const SignInView(),
   );
 
   /// selectRole: Provides the application select role.
   static final _selectRoleBloc = BlocProvider(
-    create: (BuildContext context) => SelectRoleBloc(),
+    create: (BuildContext context) => SelectRoleBloc(useCase: sl()),
     child: const ChooseRoleView(),
   );
 
   /// kyc: Provides the application kyc.
   static final _kycBloc = BlocProvider(
-    create: (BuildContext context) => KycBloc(),
+    create: (BuildContext context) => KycBloc(useCase: sl()),
     child: const CompleteKYCView(),
   );
 

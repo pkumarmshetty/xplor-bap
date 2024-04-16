@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xplor/core/exception_errors.dart';
 
 import '../../../../const/local_storage/pref_const_key.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
@@ -13,9 +15,31 @@ import '../../../on_boarding/domain/entities/ob_boarding_verify_otp_entity.dart'
 import '../../domain/entities/on_boarding_user_role_entity.dart';
 import '../models/e_auth_providers_model.dart';
 
-class OnBoardingApiService {
-  final Dio _dio = sl<Dio>();
+abstract class OnBoardingApiService {
+  Future<String> sendOtpOnBoarding(OnBoardingSendOtpEntity entity);
 
+  Future<void> verifyOtpOnBoarding(OnBoardingVerifyOtpEntity entity);
+
+  Future<void> getUserJourney();
+
+  Future<bool> assignRoleOnBoarding(OnBoardingAssignRoleEntity entity);
+
+  Future<List<OnBoardingUserRoleEntity>> getUserRolesOnBoarding();
+
+  Future<bool> updateUserKycOnBoarding();
+
+  Future<EAuthProviderModel?> getEAuthProviders();
+}
+
+class OnBoardingApiServiceImpl implements OnBoardingApiService {
+  OnBoardingApiServiceImpl(
+      {required this.dio, required this.preferencesHelper, this.helper});
+
+  Dio dio;
+  SharedPreferencesHelper preferencesHelper;
+  SharedPreferences? helper;
+
+  @override
   Future<String> sendOtpOnBoarding(OnBoardingSendOtpEntity entity) async {
     try {
       var jsonData = json.encode(entity.toJson());
@@ -24,8 +48,8 @@ class OnBoardingApiService {
         print("OnBoarding Body Data ${entity.toJson()}");
       }
 
-      final response = await _dio.post(
-        "${baseUrl}user/send-otp",
+      final response = await dio.post(
+        sendOtpApi,
         data: jsonData,
         options: Options(
           contentType: Headers.jsonContentType,
@@ -45,38 +69,7 @@ class OnBoardingApiService {
     }
   }
 
-  Future<void> resendOtpOnBoarding() async {
-    try {
-      Map<String, dynamic> entity = {
-        "key": sl<SharedPreferencesHelper>().getString(PrefConstKeys.userKey),
-      };
-
-      if (kDebugMode) {
-        print("resendOtpOnBoarding Body Data $entity");
-      }
-
-      final response = await _dio.post(
-        "${baseUrl}user/resend-otp",
-        data: entity,
-        options: Options(
-          contentType: Headers.jsonContentType,
-        ),
-      );
-
-      if (response.statusCode != 200) {
-        if (kDebugMode) {
-          print(
-              "resendOtpOnBoarding----> Success 200 not found  ${response.statusCode}");
-        }
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print("resendOtpOnBoarding----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
-    }
-  }
-
+  @override
   Future<void> verifyOtpOnBoarding(OnBoardingVerifyOtpEntity entity) async {
     try {
       var jsonData = json.encode(entity.toJson());
@@ -85,8 +78,8 @@ class OnBoardingApiService {
         print("verifyOtpOnBoarding Body Data $entity");
       }
 
-      final response = await _dio.post(
-        "${baseUrl}user/verify-otp",
+      final response = await dio.post(
+        verifyOtpApi,
         data: jsonData,
         options: Options(
           contentType: Headers.jsonContentType,
@@ -103,10 +96,18 @@ class OnBoardingApiService {
         print(
             "verifyOtpOnBoarding---->Response of sendOtpOnBoarding  ${response.data}");
       }
-      await sl<SharedPreferencesHelper>()
-          .setString(PrefConstKeys.token, response.data["data"]["token"]);
-      await sl<SharedPreferencesHelper>()
-          .setString(PrefConstKeys.userId, response.data["data"]["userId"]);
+
+      if (helper != null) {
+        await helper!
+            .setString(PrefConstKeys.token, response.data["data"]["token"]);
+        await helper!
+            .setString(PrefConstKeys.userId, response.data["data"]["userId"]);
+      } else {
+        await preferencesHelper.setString(
+            PrefConstKeys.token, response.data["data"]["token"]);
+        await preferencesHelper.setString(
+            PrefConstKeys.userId, response.data["data"]["userId"]);
+      }
     } catch (e) {
       if (kDebugMode) {
         print("verifyOtpOnBoarding----> Catch ${handleError(e)}");
@@ -115,17 +116,20 @@ class OnBoardingApiService {
     }
   }
 
+  @override
   Future<void> getUserJourney() async {
-    var token = sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
+    final authToken = helper == null
+        ? preferencesHelper.getString(PrefConstKeys.token)
+        : helper!.getString(PrefConstKeys.token);
     if (kDebugMode) {
-      print(token);
+      print(authToken);
     }
     try {
-      final response = await _dio.get(
-        "${baseUrl}user/journey",
+      final response = await dio.get(
+        getUserJourneyApi,
         options: Options(
           headers: {
-            'Authorization': token,
+            'Authorization': authToken,
           },
         ),
       );
@@ -140,10 +144,18 @@ class OnBoardingApiService {
         print(
             "getUserJourney---->Response of getUserJourney  ${response.data}");
       }
-      await sl<SharedPreferencesHelper>().setBoolean(
-          PrefConstKeys.kycVerified, response.data["data"]["kycVerified"]);
-      await sl<SharedPreferencesHelper>().setBoolean(
-          PrefConstKeys.roleAssigned, response.data["data"]["roleAssigned"]);
+
+      if (helper != null) {
+        await helper!.setBool(
+            PrefConstKeys.kycVerified, response.data["data"]["kycVerified"]);
+        await helper!.setBool(PrefConstKeys.roleAssigned,
+            response.data["data"]["personaCreated"]);
+      } else {
+        await preferencesHelper.setBoolean(
+            PrefConstKeys.kycVerified, response.data["data"]["kycVerified"]);
+        await preferencesHelper.setBoolean(PrefConstKeys.roleAssigned,
+            response.data["data"]["personaCreated"]);
+      }
     } catch (e) {
       if (kDebugMode) {
         print("getUserJourney----> Catch ${handleError(e)}");
@@ -152,6 +164,7 @@ class OnBoardingApiService {
     }
   }
 
+  @override
   Future<bool> assignRoleOnBoarding(OnBoardingAssignRoleEntity entity) async {
     try {
       var jsonData = json.encode(entity.toJson());
@@ -160,11 +173,15 @@ class OnBoardingApiService {
         print("assignRoleOnBoarding Body Data $entity");
       }
 
-      final authToken =
-          sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
+      String? authToken;
+      if (helper != null) {
+        authToken = helper!.getString(PrefConstKeys.token);
+      } else {
+        authToken = preferencesHelper.getString(PrefConstKeys.token);
+      }
 
-      final response = await _dio.patch(
-        "${baseUrl}user/role",
+      final response = await dio.patch(
+        assignRoleApi,
         data: jsonData,
         options: Options(contentType: Headers.jsonContentType, headers: {
           "Authorization": authToken,
@@ -180,10 +197,10 @@ class OnBoardingApiService {
 
       if (response.statusCode == 400) {
         final Map<String, dynamic> responseData = json.decode(response.data);
-        final String errorMessage = responseData['message'] ?? 'Unknown error';
+        final String errorMessage = responseData['message'] ?? unknownError;
         throw Exception(errorMessage);
       } else {
-        throw Exception('Unknown error occurred');
+        throw Exception(unknownErrorOccurred);
       }
     } catch (e) {
       if (kDebugMode) {
@@ -194,17 +211,15 @@ class OnBoardingApiService {
     }
   }
 
+  @override
   Future<List<OnBoardingUserRoleEntity>> getUserRolesOnBoarding() async {
     try {
-      final authToken =
-          sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
+      final authToken = helper == null
+          ? preferencesHelper.getString(PrefConstKeys.token)
+          : helper!.getString(PrefConstKeys.token);
 
-      if (authToken.isEmpty) {
-        throw Exception("Authorization token is missing or invalid.");
-      }
-
-      final response = await _dio.get(
-        "${baseUrl}user/roles",
+      final response = await dio.get(
+        getUserRoleApi,
         options: Options(
           headers: {
             "Authorization": authToken,
@@ -220,10 +235,10 @@ class OnBoardingApiService {
         return userRoles;
       } else if (response.statusCode == 400) {
         final Map<String, dynamic> responseData = json.decode(response.data);
-        final String errorMessage = responseData['message'] ?? 'Unknown error';
+        final String errorMessage = responseData['message'] ?? unknownError;
         throw Exception(errorMessage);
       } else {
-        throw Exception('Unknown error occurred');
+        throw Exception(unknownErrorOccurred);
       }
     } catch (e) {
       if (kDebugMode) {
@@ -233,6 +248,7 @@ class OnBoardingApiService {
     }
   }
 
+  @override
   Future<EAuthProviderModel?> getEAuthProviders() async {
     try {
       final authToken =
@@ -241,8 +257,8 @@ class OnBoardingApiService {
       if (authToken.isEmpty) {
         throw Exception("Authorization token is missing or invalid.");
       }
-      final response = await _dio.get(
-        "${baseUrl}e-auth",
+      final response = await dio.get(
+        getAuthProvidersApi,
         options: Options(
           contentType: Headers.jsonContentType,
           headers: {
@@ -262,10 +278,10 @@ class OnBoardingApiService {
 
       if (response.statusCode == 400) {
         final Map<String, dynamic> responseData = json.decode(response.data);
-        final String errorMessage = responseData['message'] ?? 'Unknown error';
+        final String errorMessage = responseData['message'] ?? unknownError;
         throw Exception(errorMessage);
       } else {
-        throw Exception('Unknown error occurred');
+        throw Exception(unknownErrorOccurred);
       }
     } catch (e) {
       if (kDebugMode) {
@@ -275,16 +291,14 @@ class OnBoardingApiService {
     }
   }
 
+  @override
   Future<bool> updateUserKycOnBoarding() async {
     try {
-      final authToken =
-          sl<SharedPreferencesHelper>().getString(PrefConstKeys.token);
-
-      if (authToken.isEmpty) {
-        throw Exception("Authorization token is missing or invalid.");
-      }
-      final response = await _dio.patch(
-        "${baseUrl}user/kyc",
+      final authToken = helper == null
+          ? preferencesHelper.getString(PrefConstKeys.token)
+          : helper!.getString(PrefConstKeys.token);
+      final response = await dio.patch(
+        verifyKycApi,
         options: Options(
           contentType: Headers.jsonContentType,
           headers: {
@@ -302,10 +316,10 @@ class OnBoardingApiService {
 
       if (response.statusCode == 400) {
         final Map<String, dynamic> responseData = json.decode(response.data);
-        final String errorMessage = responseData['message'] ?? 'Unknown error';
+        final String errorMessage = responseData['message'] ?? unknownError;
         throw Exception(errorMessage);
       } else {
-        throw Exception('Unknown error occurred');
+        throw Exception(unknownErrorOccurred);
       }
     } catch (e) {
       if (kDebugMode) {
@@ -322,43 +336,42 @@ class OnBoardingApiService {
       DioException dioError = error;
       switch (dioError.type) {
         case DioExceptionType.cancel:
-          errorDescription = "Request to API server was cancelled";
+          errorDescription = requestCancelError;
 
           return errorDescription;
         case DioExceptionType.connectionTimeout:
-          errorDescription = "Connection timeout with API server";
+          errorDescription = connectionTimeOutError;
 
           return errorDescription;
         case DioExceptionType.unknown:
-          errorDescription =
-              "Connection to API server failed due to internet connection";
+          errorDescription = unknownConnectionError;
 
           return errorDescription;
         case DioExceptionType.receiveTimeout:
-          errorDescription = "Receive timeout in connection with API server";
+          errorDescription = receiveTimeOutError;
 
           return errorDescription;
         case DioExceptionType.badResponse:
           if (kDebugMode) {
-            print("response.error  ${dioError.response!.data}");
+            print("$badResponseError  ${dioError.response!.data}");
           }
           return dioError.response!.data['message'];
 
         case DioExceptionType.sendTimeout:
-          errorDescription = "Send timeout in connection with API server";
+          errorDescription = sendTimeOutError;
 
           return errorDescription;
         case DioExceptionType.badCertificate:
-          errorDescription = "Bad certificate";
+          errorDescription = badCertificate;
 
           return errorDescription;
         case DioExceptionType.connectionError:
-          errorDescription = "Server connecting issues";
+          errorDescription = serverConnectingIssue;
 
           return errorDescription;
       }
     } else {
-      errorDescription = "Unexpected error occurred";
+      errorDescription = unexpectedErrorOccurred;
       return errorDescription;
     }
   }
