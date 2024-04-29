@@ -1,4 +1,3 @@
-import 'package:xplor/core/exception_errors.dart';
 import 'package:xplor/features/on_boarding/data/data_sources/on_boarding_remote.dart';
 import 'package:xplor/features/on_boarding/domain/entities/ob_boarding_verify_otp_entity.dart';
 import 'package:xplor/features/on_boarding/domain/entities/on_boarding_assign_role_entity.dart';
@@ -7,11 +6,11 @@ import 'package:xplor/features/on_boarding/domain/entities/on_boarding_user_role
 import 'package:xplor/features/on_boarding/domain/repository/on_boarding_repository.dart';
 
 import '../../../../core/connection/network_info.dart';
+import '../../../../core/exception_errors.dart';
 import '../../domain/entities/e_auth_providers_entity.dart';
 
 class OnBoardingRepositoryImpl implements OnBoardingRepository {
-  OnBoardingRepositoryImpl(
-      {required this.apiService, required this.networkInfo});
+  OnBoardingRepositoryImpl({required this.apiService, required this.networkInfo});
 
   OnBoardingApiService apiService;
   NetworkInfo networkInfo;
@@ -55,8 +54,7 @@ class OnBoardingRepositoryImpl implements OnBoardingRepository {
   @override
   Future<EAuthProviderEntity?> getEAuthProviders() async {
     if (await networkInfo.isConnected!) {
-      return EAuthProviderEntity.fromJson(
-          (await apiService.getEAuthProviders())?.toJson() ?? {});
+      return EAuthProviderEntity.fromJson((await apiService.getEAuthProviders())?.toJson() ?? {});
     } else {
       throw Exception(checkInternetConnection);
     }
@@ -75,6 +73,15 @@ class OnBoardingRepositoryImpl implements OnBoardingRepository {
   Future<void> getUserJourney() async {
     if (await networkInfo.isConnected!) {
       return apiService.getUserJourney();
+    } else {
+      throw Exception(checkInternetConnection);
+    }
+  }
+
+  @override
+  Future<bool> createMpin(String pin) async {
+    if (await networkInfo.isConnected!) {
+      return apiService.createMpin(pin);
     } else {
       throw Exception(checkInternetConnection);
     }

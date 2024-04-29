@@ -3,9 +3,7 @@ import 'package:xplor/features/on_boarding/data/models/on_boarding_assign_role_m
 
 void main() {
   group('OnBoardingAssignRoleModel JSON Serialization', () {
-    test(
-        'fromJson should convert a JSON map to a OnBoardingAssignRoleModel object',
-        () {
+    test('fromJson should convert a JSON map to a OnBoardingAssignRoleModel object', () {
       // Arrange
       final jsonMap = {'roleId': 'roleId'};
 
@@ -16,9 +14,7 @@ void main() {
       expect(model.roleId, 'roleId');
     });
 
-    test(
-        'toJson should convert a OnBoardingAssignRoleModel object to a JSON map',
-        () {
+    test('toJson should convert a OnBoardingAssignRoleModel object to a JSON map', () {
       // Arrange
       final model = OnBoardingAssignRoleModel(roleId: 'roleId');
 

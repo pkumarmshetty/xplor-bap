@@ -4,9 +4,7 @@ import 'package:xplor/features/on_boarding/domain/entities/ob_boarding_verify_ot
 
 void main() {
   group('OnBoardingVerifyOtpEntity JSON Serialization', () {
-    test(
-        'authEntityFromJson should convert a JSON string to a OnBoardingVerifyOtpEntity object',
-        () {
+    test('authEntityFromJson should convert a JSON string to a OnBoardingVerifyOtpEntity object', () {
       // Arrange
       const jsonString = '{"otp": "123456", "key": "abc123"}';
 
@@ -18,9 +16,7 @@ void main() {
       expect(entity.key, "abc123");
     });
 
-    test(
-        'authEntityToJson should convert a OnBoardingVerifyOtpEntity object to a JSON string',
-        () {
+    test('authEntityToJson should convert a OnBoardingVerifyOtpEntity object to a JSON string', () {
       // Arrange
       final entity = OnBoardingVerifyOtpEntity(otp: "123456", key: "abc123");
 

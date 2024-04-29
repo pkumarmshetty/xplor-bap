@@ -44,14 +44,12 @@ void main() {
       expect: () => [OtpIncompleteState()],
     );
 
-    OnBoardingVerifyOtpEntity entity =
-        OnBoardingVerifyOtpEntity(otp: "123456", key: "r234324234");
+    OnBoardingVerifyOtpEntity entity = OnBoardingVerifyOtpEntity(otp: "123456", key: "r234324234");
 
     blocTest<OtpBloc, OtpState>(
       'emits SuccessOtpState when OTP verification is successful',
       build: () {
-        when(mockOnBoardingUseCase.verifyOtpOnBoarding(entity))
-            .thenAnswer((_) async {});
+        when(mockOnBoardingUseCase.verifyOtpOnBoarding(entity)).thenAnswer((_) async {});
         return otpBloc;
       },
       act: (bloc) {
@@ -63,14 +61,12 @@ void main() {
       ],
     );
     var phoneNumberData = "+91 909 090 9090";
-    OnBoardingSendOtpEntity phoneEntity =
-        OnBoardingSendOtpEntity(phoneNumber: '+91 909 090 9090');
+    OnBoardingSendOtpEntity phoneEntity = OnBoardingSendOtpEntity(phoneNumber: '+91 909 090 9090');
 
     blocTest<OtpBloc, OtpState>(
       'emits ResendOtpSubmitted when resend OTP is successful',
       build: () {
-        when(mockOnBoardingUseCase.call(params: anyNamed('params')))
-            .thenAnswer((_) async => 'resend_key');
+        when(mockOnBoardingUseCase.call(params: anyNamed('params'))).thenAnswer((_) async => 'resend_key');
         return otpBloc;
       },
       act: (bloc) {
@@ -85,8 +81,7 @@ void main() {
     blocTest<OtpBloc, OtpState>(
       'emits FailureOtpState when resend OTP fails',
       build: () {
-        when(mockOnBoardingUseCase.call(params: phoneEntity))
-            .thenThrow(Exception());
+        when(mockOnBoardingUseCase.call(params: phoneEntity)).thenThrow(Exception());
         return otpBloc;
       },
       act: (bloc) {
@@ -101,8 +96,7 @@ void main() {
     blocTest<OtpBloc, OtpState>(
       'emits SuccessOtpState when user journey is successfully fetched',
       build: () {
-        when(mockOnBoardingUseCase.getUserJourney())
-            .thenAnswer((_) async => 'success');
+        when(mockOnBoardingUseCase.getUserJourney()).thenAnswer((_) async => 'success');
         return otpBloc;
       },
       act: (bloc) {
@@ -132,8 +126,7 @@ void main() {
     blocTest<OtpBloc, OtpState>(
       'emits FailureOtpState when OTP verification fails',
       build: () {
-        when(mockOnBoardingUseCase.verifyOtpOnBoarding(any))
-            .thenThrow(Exception());
+        when(mockOnBoardingUseCase.verifyOtpOnBoarding(any)).thenThrow(Exception());
         return otpBloc;
       },
       act: (bloc) {

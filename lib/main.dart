@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'config/routes/app_routes.dart';
-import 'config/routes/path_routing.dart';
-import 'config/services/app_services.dart';
-import 'config/theme/theme_cubit.dart';
-import 'config/theme/theme_data.dart';
-import 'const/bloc_providers.dart';
+import 'package:xplor/app/xplorapp.dart';
+import 'package:xplor/utils/app_utils/app_utils.dart';
+
 import 'const/bootstrap.dart';
 import 'core/dependency_injection.dart';
 
@@ -15,24 +11,16 @@ void main() async {
 
   await initializeDependencies();
 
+  // Check if token is saved
+  final bool isLoggedIn = await AppUtils.checkToken();
+  //const bool isLoggedIn = false;
+
+  // Bootstrap the app
   bootstrap(() {
     return ScreenUtilInit(
       designSize: const Size(393, 852),
       builder: (context, child) {
-        return MultiBlocProvider(
-            //------------------------------------------------------------------------------
-            providers: AppBlocProviders.appBlocs,
-            //------------------------------------------------------------------------------
-            child: BlocBuilder<ThemeCubit, AppTheme>(builder: (context, state) {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                navigatorKey: AppServices.navState,
-                title: 'Xplor',
-                //theme: state.themeData,
-                onGenerateRoute: AppRoutes.onGenerateRoutes,
-                initialRoute: Routes.main,
-              );
-            }));
+        return XplorApp(isLoggedIn: isLoggedIn);
       },
     );
   });

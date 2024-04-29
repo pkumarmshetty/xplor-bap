@@ -4,9 +4,7 @@ import 'package:xplor/features/on_boarding/domain/entities/on_boarding_send_otp_
 
 void main() {
   group('OnBoardingSendOtpEntity JSON Serialization', () {
-    test(
-        'authEntityFromJson should convert a JSON string to a OnBoardingSendOtpEntity object',
-        () {
+    test('authEntityFromJson should convert a JSON string to a OnBoardingSendOtpEntity object', () {
       // Arrange
       const jsonString = '{"phoneNumber": "1234567890"}';
 
@@ -17,9 +15,7 @@ void main() {
       expect(entity.phoneNumber, "1234567890");
     });
 
-    test(
-        'authEntityToJson should convert a OnBoardingSendOtpEntity object to a JSON string',
-        () {
+    test('authEntityToJson should convert a OnBoardingSendOtpEntity object to a JSON string', () {
       // Arrange
       final entity = OnBoardingSendOtpEntity(phoneNumber: "1234567890");
 

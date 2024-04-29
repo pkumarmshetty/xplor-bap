@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../const/local_storage/pref_const_key.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/dependency_injection.dart';
 import '../../../../utils/app_colors.dart';
@@ -26,8 +26,7 @@ class SingleSelectionChooseRole extends StatefulWidget {
   });
 
   @override
-  State<SingleSelectionChooseRole> createState() =>
-      _SingleSelectionChooseRoleState();
+  State<SingleSelectionChooseRole> createState() => _SingleSelectionChooseRoleState();
 }
 
 /// _SingleSelectionChooseRoleState class
@@ -36,8 +35,7 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
   Widget build(BuildContext context) {
     return BlocListener<SelectRoleBloc, SelectRoleState>(
         listener: (context, state) {},
-        child: BlocBuilder<SelectRoleBloc, SelectRoleState>(
-            builder: (context, state) {
+        child: BlocBuilder<SelectRoleBloc, SelectRoleState>(builder: (context, state) {
           // Handle state changes
           if (state is SelectRoleLoadedState) {
             return ListView.builder(
@@ -45,16 +43,11 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
               itemBuilder: (BuildContext context, int index) {
                 final role = state.userRoles[index];
                 return Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: AppDimensions.small),
+                  margin: const EdgeInsets.symmetric(vertical: AppDimensions.small),
                   decoration: BoxDecoration(
-                    color: widget.selectedIndex == index
-                        ? Colors.transparent
-                        : Colors.white,
+                    color: widget.selectedIndex == index ? Colors.transparent : Colors.white,
                     border: Border.all(
-                      color: widget.selectedIndex == index
-                          ? AppColors.primaryColor
-                          : AppColors.hintColor,
+                      color: widget.selectedIndex == index ? AppColors.primaryColor : AppColors.hintColor,
                       width: 2.w,
                     ),
                     borderRadius: BorderRadius.circular(AppDimensions.smallXL),
@@ -66,23 +59,26 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
                       child: ListTile(
                         leading: Radio(
                           visualDensity: const VisualDensity(horizontal: -4),
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           activeColor: AppColors.primaryColor,
                           fillColor: MaterialStateProperty.resolveWith(
-                            (states) => states
-                                .getFillColor(), // Use the extension function
+                            (states) => states.getFillColor(), // Use the extension function
                           ),
                           value: index,
                           groupValue: widget.selectedIndex,
                           onChanged: (value) {
+                            role.id = state.userRoles[index].id;
+                            sl<SharedPreferencesHelper>().setString(PrefConstKeys.roleID, role.id ?? '');
+                            if (kDebugMode) {
+                              print("Role ID: ${role.id}");
+                            }
                             widget.onIndexChanged(value as int);
                           },
                         ),
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset(
+                            SvgPicture.asset(
                               role.imageUrl ?? '',
                               height: 128.w,
                               width: 128.w,
@@ -92,14 +88,9 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
                                 child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                role.title?.titleBold(
-                                        size: 20.sp,
-                                        color: AppColors.black100) ??
-                                    const SizedBox(),
+                                role.title?.titleBold(size: 20.sp, color: AppColors.black100) ?? const SizedBox(),
                                 AppDimensions.smallXL.vSpace(),
-                                role.description?.titleRegular(
-                                        size: 12.sp,
-                                        color: AppColors.black100) ??
+                                role.description?.titleRegular(size: 12.sp, color: AppColors.black100) ??
                                     const SizedBox(),
                               ],
                             ))
@@ -111,8 +102,7 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
                       if (kDebugMode) {
                         print("Role ID: ${role.id}");
                       }
-                      sl<SharedPreferencesHelper>()
-                          .setString(PrefConstKeys.roleID, role.id ?? '');
+                      sl<SharedPreferencesHelper>().setString(PrefConstKeys.roleID, role.id ?? '');
                       setState(() {
                         widget.onIndexChanged(index);
                       });

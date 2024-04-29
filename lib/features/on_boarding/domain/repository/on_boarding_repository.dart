@@ -14,6 +14,8 @@ abstract class OnBoardingRepository {
 
   Future<bool> updateUserKycOnBoarding();
 
+  Future<bool> createMpin(String pin);
+
   Future<List<OnBoardingUserRoleEntity>> getUserRolesOnBoarding();
 
   Future<EAuthProviderEntity?> getEAuthProviders();

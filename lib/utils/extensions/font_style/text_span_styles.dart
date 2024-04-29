@@ -10,9 +10,7 @@ extension TextSpanStyles on String {
     return TextSpan(
       text: this,
       style: GoogleFonts.manrope(
-          fontSize: size ?? 14.sp,
-          fontWeight: fontWeight ?? FontWeight.w400,
-          color: color ?? AppColors.grey),
+          fontSize: size ?? 14.sp, fontWeight: fontWeight ?? FontWeight.w400, color: color ?? AppColors.grey),
     );
   }
 

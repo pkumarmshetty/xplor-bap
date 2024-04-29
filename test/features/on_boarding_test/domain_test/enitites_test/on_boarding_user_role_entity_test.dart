@@ -4,9 +4,7 @@ import 'package:xplor/features/on_boarding/domain/entities/on_boarding_user_role
 
 void main() {
   group('OnBoardingUserRoleEntity JSON Serialization', () {
-    test(
-        'onBoardingUserRoleEntityFromJson should convert a JSON string to a OnBoardingUserRoleEntity object',
-        () {
+    test('onBoardingUserRoleEntityFromJson should convert a JSON string to a OnBoardingUserRoleEntity object', () {
       // Arrange
       const jsonString =
           '{"_id": "123", "type": "type", "title": "title", "description": "description", "imageUrl": "imageUrl", "updated_at": "updated_at", "created_at": "created_at", "__v": 1}';
@@ -25,9 +23,7 @@ void main() {
       expect(entity.v, 1);
     });
 
-    test(
-        'onBoardingUserRoleEntityToJson should convert a OnBoardingUserRoleEntity object to a JSON string',
-        () {
+    test('onBoardingUserRoleEntityToJson should convert a OnBoardingUserRoleEntity object to a JSON string', () {
       // Arrange
       final entity = OnBoardingUserRoleEntity(
         id: "123",

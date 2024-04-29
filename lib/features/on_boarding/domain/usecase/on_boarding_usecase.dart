@@ -40,4 +40,8 @@ class OnBoardingUseCase implements UseCase<void, OnBoardingSendOtpEntity> {
   Future<void> getUserJourney() async {
     return await repository.getUserJourney();
   }
+
+  Future<bool> createMpin(String pin) async {
+    return await repository.createMpin(pin);
+  }
 }

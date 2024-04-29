@@ -16,4 +16,9 @@ class Routes {
 
   /// Route for the Home Screen
   static const String home = "/home";
+
+  static const String wallet = "/wallet";
+
+  /// Route for the Mpin Screen
+  static const String mpin = "/mpin";
 }

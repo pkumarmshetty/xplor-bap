@@ -9,3 +9,7 @@ class Constants {
 ]
 ''';
 }
+
+class RegexConstants {
+  static const String noSpecialCharacters = r'^[a-zA-Z0-9 ]+$';
+}

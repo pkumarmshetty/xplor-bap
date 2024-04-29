@@ -3,9 +3,7 @@ import 'package:xplor/features/on_boarding/data/models/onboarding_send_otp_model
 
 void main() {
   group('OnBoardingSendOtpModel JSON Serialization', () {
-    test(
-        'fromJson should convert a JSON map to a OnBoardingSendOtpModel object',
-        () {
+    test('fromJson should convert a JSON map to a OnBoardingSendOtpModel object', () {
       // Arrange
       final jsonMap = {
         "phoneNumber": "1234567890",
@@ -18,8 +16,7 @@ void main() {
       expect(model.phoneNumber, "1234567890");
     });
 
-    test('toJson should convert a OnBoardingSendOtpModel object to a JSON map',
-        () {
+    test('toJson should convert a OnBoardingSendOtpModel object to a JSON map', () {
       // Arrange
       final model = OnBoardingSendOtpModel(
         phoneNumber: "1234567890",

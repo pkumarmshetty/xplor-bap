@@ -1,19 +1,19 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:xplor/utils/app_colors.dart';
+import 'package:lottie/lottie.dart';
 
-import '../../config/theme/theme_cubit.dart';
+import '../../gen/assets.gen.dart';
 
+/*
 class LoadingAnimation extends StatefulWidget {
-  const LoadingAnimation({super.key});
+  const LoadingAnimation({super.key, this.seconds});
+
+  final int? seconds;
 
   @override
   State<LoadingAnimation> createState() => _WalletLoadingAnimationState();
 }
 
-class _WalletLoadingAnimationState extends State<LoadingAnimation>
-    with TickerProviderStateMixin {
+class _WalletLoadingAnimationState extends State<LoadingAnimation> with TickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -22,7 +22,7 @@ class _WalletLoadingAnimationState extends State<LoadingAnimation>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: Duration(seconds: widget.seconds ?? 2),
     )..repeat(reverse: true);
   }
 
@@ -35,18 +35,12 @@ class _WalletLoadingAnimationState extends State<LoadingAnimation>
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(4, (index) {
           double initialSize = max(20.0 - index * 5.0, 5.0);
-          Color dotColor = index.isEven
-              ? appTheme().colors.blue500
-              : appTheme().colors.grey100;
+          Color dotColor = index.isEven ? appTheme().colors.blue500 : appTheme().colors.grey100;
 
           return AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
-              double size = initialSize +
-                  10.0 *
-                      sin(_controller.value *
-                          2 *
-                          pi); // Adjust amplitude as needed
+              double size = initialSize + 10.0 * sin(_controller.value * 2 * pi); // Adjust amplitude as needed
               size = max(size, 5.0); // Ensure size is always positive
 
               return AnimatedContainer(
@@ -70,5 +64,16 @@ class _WalletLoadingAnimationState extends State<LoadingAnimation>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+}
+
+*/
+
+class LoadingAnimation extends StatelessWidget {
+  const LoadingAnimation({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Lottie.asset(Assets.files.loader, height: 50, width: 50));
   }
 }

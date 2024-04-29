@@ -4,9 +4,7 @@ import 'package:xplor/features/on_boarding/domain/entities/on_boarding_entity.da
 
 void main() {
   group('OnBoardingEntity JSON Serialization', () {
-    test(
-        'authEntityFromJson should convert a JSON string to a OnBoardingEntity object',
-        () {
+    test('authEntityFromJson should convert a JSON string to a OnBoardingEntity object', () {
       // Arrange
       const jsonString = '{"phoneNumber": "1234567890", "countryCode": "+1"}';
 
@@ -18,12 +16,9 @@ void main() {
       expect(entity.countryCode, "+1");
     });
 
-    test(
-        'authEntityToJson should convert a OnBoardingEntity object to a JSON string',
-        () {
+    test('authEntityToJson should convert a OnBoardingEntity object to a JSON string', () {
       // Arrange
-      final entity =
-          OnBoardingEntity(phoneNumber: "1234567890", countryCode: "+1");
+      final entity = OnBoardingEntity(phoneNumber: "1234567890", countryCode: "+1");
 
       // Act
       final jsonString = authEntityToJson(entity);

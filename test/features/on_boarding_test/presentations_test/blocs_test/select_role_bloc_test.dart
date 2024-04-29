@@ -28,8 +28,7 @@ void main() {
       expect(selectRoleBloc.state, equals(SelectRoleInitial()));
     });
 
-    OnBoardingAssignRoleEntity assignRoleOnBoarding =
-        OnBoardingAssignRoleEntity(roleId: "asddasdsa");
+    OnBoardingAssignRoleEntity assignRoleOnBoarding = OnBoardingAssignRoleEntity(roleId: "asddasdsa");
 
     List<OnBoardingUserRoleEntity> userRoles = [
       OnBoardingUserRoleEntity(
@@ -57,15 +56,13 @@ void main() {
     blocTest<SelectRoleBloc, SelectRoleState>(
       'emits [SelectRoleLoadedState] when GetUserRolesEvent is added',
       build: () {
-        when(mockOnBoardingUseCase.getUserRolesOnBoarding())
-            .thenAnswer((_) async => userRoles);
+        when(mockOnBoardingUseCase.getUserRolesOnBoarding()).thenAnswer((_) async => userRoles);
         return selectRoleBloc;
       },
       act: (bloc) => bloc.add(const GetUserRolesEvent()),
       expect: () => [
         const SelectRoleLoadingState(status: AppPageStatus.loading),
-        SelectRoleLoadedState(
-            userRoles: userRoles, status: AppPageStatus.success),
+        SelectRoleLoadedState(userRoles: userRoles, status: AppPageStatus.success),
       ],
     );
 
@@ -74,8 +71,8 @@ void main() {
       'when GetUserRolesEvent fails',
       build: () => selectRoleBloc,
       act: (bloc) {
-        when(mockOnBoardingUseCase.getUserRolesOnBoarding()).thenThrow(
-            Exception()); // Mocking the function to throw an exception
+        when(mockOnBoardingUseCase.getUserRolesOnBoarding())
+            .thenThrow(Exception()); // Mocking the function to throw an exception
         bloc.add(const GetUserRolesEvent());
       },
       expect: () => [
@@ -91,8 +88,7 @@ void main() {
         'emits [SelectRoleLoadingState, SelectRoleNavigationState] '
         'when AssignRoleEvent is success',
         build: () {
-          when(mockOnBoardingUseCase.assignRoleOnBoarding(assignRoleOnBoarding))
-              .thenAnswer((_) => Future.value(true));
+          when(mockOnBoardingUseCase.assignRoleOnBoarding(assignRoleOnBoarding)).thenAnswer((_) => Future.value(true));
           return selectRoleBloc;
         },
         act: (bloc) {
@@ -100,8 +96,7 @@ void main() {
         },
         expect: () => [SelectRoleNavigationState()],
         verify: (bloc) {
-          verify(
-              mockOnBoardingUseCase.assignRoleOnBoarding(assignRoleOnBoarding));
+          verify(mockOnBoardingUseCase.assignRoleOnBoarding(assignRoleOnBoarding));
         });
 
     blocTest<SelectRoleBloc, SelectRoleState>(
@@ -117,21 +112,17 @@ void main() {
         },
         expect: () => [
               SelectRoleErrorState(
-                  status: AppPageStatus.finish,
-                  errorMessage:
-                      Exception('An unexpected error occurred').toString()),
+                  status: AppPageStatus.finish, errorMessage: Exception('An unexpected error occurred').toString()),
             ],
         verify: (bloc) {
-          verify(
-              mockOnBoardingUseCase.assignRoleOnBoarding(assignRoleOnBoarding));
+          verify(mockOnBoardingUseCase.assignRoleOnBoarding(assignRoleOnBoarding));
         });
 
     blocTest<SelectRoleBloc, SelectRoleState>(
         'emits [SelectRoleLoadingState, SelectRoleNavigationState] '
         'when AssignRoleEvent is success',
         build: () {
-          when(mockOnBoardingUseCase.assignRoleOnBoarding(assignRoleOnBoarding))
-              .thenAnswer((_) => Future.value(true));
+          when(mockOnBoardingUseCase.assignRoleOnBoarding(assignRoleOnBoarding)).thenAnswer((_) => Future.value(true));
           return selectRoleBloc;
         },
         act: (bloc) {
@@ -139,8 +130,7 @@ void main() {
         },
         expect: () => [SelectRoleNavigationState()],
         verify: (bloc) {
-          verify(
-              mockOnBoardingUseCase.assignRoleOnBoarding(assignRoleOnBoarding));
+          verify(mockOnBoardingUseCase.assignRoleOnBoarding(assignRoleOnBoarding));
         });
   });
 }

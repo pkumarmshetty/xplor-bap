@@ -15,7 +15,17 @@ class AppColors {
   static const Color crossIconColor = Color(0xFFAEAEBC);
   static const Color black100 = Color(0xFF171616);
   static const Color errorColor = Color(0xFFD51F1F);
-  static Color cancelButtonBgColor =
-      Color(int.parse('#F3F3F3'.substring(1, 7), radix: 16) + 0xFF000000);
+  static const Color cancelButtonBgColor = Color(0xfff3f3f3);
   static const Color lightBlue = Color(0xFFE6F0FA);
+  static const Color redColor = Color(0xFFF92727);
+  static const Color consentBorderColor = Color(0xFFEDF1FD);
+  static const Color activeGreen = Color(0xFF0DC11F);
+  static Color f8f9fa = const Color(0xfff8f9fa);
+  static Color lightBlue6f0fa = const Color(0xffe6f0fa);
+  static Color blue1E88E5 = const Color(0xff1E88E5);
+  static Color redF04438 = const Color(0xffF04438);
+  static Color greyBorderC1 = const Color(0xffC1C1C1);
+  static Color grey9898a5 = const Color(0xff9898A5);
+  static Color greydfe2eb = const Color(0xffDFE2EB);
+  static Color redd92727 = const Color(0x1af92727);
 }

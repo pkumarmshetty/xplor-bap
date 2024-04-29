@@ -6,9 +6,9 @@ void main() {
   final hooksDir = '${Directory.current.path}/.git/hooks';
   final preCommitFilePath = '$hooksDir/pre-commit';
 
-  // Ensure the hooks directory exists
+  // Ensure the hooks repository exists
   if (!Directory(hooksDir).existsSync()) {
-    log('Error: .git/hooks directory does not exist. Make sure you are running this script from the root of your Git repository.');
+    log('Error: .git/hooks repository does not exist. Make sure you are running this script from the root of your Git repository.');
     return;
   }
 

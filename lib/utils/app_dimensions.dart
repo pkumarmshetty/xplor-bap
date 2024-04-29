@@ -12,6 +12,8 @@ class AppDimensions {
     return _instance;
   }
 
+  static const double extraExtraSmall = 2.0;
+
   static const double extraSmall = 4.0;
 
   /// Extra small dimension
