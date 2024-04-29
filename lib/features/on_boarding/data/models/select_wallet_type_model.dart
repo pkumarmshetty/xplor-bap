@@ -8,8 +8,7 @@ class WalletSelectionModel extends WalletSelectionEntity {
   });
 
   /// Creates a [WalletSelectModel] object from a JSON map.
-  factory WalletSelectionModel.fromJson(Map<String, dynamic> json) =>
-      WalletSelectionModel(
+  factory WalletSelectionModel.fromJson(Map<String, dynamic> json) => WalletSelectionModel(
         icon: json["icon"],
         title: json["title"],
         message: json["message"],

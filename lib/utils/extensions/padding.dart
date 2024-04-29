@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 extension WidgetPadding on Widget {
-  Padding padding({
+  Padding singleSidePadding({
     double left = 0.0,
     double top = 0.0,
     double right = 0.0,

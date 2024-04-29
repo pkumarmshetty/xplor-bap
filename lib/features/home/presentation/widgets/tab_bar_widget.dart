@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:xplor/features/profile/presentation/pages/profile_page_view.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
+import '../../../../utils/app_utils/app_utils.dart';
 import '../../../../utils/extensions/font_style/font_styles.dart';
 import '../../../../utils/utils.dart';
-import '../../../wallet/presentation/pages/wallet_view.dart';
+
+import '../../../wallet/presentation/pages/wallet_tab_view.dart';
 import '../pages/home_page_view.dart';
 
 class HomeTabBarWidget extends StatefulWidget {
@@ -21,32 +24,39 @@ class _HomeTabBarWidgetState extends State<HomeTabBarWidget> {
 
   final List<Widget> _screens = [
     const HomePageView(),
-    const WalletView(),
+    const MyWalletTab(),
     Center(
-      child: 'Graph'.titleBold(),
+      child: 'Coming Soon!'.titleBold(),
     ),
-    Center(
-      child: 'User'.titleBold(),
-    ),
+    const ProfileTabView(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildTabItem(0, 'Home'),
-          _buildTabItem(1, 'Wallet'),
-          _buildTabItem(2, 'Graph'),
-          _buildTabItem(3, 'Jobs'),
-        ],
-      ).symmetricPadding(
-        horizontal: AppDimensions.mediumXL.sp,
-        vertical: AppDimensions.extraSmall.sp,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool val) {
+        AppUtils.showAlertDialog(context, false);
+      },
+      child: Scaffold(
+        body: SafeArea(child: _screens[_currentIndex]),
+        bottomNavigationBar: Container(
+          color: AppColors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildTabItem(0, 'Home'),
+              _buildTabItem(1, 'Wallet'),
+              _buildTabItem(2, 'Graph'),
+              _buildTabItem(3, 'Profile'),
+            ],
+          ).symmetricPadding(
+            horizontal: AppDimensions.mediumXL.sp,
+            vertical: AppDimensions.extraSmall.sp,
+          ),
+        ),
       ),
     );
   }
@@ -61,7 +71,7 @@ class _HomeTabBarWidgetState extends State<HomeTabBarWidget> {
       case 2:
         return Assets.images.graphUnselected;
       case 3:
-        return Assets.images.userUnselected;
+        return Assets.images.userSelected;
       default:
         return Assets.images.homeSelected;
     }
@@ -90,37 +100,34 @@ class _HomeTabBarWidgetState extends State<HomeTabBarWidget> {
             _currentIndex = index;
           });
         },
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 64.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: _currentIndex == index
-                    ? AppColors.primaryColor
-                    : AppColors.white,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(0),
-                  topRight: Radius.circular(0),
-                  bottomLeft: Radius.circular(6),
-                  bottomRight: Radius.circular(6),
+        child: Container(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 64.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: _currentIndex == index ? AppColors.primaryColor : AppColors.white,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(0),
+                    topRight: Radius.circular(0),
+                    bottomLeft: Radius.circular(6),
+                    bottomRight: Radius.circular(6),
+                  ),
                 ),
               ),
-            ),
-            AppDimensions.smallXL.h.vSpace(),
-            SvgPicture.asset(
-              _currentIndex == index
-                  ? getSelectedIcon(index)
-                  : getUnSelectedIcon(index),
-            ),
-            AppDimensions.extraSmall.vSpace(),
-            _currentIndex == index
-                ? label.titleMedium(size: 12.sp, color: AppColors.primaryColor)
-                : const Text(''),
-          ],
+              AppDimensions.smallXL.h.vSpace(),
+              SvgPicture.asset(
+                _currentIndex == index ? getSelectedIcon(index) : getUnSelectedIcon(index),
+              ),
+              AppDimensions.extraSmall.vSpace(),
+              _currentIndex == index ? label.titleMedium(size: 12.sp, color: AppColors.primaryColor) : const Text(''),
+            ],
+          ),
         ));
   }
 }

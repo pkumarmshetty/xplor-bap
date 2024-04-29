@@ -35,16 +35,14 @@ void main() {
       'emits PhoneInvalidState when phone number is invalid',
       build: () => phoneBloc,
       act: (bloc) {
-        bloc.add(
-            const CheckPhoneEvent(phone: '0000000')); // An empty phone number
+        bloc.add(const CheckPhoneEvent(phone: '0000000')); // An empty phone number
       },
       expect: () => [
         PhoneInvalidState(),
       ],
     );
 
-    OnBoardingSendOtpEntity phoneEntity =
-        OnBoardingSendOtpEntity(phoneNumber: '+91 909 090 9090');
+    OnBoardingSendOtpEntity phoneEntity = OnBoardingSendOtpEntity(phoneNumber: '+91 909 090 9090');
 
     blocTest<PhoneBloc, PhoneState>(
       'emits correct state when country code is changed',
@@ -59,8 +57,7 @@ void main() {
       'emits FailurePhoneState when form submission fails',
       build: () => phoneBloc,
       act: (bloc) {
-        when(mockOnBoardingUseCase.call(params: phoneEntity))
-            .thenThrow(Exception());
+        when(mockOnBoardingUseCase.call(params: phoneEntity)).thenThrow(Exception());
         bloc.add(const PhoneSubmitEvent(phone: '+213 8234567890'));
       },
       expect: () => [
@@ -74,20 +71,17 @@ void main() {
     blocTest<PhoneBloc, PhoneState>(
       'emits SuccessPhoneState when form is submitted with valid data',
       build: () {
-        when(mockOnBoardingUseCase.call(params: anyNamed('params')))
-            .thenAnswer((_) async => 'k9898988898989324');
+        when(mockOnBoardingUseCase.call(params: anyNamed('params'))).thenAnswer((_) async => 'k9898988898989324');
         return phoneBloc;
       },
       act: (bloc) => bloc.add(PhoneSubmitEvent(phone: phoneNumberData)),
       expect: () => [
         PhoneLoadingState(),
-        SuccessPhoneState(
-            phoneNumber: phoneNumberData, key: 'k9898988898989324'),
+        SuccessPhoneState(phoneNumber: phoneNumberData, key: 'k9898988898989324'),
       ],
       verify: (bloc) {
         // Correctly verify the method call with named parameters
-        verify(mockOnBoardingUseCase.call(params: anyNamed('params')))
-            .called(1);
+        verify(mockOnBoardingUseCase.call(params: anyNamed('params'))).called(1);
       },
     );
   });

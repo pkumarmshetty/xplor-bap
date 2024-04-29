@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 
 import '../../../../../const/app_state.dart';
-import '../../../../../const/local_storage/pref_const_key.dart';
+
 import '../../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../../core/dependency_injection.dart';
 import '../../../domain/entities/on_boarding_assign_role_entity.dart';
@@ -26,17 +26,14 @@ class SelectRoleBloc extends Bloc<SelectRoleEvent, SelectRoleState> {
     emit(const SelectRoleLoadingState(status: AppPageStatus.loading));
     try {
       final userRoles = await useCase.getUserRolesOnBoarding();
-      emit(SelectRoleLoadedState(
-          userRoles: userRoles, status: AppPageStatus.success));
+      emit(SelectRoleLoadedState(userRoles: userRoles, status: AppPageStatus.success));
     } catch (e) {
-      emit(SelectRoleErrorState(
-          errorMessage: e.toString(), status: AppPageStatus.finish));
+      emit(SelectRoleErrorState(errorMessage: e.toString(), status: AppPageStatus.finish));
     }
   }
 
   /// Handles the assign role submit event.
-  Future<void> _onAssignRoleSubmit(
-      AssignRoleEvent event, Emitter<SelectRoleState> emit) async {
+  Future<void> _onAssignRoleSubmit(AssignRoleEvent event, Emitter<SelectRoleState> emit) async {
     OnBoardingAssignRoleEntity? entity;
     if (event.entity == null) {
       entity = OnBoardingAssignRoleEntity(
@@ -47,8 +44,7 @@ class SelectRoleBloc extends Bloc<SelectRoleEvent, SelectRoleState> {
 
     try {
       // Call the use case to assign the role
-      final success = await useCase
-          .assignRoleOnBoarding(event.entity == null ? entity! : event.entity!);
+      final success = await useCase.assignRoleOnBoarding(event.entity == null ? entity! : event.entity!);
 
       if (success) {
         // Add NavigationEvent if successful
@@ -57,8 +53,7 @@ class SelectRoleBloc extends Bloc<SelectRoleEvent, SelectRoleState> {
         throw Exception();
       }
     } catch (e) {
-      emit(SelectRoleErrorState(
-          status: AppPageStatus.finish, errorMessage: e.toString()));
+      emit(SelectRoleErrorState(status: AppPageStatus.finish, errorMessage: e.toString()));
     }
   }
 }

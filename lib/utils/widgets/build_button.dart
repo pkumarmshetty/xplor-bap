@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
+import '../app_colors.dart';
+import '../extensions/font_style/font_styles.dart';
 
 /// A button widget with customizable properties.
 class ButtonWidget extends StatelessWidget {
@@ -27,7 +27,16 @@ class ButtonWidget extends StatelessWidget {
   final VoidCallback? onPressed;
 
   /// The callback function to be executed when the button is pressed.
-  final Text? customText;
+  final Widget? customText;
+
+  /// The padding of the button.
+  final EdgeInsets? padding;
+
+  /// The shape of the button.
+  final OutlinedBorder? shape;
+
+  /// The shadow color of the button.
+  final Color? shadowColor;
 
   /// Constructs a [ButtonWidget] with the given properties.
   const ButtonWidget({
@@ -40,6 +49,9 @@ class ButtonWidget extends StatelessWidget {
     this.fontSize,
     this.isValid = false,
     this.onPressed,
+    this.padding,
+    this.shape,
+    this.shadowColor,
   });
 
   /// Builds the button widget.
@@ -50,13 +62,18 @@ class ButtonWidget extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isValid ? onPressed : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: buttonBackgroundColor ?? AppColors.primaryColor, // Button Background color
-          foregroundColor: buttonForegroundColor ?? Colors.white, // To set button text color
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(radius ?? 8.0),
-            ), // To remove the default radius.
-          ),
+          padding: padding,
+          backgroundColor: buttonBackgroundColor ?? AppColors.primaryColor,
+          // Button Background color
+          foregroundColor: buttonForegroundColor ?? Colors.white,
+          shadowColor: shadowColor,
+          // To set button text color
+          shape: shape ??
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(radius ?? 8.0),
+                ), // To remove the default radius.
+              ),
         ),
         child: customText ?? (title ?? '').buttonTextBold(size: fontSize ?? 14.sp),
       ),

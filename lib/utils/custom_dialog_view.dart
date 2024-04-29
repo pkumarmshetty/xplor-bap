@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/utils/app_dimensions.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/padding.dart';
-import 'package:xplor/utils/extensions/space.dart';
+
+import 'app_colors.dart';
+import 'app_dimensions.dart';
+import 'extensions/font_style/font_styles.dart';
+import 'extensions/padding.dart';
+import 'extensions/space.dart';
 
 /// Import color definitions and custom widget
 import 'widgets/build_button.dart';
-import 'app_colors.dart';
+import 'widgets/top_header_for_dialogs.dart';
 
 /// Custom dialog view widget
 class CustomDialogView extends StatelessWidget {
@@ -36,33 +38,17 @@ class CustomDialogView extends StatelessWidget {
       ),
       backgroundColor: AppColors.white,
       elevation: 0,
-      insetPadding:
-          const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
+      insetPadding: const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           /// Vertical space above the title
-          AppDimensions.smallXL.vSpace(),
-
-          /// Title with custom styling
-          title
-              .titleExtraBold(color: AppColors.countryCodeColor, size: 20.sp)
-              .symmetricPadding(horizontal: AppDimensions.medium),
-
-          /// Divider below the title
-          Divider(
-            color: AppColors.crossIconColor,
-            thickness: 0.5.w,
-          ),
-
-          /// Vertical space below the divider
-          AppDimensions.mediumXL.vSpace(),
+          TopHeaderForDialogs(title: title, isCrossIconVisible: false),
 
           /// Message with custom styling
           message
-              .titleRegular(
-                  color: AppColors.alertDialogMessageColor, size: 14.sp)
+              .titleRegular(color: AppColors.alertDialogMessageColor, size: 14.sp)
               .symmetricPadding(horizontal: AppDimensions.medium),
 
           /// Vertical space below the message

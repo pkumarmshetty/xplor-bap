@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
+import 'package:xplor/features/on_boarding/domain/entities/e_auth_providers_entity.dart';
 import 'package:xplor/features/on_boarding/domain/entities/ob_boarding_verify_otp_entity.dart';
 import 'package:xplor/features/on_boarding/domain/entities/on_boarding_assign_role_entity.dart';
 import 'package:xplor/features/on_boarding/domain/entities/on_boarding_send_otp_entity.dart';
@@ -25,11 +26,9 @@ void main() {
       GetIt.I.unregister<OnBoardingRepository>();
     });
 
-    OnBoardingSendOtpEntity entity =
-        OnBoardingSendOtpEntity(phoneNumber: '+918323334343');
+    OnBoardingSendOtpEntity entity = OnBoardingSendOtpEntity(phoneNumber: '+918323334343');
 
-    OnBoardingAssignRoleEntity assignRoleEntity =
-        OnBoardingAssignRoleEntity(roleId: 'roleId');
+    OnBoardingAssignRoleEntity assignRoleEntity = OnBoardingAssignRoleEntity(roleId: 'roleId');
 
     List<OnBoardingUserRoleEntity> userRoles = [
       OnBoardingUserRoleEntity(
@@ -55,8 +54,7 @@ void main() {
     ];
 
     test('Usecase Send OTP', () async {
-      when(mockOnBoardingRepository.sendOtpOnBoarding(entity))
-          .thenAnswer((_) async => '123456');
+      when(mockOnBoardingRepository.sendOtpOnBoarding(entity)).thenAnswer((_) async => '123456');
 
       // act
       final result = await onBoardingUseCase.call(params: entity);
@@ -70,8 +68,7 @@ void main() {
       final mockParams = OnBoardingVerifyOtpEntity(otp: '123456', key: 'Key');
 
       // Mock the behavior of your repository (if necessary)
-      when(mockOnBoardingRepository.verifyOtpOnBoarding(mockParams))
-          .thenAnswer((_) => Future.value());
+      when(mockOnBoardingRepository.verifyOtpOnBoarding(mockParams)).thenAnswer((_) => Future.value());
 
       // Call the method and await its completion
       await onBoardingUseCase.verifyOtpOnBoarding(mockParams);
@@ -84,44 +81,37 @@ void main() {
       // Arrange
       final params = OnBoardingVerifyOtpEntity(otp: '123456');
       // Mock the repository method call to throw an error
-      when(mockOnBoardingRepository.verifyOtpOnBoarding(params))
-          .thenThrow(Exception('Verification failed'));
+      when(mockOnBoardingRepository.verifyOtpOnBoarding(params)).thenThrow(Exception('Verification failed'));
 
       // Act
       // Assert
-      expect(
-          () => onBoardingUseCase.verifyOtpOnBoarding(params), throwsException);
+      expect(() => onBoardingUseCase.verifyOtpOnBoarding(params), throwsException);
       verify(mockOnBoardingRepository.verifyOtpOnBoarding(params));
       verifyNoMoreInteractions(mockOnBoardingRepository);
     });
 
     test('Usecase for assignRoleOnBoarding is success', () async {
-      when(mockOnBoardingRepository.assignRoleOnBoarding(assignRoleEntity))
-          .thenAnswer((_) async => true);
+      when(mockOnBoardingRepository.assignRoleOnBoarding(assignRoleEntity)).thenAnswer((_) async => true);
 
       // act
-      final result =
-          await onBoardingUseCase.assignRoleOnBoarding(assignRoleEntity);
+      final result = await onBoardingUseCase.assignRoleOnBoarding(assignRoleEntity);
 
       // assert
       expect(result, true);
     });
 
     test('Usecase for assignRoleOnBoarding is failed', () async {
-      when(mockOnBoardingRepository.assignRoleOnBoarding(assignRoleEntity))
-          .thenAnswer((_) async => false);
+      when(mockOnBoardingRepository.assignRoleOnBoarding(assignRoleEntity)).thenAnswer((_) async => false);
 
       // act
-      final result =
-          await onBoardingUseCase.assignRoleOnBoarding(assignRoleEntity);
+      final result = await onBoardingUseCase.assignRoleOnBoarding(assignRoleEntity);
 
       // assert
       expect(result, false);
     });
 
     test('Usecase for updateUserKycOnBoarding is success', () async {
-      when(mockOnBoardingRepository.updateUserKycOnBoarding())
-          .thenAnswer((_) async => true);
+      when(mockOnBoardingRepository.updateUserKycOnBoarding()).thenAnswer((_) async => true);
 
       // act
       final result = await onBoardingUseCase.updateUserKycOnBoarding();
@@ -131,8 +121,7 @@ void main() {
     });
 
     test('Usecase for updateUserKycOnBoarding is failed', () async {
-      when(mockOnBoardingRepository.updateUserKycOnBoarding())
-          .thenAnswer((_) async => false);
+      when(mockOnBoardingRepository.updateUserKycOnBoarding()).thenAnswer((_) async => false);
 
       // act
       final result = await onBoardingUseCase.updateUserKycOnBoarding();
@@ -142,8 +131,7 @@ void main() {
     });
 
     test('Usecase for getUserRolesOnBoarding', () async {
-      when(mockOnBoardingRepository.getUserRolesOnBoarding())
-          .thenAnswer((_) async => userRoles);
+      when(mockOnBoardingRepository.getUserRolesOnBoarding()).thenAnswer((_) async => userRoles);
 
       // act
       final result = await onBoardingUseCase.getUserRolesOnBoarding();
@@ -152,11 +140,35 @@ void main() {
       expect(result, userRoles);
     });
 
+    test('createMpin', () async {
+      // Mock repository method call
+      when(mockOnBoardingRepository.createMpin('1234')).thenAnswer((_) async => true);
+
+      final result = await onBoardingUseCase.createMpin('1234');
+
+      expect(result, true);
+      // Add more assertions if needed
+    });
+
+    test('getEAuthProviders', () async {
+      final eAuthProviderEntity = EAuthProviderEntity(
+        code: 'code',
+        iconLink: 'iconLink',
+        title: 'title',
+        subTitle: 'subTitle',
+        redirectUrl: 'redirectUrl',
+      ); // Mock response
+      when(mockOnBoardingRepository.getEAuthProviders()).thenAnswer((_) async => eAuthProviderEntity);
+      final result = await onBoardingUseCase.getEAuthProviders();
+
+      expect(result, eAuthProviderEntity);
+      // Add more assertions if needed
+    });
+
     test('Usecase for getUserJourney', () async {
       // Create a mock OnBoardingVerifyOtpEntity
       // Mock the behavior of your repository (if necessary)
-      when(mockOnBoardingRepository.getUserJourney())
-          .thenAnswer((_) => Future.value());
+      when(mockOnBoardingRepository.getUserJourney()).thenAnswer((_) => Future.value());
 
       // Call the method and await its completion
       await onBoardingUseCase.getUserJourney();

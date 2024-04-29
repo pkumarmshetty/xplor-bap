@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:xplor/features/home/presentation/widgets/tab_bar_widget.dart';
 import 'package:xplor/features/on_boarding/presentation/pages/choose_role/choose_role_view.dart';
 import 'package:xplor/features/on_boarding/presentation/pages/complete_kyc/complete_kyc_view.dart';
+import 'package:xplor/features/on_boarding/presentation/pages/mpin/generate_mpin_screen.dart';
 import 'package:xplor/features/on_boarding/presentation/pages/sign_in/sign_in_view.dart';
 
 import '../../features/on_boarding/presentation/pages/otp/otp_view.dart';
+import '../../features/wallet/presentation/pages/wallet_no_doc_view.dart';
 import 'path_routing.dart';
 
 /// Class responsible for handling app routes and generating appropriate route widgets.
@@ -15,13 +17,15 @@ class AppRoutes {
       case Routes.main:
         // Return a material route for the main route, displaying HomeTabs widget.
         return _materialRoute(const SignInView());
-      case Routes.login:
-        //return _materialRoute(const SignInView());
-        return customPageRoute(const SignInView());
       case Routes.otp:
         // Return a material route for the OTP route, displaying OtpView widget.
         return customPageRoute(
           const OtpView(),
+        );
+      case Routes.mpin:
+        // Return a material route for the OTP route, displaying OtpView widget.
+        return customPageRoute(
+          const GenerateMpinScreen(),
         );
       case Routes.kyc:
         return customPageRoute(const CompleteKYCView());
@@ -29,6 +33,8 @@ class AppRoutes {
         return customPageRoute(const ChooseRoleView());
       case Routes.home:
         return customPageRoute(const HomeTabBarWidget());
+      case Routes.wallet:
+        return customPageRoute(const WalletNoDocumentView());
       default:
         // Return a default material route, displaying SplashView for unknown routes.
         return customPageRoute(const SignInView());

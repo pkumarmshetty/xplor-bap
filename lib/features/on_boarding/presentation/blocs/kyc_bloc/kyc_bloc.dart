@@ -2,11 +2,9 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.dart';
 
-import '../../../../../core/dependency_injection.dart';
 import '../../../domain/entities/e_auth_providers_entity.dart';
 
 part 'kyc_event.dart';
-
 part 'kyc_state.dart';
 
 class KycBloc extends Bloc<KycEvent, KycState> {
@@ -17,11 +15,12 @@ class KycBloc extends Bloc<KycEvent, KycState> {
     on<UpdateUserKycEvent>(_getEAuthProviders);
     on<EAuthSuccessEvent>(authorize);
     on<CloseEAuthWebView>(closeEAuthWebView);
-    on<UpdateUserKycEvent>(_onUpdateUserKycSubmit);
+
+    /// This code is commented for future reference
+    //on<UpdateUserKycEvent>(_onUpdateUserKycSubmit);
   }
 
-  Future<bool> closeEAuthWebView(
-      CloseEAuthWebView event, Emitter<KycState> emit) async {
+  Future<bool> closeEAuthWebView(CloseEAuthWebView event, Emitter<KycState> emit) async {
     /// emit loading state
     emit(KycLoadingState());
     try {
@@ -34,8 +33,7 @@ class KycBloc extends Bloc<KycEvent, KycState> {
     }
   }
 
-  Future<bool> authorize(
-      EAuthSuccessEvent event, Emitter<KycState> emit) async {
+  Future<bool> authorize(EAuthSuccessEvent event, Emitter<KycState> emit) async {
     /// emit loading state
     emit(KycLoadingState());
     try {
@@ -49,14 +47,12 @@ class KycBloc extends Bloc<KycEvent, KycState> {
   }
 
   /// Handles the update user kyc submit event.
-  Future<bool> _getEAuthProviders(
-      UpdateUserKycEvent event, Emitter<KycState> emit) async {
+  Future<bool> _getEAuthProviders(UpdateUserKycEvent event, Emitter<KycState> emit) async {
     /// emit loading state
     emit(KycLoadingState());
     try {
       /// call getEAuthProviders api
-      EAuthProviderEntity? provider =
-          await sl<OnBoardingUseCase>().getEAuthProviders();
+      EAuthProviderEntity? provider = await useCase.getEAuthProviders();
       if (provider != null) {
         emit(ShowWebViewState(provider.redirectUrl));
       } else {
@@ -72,7 +68,8 @@ class KycBloc extends Bloc<KycEvent, KycState> {
   }
 
   /// Handles the update user kyc submit event.
-  Future<bool> _onUpdateUserKycSubmit(
+  /// This code is commented for future reference
+/*Future<bool> _onUpdateUserKycSubmit(
       UpdateUserKycEvent event, Emitter<KycState> emit) async {
     /// emit loading state
     emit(KycLoadingState());
@@ -88,5 +85,5 @@ class KycBloc extends Bloc<KycEvent, KycState> {
       emit(KycErrorState(e.toString()));
       return false;
     }
-  }
+  }*/
 }

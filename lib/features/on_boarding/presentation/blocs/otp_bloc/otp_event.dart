@@ -37,5 +37,5 @@ class PhoneOtpVerifyEvent extends OtpEvent {
   final String otp;
   final String? key;
 
-  const PhoneOtpVerifyEvent({required this.otp,this.key});
+  const PhoneOtpVerifyEvent({required this.otp, this.key});
 }

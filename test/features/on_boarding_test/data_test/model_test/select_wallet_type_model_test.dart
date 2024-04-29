@@ -3,8 +3,7 @@ import 'package:xplor/features/on_boarding/data/models/select_wallet_type_model.
 
 void main() {
   group('WalletSelectionModel JSON Deserialization', () {
-    test('fromJson should convert a JSON map to a WalletSelectionModel object',
-        () {
+    test('fromJson should convert a JSON map to a WalletSelectionModel object', () {
       // Arrange
       final jsonMap = {
         "icon": "icon_url",

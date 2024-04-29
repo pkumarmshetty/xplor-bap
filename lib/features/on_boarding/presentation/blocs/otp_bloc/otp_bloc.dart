@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../../utils/app_utils.dart';
+import '../../../../../utils/app_utils/app_utils.dart';
 import '../../../domain/entities/ob_boarding_verify_otp_entity.dart';
 import '../../../domain/entities/on_boarding_send_otp_entity.dart';
 import '../../../domain/usecase/on_boarding_usecase.dart';
@@ -42,8 +42,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
   _onVerifyOtpFn(PhoneOtpVerifyEvent event, Emitter<OtpState> emit) async {
     emit(OtpLoadingState());
 
-    OnBoardingVerifyOtpEntity entity =
-        OnBoardingVerifyOtpEntity(otp: otp ?? event.otp, key: key ?? event.key);
+    OnBoardingVerifyOtpEntity entity = OnBoardingVerifyOtpEntity(otp: otp ?? event.otp, key: key ?? event.key);
 
     try {
       await useCase.verifyOtpOnBoarding(entity);
@@ -69,12 +68,11 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
     }
   }
 
-  Future<void> _getUserJourney(
-      GetUserJourneyEvent event, Emitter<OtpState> emit) async {
+  Future<void> _getUserJourney(GetUserJourneyEvent event, Emitter<OtpState> emit) async {
     emit(OtpLoadingState());
     try {
       await useCase.getUserJourney();
-
+      //AppServices.navState.currentContext?.read<WalletDataBloc>().getWalletData();
       emit(SuccessOtpState());
     } catch (e) {
       emit(FailureOtpState(AppUtils.getErrorMessage(e.toString())));

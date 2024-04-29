@@ -23,7 +23,6 @@ class KycErrorState extends KycState {
   final String error;
 }
 
-class AuthorizedUserState extends KycState {
-}
+class AuthorizedUserState extends KycState {}
 
 class KycFailedState extends KycState {}

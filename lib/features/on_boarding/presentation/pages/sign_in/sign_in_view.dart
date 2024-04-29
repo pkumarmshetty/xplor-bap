@@ -6,8 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:xplor/utils/app_utils.dart';
-
+import '../../../../../utils/app_utils/app_utils.dart';
 import '../../../../../config/routes/path_routing.dart';
 import '../../../../../config/services/app_services.dart';
 import '../../../../../utils/app_colors.dart';
@@ -48,15 +47,14 @@ class _SignInViewState extends State<SignInView> {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool val) {
-        AppUtils.showAlertDialog(context);
+        AppUtils.showAlertDialog(context, true);
       },
       child: Scaffold(
         body: SafeArea(
           child: BlocListener<PhoneBloc, PhoneState>(
             listener: (context, state) {
               if (state is SuccessPhoneState) {
-                context.read<OtpBloc>().add(PhoneNumberSaveEvent(
-                    phoneNumber: state.phoneNumber, key: state.key));
+                context.read<OtpBloc>().add(PhoneNumberSaveEvent(phoneNumber: state.phoneNumber, key: state.key));
                 Navigator.pushNamed(
                   AppServices.navState.currentContext!,
                   Routes.otp,
@@ -99,9 +97,7 @@ class _SignInViewState extends State<SignInView> {
         if (state is FailurePhoneState)
           Column(
             children: [
-              state.message
-                  .toString()
-                  .titleSemiBold(size: 12.sp, color: AppColors.errorColor),
+              state.message.toString().titleSemiBold(size: 12.sp, color: AppColors.errorColor),
               AppDimensions.smallXL.vSpace(),
             ],
           ),
@@ -135,26 +131,18 @@ class _SignInViewState extends State<SignInView> {
     return IntlPhoneField(
       controller: mobileNumberController,
       pickerDialogStyle: PickerDialogStyle(
-          countryCodeStyle: GoogleFonts.manrope(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.countryCodeColor),
-          countryNameStyle: GoogleFonts.manrope(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.countryCodeColor),
+          countryCodeStyle:
+              GoogleFonts.manrope(fontSize: 12.sp, fontWeight: FontWeight.w600, color: AppColors.countryCodeColor),
+          countryNameStyle:
+              GoogleFonts.manrope(fontSize: 12.sp, fontWeight: FontWeight.w600, color: AppColors.countryCodeColor),
           listTileDivider: const SizedBox(),
-          listTilePadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+          listTilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
           padding: const EdgeInsets.all(12),
-          searchFieldPadding:
-              const EdgeInsets.only(left: 8, right: 8, top: 20, bottom: 8),
+          searchFieldPadding: const EdgeInsets.only(left: 8, right: 8, top: 20, bottom: 8),
           searchFieldInputDecoration: InputDecoration(
               hintText: "Search any country...",
-              hintStyle: GoogleFonts.manrope(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.countryCodeColor),
+              hintStyle:
+                  GoogleFonts.manrope(fontSize: 12.sp, fontWeight: FontWeight.w600, color: AppColors.countryCodeColor),
               prefixIcon: const Icon(
                 Icons.search,
                 size: 24,
@@ -168,21 +156,12 @@ class _SignInViewState extends State<SignInView> {
           width: double.infinity),
       flagsButtonPadding: const EdgeInsets.all(8),
       dropdownIconPosition: IconPosition.trailing,
-      dropdownTextStyle: GoogleFonts.manrope(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w600,
-          color: AppColors.countryCodeColor),
-      style: GoogleFonts.manrope(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w600,
-          color: AppColors.countryCodeColor),
+      dropdownTextStyle:
+          GoogleFonts.manrope(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.countryCodeColor),
+      style: GoogleFonts.manrope(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.countryCodeColor),
       onCountryChanged: (Country country) {
-        context
-            .read<PhoneBloc>()
-            .add(CountryCodeEvent(countryCode: "+${country.dialCode}"));
-        context
-            .read<PhoneBloc>()
-            .add(CheckPhoneEvent(phone: mobileNumberController.text));
+        context.read<PhoneBloc>().add(CountryCodeEvent(countryCode: "+${country.dialCode}"));
+        context.read<PhoneBloc>().add(CheckPhoneEvent(phone: mobileNumberController.text));
       },
       disableLengthCheck: true,
       inputFormatters: [
@@ -197,8 +176,7 @@ class _SignInViewState extends State<SignInView> {
       ),
       decoration: InputDecoration(
         hintText: 'Mobile Number',
-        hintStyle:
-            GoogleFonts.manrope(fontSize: 14.sp, fontWeight: FontWeight.w400),
+        hintStyle: GoogleFonts.manrope(fontSize: 14.sp, fontWeight: FontWeight.w400),
 
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -206,15 +184,12 @@ class _SignInViewState extends State<SignInView> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0), // Border radius
-          borderSide: const BorderSide(
-              color: AppColors.primaryColor), // Border color when focused
+          borderSide: const BorderSide(color: AppColors.primaryColor), // Border color when focused
         ),
-        contentPadding: const EdgeInsets.symmetric(
-            vertical: AppDimensions.medium), // Height of the TextFormField
+        contentPadding: const EdgeInsets.symmetric(vertical: AppDimensions.medium), // Height of the TextFormField
       ),
       initialCountryCode: 'IN',
-      onChanged: (phone) =>
-          context.read<PhoneBloc>().add(CheckPhoneEvent(phone: phone.number)),
+      onChanged: (phone) => context.read<PhoneBloc>().add(CheckPhoneEvent(phone: phone.number)),
     );
   }
 }

@@ -1,16 +1,12 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+part 'pref_const_key.dart';
+
 class SharedPreferencesHelper {
   late SharedPreferences sharedPreferences;
 
   Future<dynamic> init({SharedPreferences? preferences}) async {
-    if (preferences != null) {
-      SharedPreferences.setMockInitialValues({});
-      sharedPreferences = preferences;
-      return sharedPreferences;
-    } else {
-      sharedPreferences = await SharedPreferences.getInstance();
-    }
+    sharedPreferences = await SharedPreferences.getInstance();
   }
 
   // Define your methods to get and set data using _sharedPreferences.

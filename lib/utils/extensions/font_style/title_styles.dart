@@ -82,11 +82,27 @@ extension TitleStyles on String {
   Text titleBold({
     Color? color,
     double? size,
+    int? maxLine,
   }) {
     return Text(
       this,
       style: GoogleFonts.manrope(
           fontSize: size ?? 28.sp, fontWeight: FontWeight.w700, color: color ?? AppColors.textColor),
+      maxLines: maxLine ?? 5,
+    );
+  }
+
+  Text titleBoldWithDots({
+    Color? color,
+    double? size,
+    int? maxLine,
+  }) {
+    return Text(
+      this,
+      style: GoogleFonts.manrope(
+          fontSize: size ?? 28.sp, fontWeight: FontWeight.w700, color: color ?? AppColors.textColor),
+      maxLines: maxLine ?? 5,
+      overflow: TextOverflow.ellipsis,
     );
   }
 

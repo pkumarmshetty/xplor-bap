@@ -7,8 +7,9 @@ import '../../../../utils/app_dimensions.dart';
 
 class CommonPinCodeTextField extends StatelessWidget {
   final TextEditingController? textEditingController;
+  final bool? hidePin;
   final Function(String value)? onChanged;
-  const CommonPinCodeTextField({super.key, this.textEditingController, this.onChanged});
+  const CommonPinCodeTextField({super.key, this.textEditingController, this.onChanged, this.hidePin});
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +20,9 @@ class CommonPinCodeTextField extends StatelessWidget {
         FilteringTextInputFormatter.digitsOnly, // Allow only digits
       ],
       length: 6,
-      obscureText: false,
+      obscureText: hidePin ?? false,
       autoFocus: false,
       animationType: AnimationType.fade,
-      /*validator: (val) {
-        // Validate pin code
-        if (val!.isEmpty) {
-          return "Please enter otp";
-        }
-        if (val.length < 5) {
-          return "Please enter 6 digits otp";
-        }
-
-        return null;
-      },*/
       errorTextSpace: AppDimensions.mediumXL,
       pinTheme: PinTheme(
         shape: PinCodeFieldShape.box,

@@ -8,21 +8,24 @@ import '../app_dimensions.dart';
 import '../utils.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  const CustomTextFormField(
-      {super.key,
-      required this.label,
-      this.hintText,
-      this.onChanged,
-      this.controller,
-      this.validator,
-      this.onPressed,
-      this.inputFormatters,
-      this.suffixIcon,
-      this.onTap,
-      this.inputType = TextInputType.text,
-      this.isPassword = false,
-      this.readOnly = false,
-      this.obscureText = true});
+  const CustomTextFormField({
+    super.key,
+    required this.label,
+    this.hintText,
+    this.onChanged,
+    this.controller,
+    this.validator,
+    this.onPressed,
+    this.inputFormatters,
+    this.suffixIcon,
+    this.onTap,
+    this.inputType = TextInputType.text,
+    this.isPassword = false,
+    this.readOnly = false,
+    this.obscureText = true,
+    this.prefixIcon,
+    this.onFieldSubmitted,
+  });
 
   final String? hintText;
   final String label;
@@ -34,6 +37,8 @@ class CustomTextFormField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
+  final ValueChanged<String>? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -42,26 +47,23 @@ class CustomTextFormField extends StatelessWidget {
       children: [
         if (label != "") label.titleBold(size: 14.sp),
         TextFormField(
+          maxLines: 3,
+          minLines: 1,
           controller: controller,
           onChanged: onChanged,
+          onFieldSubmitted: onFieldSubmitted,
           validator: validator,
           readOnly: readOnly,
           keyboardType: inputType,
           onTap: onTap,
           inputFormatters: inputFormatters,
           obscureText: isPassword ? obscureText : false,
-          style: GoogleFonts.manrope(
-              fontWeight: FontWeight.w400,
-              fontSize: 14.sp,
-              color: AppColors.black),
+          style: GoogleFonts.manrope(fontWeight: FontWeight.w400, fontSize: 14.sp, color: AppColors.black),
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(
-                vertical: 14.sp, horizontal: AppDimensions.smallXL.sp),
+            contentPadding: EdgeInsets.symmetric(vertical: 14.sp, horizontal: AppDimensions.smallXL.sp),
             hintText: hintText,
-            hintStyle: GoogleFonts.manrope(
-                fontWeight: FontWeight.w400,
-                fontSize: 14.sp,
-                color: AppColors.hintColor),
+            hintStyle: GoogleFonts.manrope(fontWeight: FontWeight.w400, fontSize: 14.sp, color: AppColors.hintColor),
+            prefixIcon: prefixIcon,
             suffixIcon: isPassword
                 ? IconButton(
                     icon: Icon(
@@ -73,8 +75,7 @@ class CustomTextFormField extends StatelessWidget {
                   )
                 : suffixIcon,
             border: OutlineInputBorder(
-              borderSide:
-                  const BorderSide(width: 1, color: AppColors.hintColor),
+              borderSide: const BorderSide(width: 1, color: AppColors.hintColor),
               borderRadius: BorderRadius.circular(AppDimensions.small),
             ),
           ),

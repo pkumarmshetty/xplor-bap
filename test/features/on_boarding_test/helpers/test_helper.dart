@@ -7,13 +7,7 @@ import 'package:xplor/features/on_boarding/domain/repository/on_boarding_reposit
 import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.dart';
 
 @GenerateMocks(
-  [
-    OnBoardingRepository,
-    OnBoardingApiService,
-    OnBoardingUseCase,
-    NetworkInfo,
-    SharedPreferencesHelper
-  ],
+  [OnBoardingRepository, OnBoardingApiService, OnBoardingUseCase, NetworkInfo, SharedPreferencesHelper],
   customMocks: [
     MockSpec<Dio>(as: #MockDio),
   ],

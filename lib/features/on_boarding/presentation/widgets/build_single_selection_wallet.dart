@@ -7,6 +7,8 @@ import 'package:xplor/utils/extensions/color/color_material_state.dart';
 import 'package:xplor/utils/extensions/font_style/font_styles.dart';
 import 'package:xplor/utils/utils.dart';
 
+import '../../../../gen/assets.gen.dart';
+
 /// Widget for selecting a single wallet option
 class SingleSelectionWallet extends StatefulWidget {
   final int selectedIndex;
@@ -25,7 +27,10 @@ class SingleSelectionWallet extends StatefulWidget {
 class _SingleSelectionWalletState extends State<SingleSelectionWallet> {
   List<WalletSelectionEntity> items = [
     WalletSelectionEntity(
-        icon: 'assets/images/digilocker.png', title: 'Digilocker', message: 'Continue with Digilocker'),
+      icon: Assets.images.digilocker.path,
+      title: 'Digilocker',
+      message: 'Continue with Digilocker',
+    ),
   ];
 
   @override

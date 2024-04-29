@@ -26,11 +26,9 @@ void main() {
     group('sendOtpOnBoarding', () {
       final entity = OnBoardingSendOtpEntity();
 
-      test('should return the otp when the call to data source is successful',
-          () async {
+      test('should return the otp when the call to data source is successful', () async {
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-        when(mockApiService.sendOtpOnBoarding(any))
-            .thenAnswer((_) async => '123456');
+        when(mockApiService.sendOtpOnBoarding(any)).thenAnswer((_) async => '123456');
 
         final result = await repository.sendOtpOnBoarding(entity);
 
@@ -38,12 +36,10 @@ void main() {
         verify(mockApiService.sendOtpOnBoarding(entity)).called(1);
       });
 
-      test('should throw an exception when there is no internet connection',
-          () async {
+      test('should throw an exception when there is no internet connection', () async {
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
 
-        expect(() => repository.sendOtpOnBoarding(entity),
-            throwsA(isA<Exception>()));
+        expect(() => repository.sendOtpOnBoarding(entity), throwsA(isA<Exception>()));
 
         verifyNever(mockApiService.sendOtpOnBoarding(any));
       });
@@ -52,9 +48,7 @@ void main() {
     group('verifyOtpOnBoarding', () {
       final entity = OnBoardingVerifyOtpEntity();
 
-      test(
-          'should complete successfully when the call to data source is successful',
-          () async {
+      test('should complete successfully when the call to data source is successful', () async {
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
 
         await repository.verifyOtpOnBoarding(entity);
@@ -62,12 +56,10 @@ void main() {
         verify(mockApiService.verifyOtpOnBoarding(entity)).called(1);
       });
 
-      test('should throw an exception when there is no internet connection',
-          () async {
+      test('should throw an exception when there is no internet connection', () async {
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
 
-        expect(() => repository.verifyOtpOnBoarding(entity),
-            throwsA(isA<Exception>()));
+        expect(() => repository.verifyOtpOnBoarding(entity), throwsA(isA<Exception>()));
 
         verifyNever(mockApiService.verifyOtpOnBoarding(entity));
       });
@@ -76,11 +68,9 @@ void main() {
     group('assignRoleOnBoarding', () {
       final entity = OnBoardingAssignRoleEntity();
 
-      test('should return true when the call to data source is successful',
-          () async {
+      test('should return true when the call to data source is successful', () async {
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-        when(mockApiService.assignRoleOnBoarding(any))
-            .thenAnswer((_) async => true);
+        when(mockApiService.assignRoleOnBoarding(any)).thenAnswer((_) async => true);
 
         final result = await repository.assignRoleOnBoarding(entity);
 
@@ -88,23 +78,19 @@ void main() {
         verify(mockApiService.assignRoleOnBoarding(entity)).called(1);
       });
 
-      test('should throw an exception when there is no internet connection',
-          () async {
+      test('should throw an exception when there is no internet connection', () async {
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
 
-        expect(() => repository.assignRoleOnBoarding(entity),
-            throwsA(isA<Exception>()));
+        expect(() => repository.assignRoleOnBoarding(entity), throwsA(isA<Exception>()));
 
         verifyNever(mockApiService.assignRoleOnBoarding(entity));
       });
     });
 
     group('updateUserKycOnBoarding', () {
-      test('should return true when the call to data source is successful',
-          () async {
+      test('should return true when the call to data source is successful', () async {
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-        when(mockApiService.updateUserKycOnBoarding())
-            .thenAnswer((_) async => true);
+        when(mockApiService.updateUserKycOnBoarding()).thenAnswer((_) async => true);
 
         final result = await repository.updateUserKycOnBoarding();
 
@@ -112,25 +98,20 @@ void main() {
         verify(mockApiService.updateUserKycOnBoarding()).called(1);
       });
 
-      test('should throw an exception when there is no internet connection',
-          () async {
+      test('should throw an exception when there is no internet connection', () async {
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
 
-        expect(() => repository.updateUserKycOnBoarding(),
-            throwsA(isA<Exception>()));
+        expect(() => repository.updateUserKycOnBoarding(), throwsA(isA<Exception>()));
 
         verifyNever(mockApiService.updateUserKycOnBoarding());
       });
     });
 
     group('getUserRolesOnBoarding', () {
-      test(
-          'should return a list of user roles when the call to data source is successful',
-          () async {
+      test('should return a list of user roles when the call to data source is successful', () async {
         final userRoles = <OnBoardingUserRoleEntity>[];
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-        when(mockApiService.getUserRolesOnBoarding())
-            .thenAnswer((_) async => userRoles);
+        when(mockApiService.getUserRolesOnBoarding()).thenAnswer((_) async => userRoles);
 
         final result = await repository.getUserRolesOnBoarding();
 
@@ -138,21 +119,42 @@ void main() {
         verify(mockApiService.getUserRolesOnBoarding()).called(1);
       });
 
-      test('should throw an exception when there is no internet connection',
-          () async {
+      test('should throw an exception when there is no internet connection', () async {
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
 
-        expect(() => repository.getUserRolesOnBoarding(),
-            throwsA(isA<Exception>()));
+        expect(() => repository.getUserRolesOnBoarding(), throwsA(isA<Exception>()));
 
         verifyNever(mockApiService.getUserRolesOnBoarding());
       });
     });
 
+    group('getEAuthProviders', () {
+      test('getEAuthProviders - Network not connected', () async {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+        expect(() => repository.getEAuthProviders(), throwsException);
+      });
+    });
+
+    group('YourTestClass', () {
+      test('createMpin - Network connected', () async {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+        when(mockApiService.createMpin('123456')).thenAnswer((_) async => true);
+
+        final result = await repository.createMpin('123456');
+
+        expect(result, true);
+      });
+
+      test('createMpin - Network not connected', () async {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+
+        // Call the method and expect an exception to be
+        expect(() => repository.createMpin('1234'), throwsException);
+      });
+    });
+
     group('getUserJourney', () {
-      test(
-          'should complete successfully when the call to data source is successful',
-          () async {
+      test('should complete successfully when the call to data source is successful', () async {
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
 
         await repository.getUserJourney();
@@ -160,8 +162,7 @@ void main() {
         verify(mockApiService.getUserJourney()).called(1);
       });
 
-      test('should throw an exception when there is no internet connection',
-          () async {
+      test('should throw an exception when there is no internet connection', () async {
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
 
         expect(() => repository.getUserJourney(), throwsA(isA<Exception>()));

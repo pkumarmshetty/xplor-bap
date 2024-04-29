@@ -9,23 +9,17 @@ import 'package:dio/dio.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i7;
 import 'package:shared_preferences/shared_preferences.dart' as _i3;
-import 'package:xplor/const/local_storage/shared_preferences_helper.dart'
-    as _i14;
-import 'package:xplor/core/connection/network_info.dart' as _i13;
-import 'package:xplor/features/on_boarding/data/data_sources/on_boarding_remote.dart'
-    as _i11;
-import 'package:xplor/features/on_boarding/domain/entities/ob_boarding_verify_otp_entity.dart'
-    as _i8;
-import 'package:xplor/features/on_boarding/domain/entities/on_boarding_assign_role_entity.dart'
-    as _i9;
-import 'package:xplor/features/on_boarding/domain/entities/on_boarding_send_otp_entity.dart'
-    as _i6;
-import 'package:xplor/features/on_boarding/domain/entities/on_boarding_user_role_entity.dart'
-    as _i10;
-import 'package:xplor/features/on_boarding/domain/repository/on_boarding_repository.dart'
-    as _i2;
-import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.dart'
-    as _i12;
+import 'package:xplor/const/local_storage/shared_preferences_helper.dart' as _i16;
+import 'package:xplor/core/connection/network_info.dart' as _i15;
+import 'package:xplor/features/on_boarding/data/data_sources/on_boarding_remote.dart' as _i12;
+import 'package:xplor/features/on_boarding/data/models/e_auth_providers_model.dart' as _i13;
+import 'package:xplor/features/on_boarding/domain/entities/e_auth_providers_entity.dart' as _i11;
+import 'package:xplor/features/on_boarding/domain/entities/ob_boarding_verify_otp_entity.dart' as _i8;
+import 'package:xplor/features/on_boarding/domain/entities/on_boarding_assign_role_entity.dart' as _i9;
+import 'package:xplor/features/on_boarding/domain/entities/on_boarding_send_otp_entity.dart' as _i6;
+import 'package:xplor/features/on_boarding/domain/entities/on_boarding_user_role_entity.dart' as _i10;
+import 'package:xplor/features/on_boarding/domain/repository/on_boarding_repository.dart' as _i2;
+import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.dart' as _i14;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -40,8 +34,7 @@ import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.da
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeOnBoardingRepository_0 extends _i1.SmartFake
-    implements _i2.OnBoardingRepository {
+class _FakeOnBoardingRepository_0 extends _i1.SmartFake implements _i2.OnBoardingRepository {
   _FakeOnBoardingRepository_0(
     Object parent,
     Invocation parentInvocation,
@@ -51,8 +44,7 @@ class _FakeOnBoardingRepository_0 extends _i1.SmartFake
         );
 }
 
-class _FakeSharedPreferences_1 extends _i1.SmartFake
-    implements _i3.SharedPreferences {
+class _FakeSharedPreferences_1 extends _i1.SmartFake implements _i3.SharedPreferences {
   _FakeSharedPreferences_1(
     Object parent,
     Invocation parentInvocation,
@@ -72,8 +64,7 @@ class _FakeBaseOptions_2 extends _i1.SmartFake implements _i4.BaseOptions {
         );
 }
 
-class _FakeHttpClientAdapter_3 extends _i1.SmartFake
-    implements _i4.HttpClientAdapter {
+class _FakeHttpClientAdapter_3 extends _i1.SmartFake implements _i4.HttpClientAdapter {
   _FakeHttpClientAdapter_3(
     Object parent,
     Invocation parentInvocation,
@@ -116,15 +107,13 @@ class _FakeResponse_6<T1> extends _i1.SmartFake implements _i4.Response<T1> {
 /// A class which mocks [OnBoardingRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockOnBoardingRepository extends _i1.Mock
-    implements _i2.OnBoardingRepository {
+class MockOnBoardingRepository extends _i1.Mock implements _i2.OnBoardingRepository {
   MockOnBoardingRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<String> sendOtpOnBoarding(_i6.OnBoardingSendOtpEntity? entity) =>
-      (super.noSuchMethod(
+  _i5.Future<String> sendOtpOnBoarding(_i6.OnBoardingSendOtpEntity? entity) => (super.noSuchMethod(
         Invocation.method(
           #sendOtpOnBoarding,
           [entity],
@@ -139,8 +128,7 @@ class MockOnBoardingRepository extends _i1.Mock
       ) as _i5.Future<String>);
 
   @override
-  _i5.Future<void> verifyOtpOnBoarding(_i8.OnBoardingVerifyOtpEntity? entity) =>
-      (super.noSuchMethod(
+  _i5.Future<void> verifyOtpOnBoarding(_i8.OnBoardingVerifyOtpEntity? entity) => (super.noSuchMethod(
         Invocation.method(
           #verifyOtpOnBoarding,
           [entity],
@@ -150,9 +138,7 @@ class MockOnBoardingRepository extends _i1.Mock
       ) as _i5.Future<void>);
 
   @override
-  _i5.Future<bool> assignRoleOnBoarding(
-          _i9.OnBoardingAssignRoleEntity? entity) =>
-      (super.noSuchMethod(
+  _i5.Future<bool> assignRoleOnBoarding(_i9.OnBoardingAssignRoleEntity? entity) => (super.noSuchMethod(
         Invocation.method(
           #assignRoleOnBoarding,
           [entity],
@@ -170,15 +156,31 @@ class MockOnBoardingRepository extends _i1.Mock
       ) as _i5.Future<bool>);
 
   @override
-  _i5.Future<List<_i10.OnBoardingUserRoleEntity>> getUserRolesOnBoarding() =>
-      (super.noSuchMethod(
+  _i5.Future<bool> createMpin(String? pin) => (super.noSuchMethod(
+        Invocation.method(
+          #createMpin,
+          [pin],
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+
+  @override
+  _i5.Future<List<_i10.OnBoardingUserRoleEntity>> getUserRolesOnBoarding() => (super.noSuchMethod(
         Invocation.method(
           #getUserRolesOnBoarding,
           [],
         ),
-        returnValue: _i5.Future<List<_i10.OnBoardingUserRoleEntity>>.value(
-            <_i10.OnBoardingUserRoleEntity>[]),
+        returnValue: _i5.Future<List<_i10.OnBoardingUserRoleEntity>>.value(<_i10.OnBoardingUserRoleEntity>[]),
       ) as _i5.Future<List<_i10.OnBoardingUserRoleEntity>>);
+
+  @override
+  _i5.Future<_i11.EAuthProviderEntity?> getEAuthProviders() => (super.noSuchMethod(
+        Invocation.method(
+          #getEAuthProviders,
+          [],
+        ),
+        returnValue: _i5.Future<_i11.EAuthProviderEntity?>.value(),
+      ) as _i5.Future<_i11.EAuthProviderEntity?>);
 
   @override
   _i5.Future<void> getUserJourney() => (super.noSuchMethod(
@@ -194,15 +196,13 @@ class MockOnBoardingRepository extends _i1.Mock
 /// A class which mocks [OnBoardingApiService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockOnBoardingApiService extends _i1.Mock
-    implements _i11.OnBoardingApiService {
+class MockOnBoardingApiService extends _i1.Mock implements _i12.OnBoardingApiService {
   MockOnBoardingApiService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<String> sendOtpOnBoarding(_i6.OnBoardingSendOtpEntity? entity) =>
-      (super.noSuchMethod(
+  _i5.Future<String> sendOtpOnBoarding(_i6.OnBoardingSendOtpEntity? entity) => (super.noSuchMethod(
         Invocation.method(
           #sendOtpOnBoarding,
           [entity],
@@ -217,8 +217,7 @@ class MockOnBoardingApiService extends _i1.Mock
       ) as _i5.Future<String>);
 
   @override
-  _i5.Future<void> verifyOtpOnBoarding(_i8.OnBoardingVerifyOtpEntity? entity) =>
-      (super.noSuchMethod(
+  _i5.Future<void> verifyOtpOnBoarding(_i8.OnBoardingVerifyOtpEntity? entity) => (super.noSuchMethod(
         Invocation.method(
           #verifyOtpOnBoarding,
           [entity],
@@ -238,9 +237,7 @@ class MockOnBoardingApiService extends _i1.Mock
       ) as _i5.Future<void>);
 
   @override
-  _i5.Future<bool> assignRoleOnBoarding(
-          _i9.OnBoardingAssignRoleEntity? entity) =>
-      (super.noSuchMethod(
+  _i5.Future<bool> assignRoleOnBoarding(_i9.OnBoardingAssignRoleEntity? entity) => (super.noSuchMethod(
         Invocation.method(
           #assignRoleOnBoarding,
           [entity],
@@ -249,14 +246,12 @@ class MockOnBoardingApiService extends _i1.Mock
       ) as _i5.Future<bool>);
 
   @override
-  _i5.Future<List<_i10.OnBoardingUserRoleEntity>> getUserRolesOnBoarding() =>
-      (super.noSuchMethod(
+  _i5.Future<List<_i10.OnBoardingUserRoleEntity>> getUserRolesOnBoarding() => (super.noSuchMethod(
         Invocation.method(
           #getUserRolesOnBoarding,
           [],
         ),
-        returnValue: _i5.Future<List<_i10.OnBoardingUserRoleEntity>>.value(
-            <_i10.OnBoardingUserRoleEntity>[]),
+        returnValue: _i5.Future<List<_i10.OnBoardingUserRoleEntity>>.value(<_i10.OnBoardingUserRoleEntity>[]),
       ) as _i5.Future<List<_i10.OnBoardingUserRoleEntity>>);
 
   @override
@@ -267,12 +262,30 @@ class MockOnBoardingApiService extends _i1.Mock
         ),
         returnValue: _i5.Future<bool>.value(false),
       ) as _i5.Future<bool>);
+
+  @override
+  _i5.Future<bool> createMpin(String? pin) => (super.noSuchMethod(
+        Invocation.method(
+          #createMpin,
+          [pin],
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+
+  @override
+  _i5.Future<_i13.EAuthProviderModel?> getEAuthProviders() => (super.noSuchMethod(
+        Invocation.method(
+          #getEAuthProviders,
+          [],
+        ),
+        returnValue: _i5.Future<_i13.EAuthProviderModel?>.value(),
+      ) as _i5.Future<_i13.EAuthProviderModel?>);
 }
 
 /// A class which mocks [OnBoardingUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockOnBoardingUseCase extends _i1.Mock implements _i12.OnBoardingUseCase {
+class MockOnBoardingUseCase extends _i1.Mock implements _i14.OnBoardingUseCase {
   MockOnBoardingUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -296,8 +309,7 @@ class MockOnBoardingUseCase extends _i1.Mock implements _i12.OnBoardingUseCase {
       );
 
   @override
-  _i5.Future<String> call({_i6.OnBoardingSendOtpEntity? params}) =>
-      (super.noSuchMethod(
+  _i5.Future<String> call({_i6.OnBoardingSendOtpEntity? params}) => (super.noSuchMethod(
         Invocation.method(
           #call,
           [],
@@ -314,8 +326,7 @@ class MockOnBoardingUseCase extends _i1.Mock implements _i12.OnBoardingUseCase {
       ) as _i5.Future<String>);
 
   @override
-  _i5.Future<void> verifyOtpOnBoarding(_i8.OnBoardingVerifyOtpEntity? params) =>
-      (super.noSuchMethod(
+  _i5.Future<void> verifyOtpOnBoarding(_i8.OnBoardingVerifyOtpEntity? params) => (super.noSuchMethod(
         Invocation.method(
           #verifyOtpOnBoarding,
           [params],
@@ -325,9 +336,7 @@ class MockOnBoardingUseCase extends _i1.Mock implements _i12.OnBoardingUseCase {
       ) as _i5.Future<void>);
 
   @override
-  _i5.Future<bool> assignRoleOnBoarding(
-          _i9.OnBoardingAssignRoleEntity? params) =>
-      (super.noSuchMethod(
+  _i5.Future<bool> assignRoleOnBoarding(_i9.OnBoardingAssignRoleEntity? params) => (super.noSuchMethod(
         Invocation.method(
           #assignRoleOnBoarding,
           [params],
@@ -345,14 +354,21 @@ class MockOnBoardingUseCase extends _i1.Mock implements _i12.OnBoardingUseCase {
       ) as _i5.Future<bool>);
 
   @override
-  _i5.Future<List<_i10.OnBoardingUserRoleEntity>> getUserRolesOnBoarding() =>
-      (super.noSuchMethod(
+  _i5.Future<_i11.EAuthProviderEntity?> getEAuthProviders() => (super.noSuchMethod(
+        Invocation.method(
+          #getEAuthProviders,
+          [],
+        ),
+        returnValue: _i5.Future<_i11.EAuthProviderEntity?>.value(),
+      ) as _i5.Future<_i11.EAuthProviderEntity?>);
+
+  @override
+  _i5.Future<List<_i10.OnBoardingUserRoleEntity>> getUserRolesOnBoarding() => (super.noSuchMethod(
         Invocation.method(
           #getUserRolesOnBoarding,
           [],
         ),
-        returnValue: _i5.Future<List<_i10.OnBoardingUserRoleEntity>>.value(
-            <_i10.OnBoardingUserRoleEntity>[]),
+        returnValue: _i5.Future<List<_i10.OnBoardingUserRoleEntity>>.value(<_i10.OnBoardingUserRoleEntity>[]),
       ) as _i5.Future<List<_i10.OnBoardingUserRoleEntity>>);
 
   @override
@@ -364,12 +380,21 @@ class MockOnBoardingUseCase extends _i1.Mock implements _i12.OnBoardingUseCase {
         returnValue: _i5.Future<void>.value(),
         returnValueForMissingStub: _i5.Future<void>.value(),
       ) as _i5.Future<void>);
+
+  @override
+  _i5.Future<bool> createMpin(String? pin) => (super.noSuchMethod(
+        Invocation.method(
+          #createMpin,
+          [pin],
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
 }
 
 /// A class which mocks [NetworkInfo].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockNetworkInfo extends _i1.Mock implements _i13.NetworkInfo {
+class MockNetworkInfo extends _i1.Mock implements _i15.NetworkInfo {
   MockNetworkInfo() {
     _i1.throwOnMissingStub(this);
   }
@@ -378,8 +403,7 @@ class MockNetworkInfo extends _i1.Mock implements _i13.NetworkInfo {
 /// A class which mocks [SharedPreferencesHelper].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSharedPreferencesHelper extends _i1.Mock
-    implements _i14.SharedPreferencesHelper {
+class MockSharedPreferencesHelper extends _i1.Mock implements _i16.SharedPreferencesHelper {
   MockSharedPreferencesHelper() {
     _i1.throwOnMissingStub(this);
   }
@@ -394,8 +418,7 @@ class MockSharedPreferencesHelper extends _i1.Mock
       ) as _i3.SharedPreferences);
 
   @override
-  set sharedPreferences(_i3.SharedPreferences? _sharedPreferences) =>
-      super.noSuchMethod(
+  set sharedPreferences(_i3.SharedPreferences? _sharedPreferences) => super.noSuchMethod(
         Invocation.setter(
           #sharedPreferences,
           _sharedPreferences,
@@ -404,8 +427,7 @@ class MockSharedPreferencesHelper extends _i1.Mock
       );
 
   @override
-  _i5.Future<dynamic> init({_i3.SharedPreferences? preferences}) =>
-      (super.noSuchMethod(
+  _i5.Future<dynamic> init({_i3.SharedPreferences? preferences}) => (super.noSuchMethod(
         Invocation.method(
           #init,
           [],
@@ -513,8 +535,7 @@ class MockDio extends _i1.Mock implements _i4.Dio {
       ) as _i4.HttpClientAdapter);
 
   @override
-  set httpClientAdapter(_i4.HttpClientAdapter? _httpClientAdapter) =>
-      super.noSuchMethod(
+  set httpClientAdapter(_i4.HttpClientAdapter? _httpClientAdapter) => super.noSuchMethod(
         Invocation.setter(
           #httpClientAdapter,
           _httpClientAdapter,
@@ -1020,8 +1041,7 @@ class MockDio extends _i1.Mock implements _i4.Dio {
             #options: options,
           },
         ),
-        returnValue:
-            _i5.Future<_i4.Response<dynamic>>.value(_FakeResponse_6<dynamic>(
+        returnValue: _i5.Future<_i4.Response<dynamic>>.value(_FakeResponse_6<dynamic>(
           this,
           Invocation.method(
             #download,
@@ -1069,8 +1089,7 @@ class MockDio extends _i1.Mock implements _i4.Dio {
             #options: options,
           },
         ),
-        returnValue:
-            _i5.Future<_i4.Response<dynamic>>.value(_FakeResponse_6<dynamic>(
+        returnValue: _i5.Future<_i4.Response<dynamic>>.value(_FakeResponse_6<dynamic>(
           this,
           Invocation.method(
             #downloadUri,
@@ -1168,8 +1187,7 @@ class MockDio extends _i1.Mock implements _i4.Dio {
       ) as _i5.Future<_i4.Response<T>>);
 
   @override
-  _i5.Future<_i4.Response<T>> fetch<T>(_i4.RequestOptions? requestOptions) =>
-      (super.noSuchMethod(
+  _i5.Future<_i4.Response<T>> fetch<T>(_i4.RequestOptions? requestOptions) => (super.noSuchMethod(
         Invocation.method(
           #fetch,
           [requestOptions],

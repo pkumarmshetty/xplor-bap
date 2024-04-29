@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../../../../utils/app_utils.dart';
+import '../../../../../utils/app_utils/app_utils.dart';
 import '../../../domain/entities/on_boarding_send_otp_entity.dart';
 import '../../../domain/usecase/on_boarding_usecase.dart';
 
@@ -18,8 +18,7 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
     on<PhoneSubmitEvent>(_onFormSubmitted);
   }
 
-  Future<void> _onCountryCodeChange(
-      CountryCodeEvent event, Emitter<PhoneState> emit) async {
+  Future<void> _onCountryCodeChange(CountryCodeEvent event, Emitter<PhoneState> emit) async {
     countryCode = event.countryCode;
   }
 
@@ -40,8 +39,7 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
     );
     try {
       String res = await useCase.call(params: entity);
-      emit(SuccessPhoneState(
-          phoneNumber: '$countryCode ${event.phone}', key: res));
+      emit(SuccessPhoneState(phoneNumber: '$countryCode ${event.phone}', key: res));
     } catch (e) {
       emit(FailurePhoneState(AppUtils.getErrorMessage(e.toString())));
     }
