@@ -8,20 +8,24 @@ String authEntityToJson(OnBoardingAssignRoleEntity data) => json.encode(data.toJ
 
 class OnBoardingAssignRoleEntity {
   String? roleId;
+  String? deviceId;
 
   OnBoardingAssignRoleEntity({
     this.roleId,
+    this.deviceId,
   });
 
   /// Creates a [OnBoardingAssignRoleEntity] object from a JSON map.
   factory OnBoardingAssignRoleEntity.fromJson(Map<String, dynamic> json) => OnBoardingAssignRoleEntity(
         roleId: json["roleId"],
+        deviceId: json["deviceId"],
       );
 
   /// Converts the [OnBoardingAssignRoleEntity] object to a JSON map.
   Map<String, dynamic> toJson() {
     return {
       'roleId': roleId,
+      'deviceId': deviceId,
     };
   }
 }

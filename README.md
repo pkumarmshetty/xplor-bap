@@ -6,6 +6,7 @@ It includes features for user authentication, role selection, KYC (Know Your Cus
 ## Table of Contents
 
 - [Features]
+- [Branching Strategy]
 - [Installation]
 - [Contributing]
 - [License]
@@ -47,6 +48,45 @@ It includes features for user authentication, role selection, KYC (Know Your Cus
 - Functionality:
     - Specify duration: When granting consent for document access or sharing, users can specify a duration for which the consent remains valid.
     - Automatic expiration: After the specified duration elapses, the consent for document access expires automatically, restricting further access unless renewed.
+
+
+## Branching Strategy
+
+1. Feature Branches
+
+- For new features:
+   - Format: feature/brief-description
+   - Example: feature/user-authentication, feature/shopping-cart
+2. Bugfix Branches
+
+- For fixing bugs:
+   - Format: bugfix/brief-description
+   - Example: bugfix/login-error, bugfix/cart-not-updating
+3. Hotfix Branches
+
+- For urgent fixes that need to be deployed immediately:
+   - Format: hotfix/brief-description
+   - Example: hotfix/critical-security-patch, hotfix/payment-gateway
+4. Improvement Branches
+
+- For improvements or refactoring that aren't new features:
+   - Format: improvement/brief-description
+   - Example: improvement/code-refactor, improvement/ui-enhancements
+5. Release Branches
+
+- For preparing a release:
+   - Format: release/version-number
+   - Example: release/1.0.0, release/2.1.3
+6. Experiment Branches
+
+- For experimental features or spikes:
+   - Format: experiment/brief-description
+   - Example: experiment/new-ui-concept, experiment/performance-tuning
+7. Chore Branches
+- For routine tasks such as updating dependencies or documentation:
+   - Format: chore/brief-description
+   - Example: chore/update-dependencies, chore/add-documentation
+
 
 ## Installation
 

@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:xplor/features/multi_lang/domain/mappers/wallet/wallet_keys.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
 import 'package:xplor/utils/utils.dart';
 
 import '../../../../gen/assets.gen.dart';
@@ -48,14 +50,22 @@ class _TagsWidgetState extends State<TagsWidget> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  'Enter Tags'.titleBold(size: 14.sp),
+                  WalletKeys.enterTags.stringToString.titleBold(size: 14.sp, color: AppColors.grey64697a),
                   AppDimensions.small.vSpace(),
                   Container(
+                    padding: EdgeInsets.zero,
                     decoration: BoxDecoration(
-                      color: AppColors.white,
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: AppColors.grey100,
+                          offset: Offset(0, 10),
+                          blurRadius: 30,
+                        ),
+                      ],
                       border: Border.all(
-                        color: AppColors.hintColor,
-                        width: 1.5.w,
+                        color: AppColors.grey100,
+                        width: 1.5,
                       ),
                       borderRadius: BorderRadius.circular(AppDimensions.small),
                     ),
@@ -89,9 +99,11 @@ class _TagsWidgetState extends State<TagsWidget> {
                             // Adjust as needed
                           ],
                           decoration: InputDecoration(
+                            filled: true,
+                            fillColor: AppColors.white,
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: AppDimensions.smallXL.sp),
-                            hintText: 'Include comma (,) separated values',
+                            contentPadding: EdgeInsets.symmetric(vertical: 14.sp, horizontal: AppDimensions.smallXL.sp),
+                            hintText: WalletKeys.includeComma.stringToString,
                             hintStyle: GoogleFonts.manrope(
                                 fontWeight: FontWeight.w400, fontSize: 14.sp, color: AppColors.hintColor),
                           ),
@@ -111,12 +123,14 @@ class _TagsWidgetState extends State<TagsWidget> {
                                         uniqueTags = selected.toSet();
                                         return Container(
                                           decoration: BoxDecoration(
-                                              color: AppColors.lightBlue,
+                                              color: AppColors.tagsColor.withOpacity(0.1),
+                                              border: Border.all(
+                                                color: AppColors.tagsColor,
+                                                width: 1.5,
+                                              ),
                                               borderRadius: BorderRadius.circular(49.27.sp)),
                                           child: Row(
                                             crossAxisAlignment: CrossAxisAlignment.center,
-                                            /*crossAxisAlignment:
-                                            CrossAxisAlignment.start,*/
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               AppDimensions.smallXL.hSpace(),
@@ -157,7 +171,8 @@ class _TagsWidgetState extends State<TagsWidget> {
                   if (!(selected.length == uniqueTags.length) && state is! FileTagsErrorState)
                     Column(
                       children: [
-                        "Each tag must be different".titleSemiBold(size: 12.sp, color: AppColors.errorColor),
+                        WalletKeys.eachTagMustBeDifferent.stringToString
+                            .titleSemiBold(size: 12.sp, color: AppColors.errorColor),
                         AppDimensions.smallXL.vSpace(),
                       ],
                     ),
@@ -170,16 +185,16 @@ class _TagsWidgetState extends State<TagsWidget> {
                     ),
                 ],
               ),
-              AppDimensions.small.vSpace(),
+              AppDimensions.smallXL.vSpace(),
               Row(
                 children: [
-                  'Suggested Tags:'.titleRegular(size: 14.sp, color: AppColors.hintColor),
+                  WalletKeys.suggestedTags.stringToString.titleRegular(size: 14.sp, color: AppColors.hintColor),
                   AppDimensions.extraSmall.hSpace(),
-                  tagsWidget(tag: 'Scholarship'),
+                  tagsWidget(tag: WalletKeys.scholarship.stringToString),
                   AppDimensions.extraSmall.hSpace(),
-                  tagsWidget(tag: 'Admission'),
+                  tagsWidget(tag: WalletKeys.admission.stringToString),
                   AppDimensions.extraSmall.hSpace(),
-                  tagsWidget(tag: 'Job'),
+                  tagsWidget(tag: WalletKeys.job.stringToString),
                 ],
               ),
             ],
@@ -199,7 +214,8 @@ class _TagsWidgetState extends State<TagsWidget> {
         });
       },
       child: Container(
-        decoration: BoxDecoration(color: AppColors.lightBlue, borderRadius: BorderRadius.circular(49.27.sp)),
+        decoration:
+            BoxDecoration(color: AppColors.grey64697a.withOpacity(0.1), borderRadius: BorderRadius.circular(49.27.sp)),
         padding: const EdgeInsets.symmetric(vertical: AppDimensions.extraSmall, horizontal: AppDimensions.small),
         child: tag.titleSemiBold(size: 10.sp),
       ),

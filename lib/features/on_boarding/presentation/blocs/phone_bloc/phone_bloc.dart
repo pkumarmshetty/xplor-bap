@@ -1,5 +1,10 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
+import '../../../../../const/local_storage/shared_preferences_helper.dart';
+import '../../../../../core/dependency_injection.dart';
 import '../../../../../utils/app_utils/app_utils.dart';
 import '../../../domain/entities/on_boarding_send_otp_entity.dart';
 import '../../../domain/usecase/on_boarding_usecase.dart';
@@ -16,6 +21,7 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
     on<CountryCodeEvent>(_onCountryCodeChange);
     on<CheckPhoneEvent>(_validatePhoneNumber);
     on<PhoneSubmitEvent>(_onFormSubmitted);
+    on<PhoneInitialEvent>(_onInitialEvent);
   }
 
   Future<void> _onCountryCodeChange(CountryCodeEvent event, Emitter<PhoneState> emit) async {
@@ -36,13 +42,22 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
 
     OnBoardingSendOtpEntity? entity = OnBoardingSendOtpEntity(
       phoneNumber: '$countryCode ${event.phone}'.trim(),
+      deviceId: sl<SharedPreferencesHelper>().getString(PrefConstKeys.deviceId),
+      userCheck: event.userCheck,
     );
+    if (kDebugMode) {
+      print('$countryCode ${event.phone}'.trim());
+    }
     try {
       String res = await useCase.call(params: entity);
       emit(SuccessPhoneState(phoneNumber: '$countryCode ${event.phone}', key: res));
     } catch (e) {
       emit(FailurePhoneState(AppUtils.getErrorMessage(e.toString())));
     }
+  }
+
+  FutureOr<void> _onInitialEvent(PhoneInitialEvent event, Emitter<PhoneState> emit) {
+    emit(PhoneInitial());
   }
 }
 

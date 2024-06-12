@@ -6,70 +6,64 @@ mixin AppUtilsDialogMixin {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return AlertDialog(
-            insetPadding: const EdgeInsets.symmetric(horizontal: 20),
-            contentPadding: const EdgeInsets.only(left: 20, right: 20, bottom: 25),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            titlePadding: const EdgeInsets.only(left: 20, right: 10, bottom: 20, top: 6),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                'Exit'.titleExtraBold(size: 20),
-                IconButton(
-                  icon: const Icon(Icons.close, color: AppColors.crossIconColor),
-                  // Set custom close icon
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            ),
-            content: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: 'Are you sure, you want to exit?\nAll progress will be lost.'.titleSemiBold(size: 16)),
-            actions: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: ButtonWidget(
-                        buttonBackgroundColor: AppColors.cancelButtonBgColor,
-                        buttonForegroundColor: AppColors.subTitleText,
-                        customText: 'Cancel'.titleMedium(size: 12, color: AppColors.subTitleText),
-                        isValid: true,
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                      child: ButtonWidget(
-                        fontSize: 12,
-                        customText: 'Exit'.titleMedium(size: 12, color: AppColors.white),
-                        isValid: true,
-                        onPressed: () {
-                          if (isTokenClear) {
-                            sl<SharedPreferencesHelper>().setString(PrefConstKeys.token, "");
-                          }
-                          if (Platform.isAndroid) {
-                            SystemNavigator.pop();
-                          } else if (Platform.isIOS) {
-                            exit(0);
-                          }
-                        },
-                      ),
-                    )
-                  ],
-                ),
+          return blurWidget(Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppDimensions.medium),
               ),
-            ],
-          );
+              backgroundColor: AppColors.white,
+              elevation: 0,
+              insetPadding: const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Vertical space above the title
+                  TopHeaderForDialogs(title: OnBoardingKeys.exitString.stringToString, isCrossIconVisible: false),
+                  OnBoardingKeys.exitMessage.stringToString
+                      .titleRegular(size: 14.sp, color: AppColors.grey64697a)
+                      .symmetricPadding(horizontal: AppDimensions.mediumXL),
+                  AppDimensions.small.vSpace(),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ButtonWidget(
+                          isFilled: false,
+                          radius: AppDimensions.small,
+                          buttonBackgroundColor: AppColors.white,
+                          buttonForegroundColor: AppColors.white,
+                          customText:
+                              OnBoardingKeys.cancel.stringToString.titleBold(size: 14, color: AppColors.primaryColor),
+                          isValid: true,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                      AppDimensions.small.hSpace(),
+                      Expanded(
+                        child: ButtonWidget(
+                          radius: AppDimensions.small,
+                          fontSize: 8.0,
+                          customText:
+                              OnBoardingKeys.exitString.stringToString.titleBold(size: 14, color: AppColors.white),
+                          isValid: true,
+                          onPressed: () {
+                            if (isTokenClear) {
+                              sl<SharedPreferencesHelper>().setString(PrefConstKeys.accessToken, "");
+                            }
+                            if (Platform.isAndroid) {
+                              SystemNavigator.pop();
+                            } else if (Platform.isIOS) {
+                              exit(0);
+                            }
+                          },
+                        ),
+                      )
+                    ],
+                  ).symmetricPadding(horizontal: AppDimensions.mediumXL),
+                  AppDimensions.small.vSpace(),
+                ],
+              )));
         });
   }
 
@@ -99,35 +93,86 @@ mixin AppUtilsDialogMixin {
                 AppDimensions.large.vSpace(),
 
                 /// OK button
+                ///
                 Row(
                   children: [
                     Expanded(
-                      child: ButtonWidget(
-                        buttonBackgroundColor: AppColors.cancelButtonBgColor,
-                        buttonForegroundColor: AppColors.subTitleText,
-                        customText: leftButtonMessage.titleMedium(size: 12.sp, color: AppColors.subTitleText),
-                        isValid: true,
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.cancelButtonBgColor,
+                          // Text color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0), // Rounded edges
+                          ),
+                          elevation: 5, // Shadow
+                        ),
+                        child: leftButtonMessage
+                            .titleMedium(color: AppColors.cancelStyle, size: 12.sp)
+                            .paddingAll(padding: AppDimensions.smallXL.w),
                       ),
                     ),
                     AppDimensions.mediumXL.hSpace(),
                     Expanded(
-                      child: ButtonWidget(
-                        buttonBackgroundColor: AppColors.errorColor,
-                        buttonForegroundColor: AppColors.white,
-                        fontSize: 12.sp,
-                        customText: rightButtonMessage.titleMedium(size: 12.sp, color: AppColors.white),
-                        isValid: true,
-                        onPressed: onConfirm,
+                      child: ElevatedButton(
+                        onPressed: () => onConfirm(),
+                        style: ElevatedButton.styleFrom(
+                          surfaceTintColor: AppColors.errorColor,
+                          backgroundColor: AppColors.errorColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0), // Rounded edges
+                          ),
+                          elevation: 5, // Shadow
+                        ),
+                        child: rightButtonMessage
+                            .titleMedium(color: AppColors.white, size: 12.sp)
+                            .paddingAll(padding: AppDimensions.smallXL.w),
                       ),
-                    )
+                    ),
                   ],
                 ).symmetricPadding(horizontal: AppDimensions.mediumXL),
 
                 /// Vertical space below the OK button
+                AppDimensions.xxl.vSpace(),
+              ],
+            ),
+          );
+        });
+  }
+
+  static void linkGeneratedDialog(
+      BuildContext context, String title, String message, String buttonText, VoidCallback onConfirm) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppDimensions.medium),
+            ),
+            backgroundColor: AppColors.white,
+            elevation: 0,
+            insetPadding: const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TopHeaderForDialogs(title: title, isCrossIconVisible: false),
+
+                /// Message with custom styling
+                message
+                    .titleSemiBold(size: 14.sp, maxLine: 6, color: AppColors.grey64697a)
+                    .symmetricPadding(horizontal: AppDimensions.mediumXL),
+
+                /// Vertical space below the message
                 AppDimensions.large.vSpace(),
+
+                /// OK button
+                CircularButton(onPressed: () => onConfirm(), isValid: true, title: buttonText)
+                    .symmetricPadding(horizontal: AppDimensions.mediumXL),
+
+                /// Vertical space below the OK button
+                AppDimensions.xxl.vSpace(),
               ],
             ),
           );
@@ -140,11 +185,8 @@ mixin AppUtilsDialogMixin {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return EnterMPinDialog(
-            title: 'Enter MPIN',
+            title: GenerateMpinKeys.enterMPin.stringToString,
             isCrossIconVisible: true,
-            onConfirmPressed: () {
-              AppUtils.shareFile('Sharing HSC Marksheet');
-            },
           );
         });
   }

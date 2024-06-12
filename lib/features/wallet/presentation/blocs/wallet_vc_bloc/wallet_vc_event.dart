@@ -14,10 +14,12 @@ class GetWalletVcEvent extends WalletVcEvent {
 
 class WalletDocumentSelectedEvent extends WalletVcEvent {
   final int position;
+  final String id;
   final bool isSelected;
 
   const WalletDocumentSelectedEvent({
     required this.position,
+    required this.id,
     required this.isSelected,
   });
 }
@@ -27,6 +29,14 @@ class WalletMultipleDocumentsShareEvent extends WalletVcEvent {
 
   const WalletMultipleDocumentsShareEvent({
     required this.docs,
+  });
+}
+
+class WalletSearchDocumentsEvent extends WalletVcEvent {
+  final String documentsName;
+
+  const WalletSearchDocumentsEvent({
+    required this.documentsName,
   });
 }
 

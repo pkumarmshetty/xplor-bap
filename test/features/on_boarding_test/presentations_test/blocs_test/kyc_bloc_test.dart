@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:xplor/features/on_boarding/domain/entities/e_auth_providers_entity.dart';
-import 'package:xplor/features/on_boarding/presentation/blocs/kyc_bloc/kyc_bloc.dart';
+import 'package:xplor/features/on_boarding/presentation/blocs/kyc_bloc/kyc_bloc_belem.dart';
 
 import '../../helpers/test_helper.mocks.dart';
 
@@ -34,7 +34,7 @@ void main() {
           title: "example"));
       return kycBloc;
     },
-    act: (bloc) => bloc.add(const UpdateUserKycEvent()),
+    act: (bloc) => bloc.add(const GetProvidersEvent()),
     expect: () => [
       KycLoadingState(),
       const ShowWebViewState('https://example.com'),
@@ -47,7 +47,7 @@ void main() {
       when(mockOnBoardingUseCase.getEAuthProviders()).thenAnswer((_) async => null);
       return kycBloc;
     },
-    act: (bloc) => bloc.add(const UpdateUserKycEvent()),
+    act: (bloc) => bloc.add(const GetProvidersEvent()),
     expect: () => [
       KycLoadingState(),
       KycFailedState(),
@@ -60,7 +60,7 @@ void main() {
       when(mockOnBoardingUseCase.getEAuthProviders()).thenThrow(Exception('Error'));
       return kycBloc;
     },
-    act: (bloc) => bloc.add(const UpdateUserKycEvent()),
+    act: (bloc) => bloc.add(const GetProvidersEvent()),
     expect: () => [
       KycLoadingState(),
       const KycErrorState('Error'),

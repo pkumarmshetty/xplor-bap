@@ -1,6 +1,8 @@
-import '../../domain/entities/user_data_entity.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
+
 import '../../../../core/connection/network_info.dart';
 import '../../../../core/exception_errors.dart';
+import '../../../on_boarding/domain/entities/user_data_entity.dart';
 import '../../domain/repository/home_repository.dart';
 import '../data_sources/home_api_service.dart';
 
@@ -15,7 +17,7 @@ class HomeRepositoryImpl implements HomeRepository {
     if (await networkInfo.isConnected!) {
       return apiService.getUserData();
     } else {
-      throw Exception(checkInternetConnection);
+      throw Exception(ExceptionErrors.checkInternetConnection.stringToString);
     }
   }
 }

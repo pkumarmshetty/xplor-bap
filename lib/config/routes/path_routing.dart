@@ -2,6 +2,16 @@
 class Routes {
   static const String main = "/";
 
+  static const String welcomePage = "/welcomePage";
+
+  static const String selectLanguageScreen = "/selectLanguageScreen";
+
+  static const String accessLocationPage = "/accessLocation";
+
+  static const String walkThrough = "/walkThrough";
+
+  static const String shareDocument = "/shareDoc";
+
   /// Represents the main or home route, likely the initial route when the app starts.
   static const String login = "/login";
 
@@ -21,4 +31,42 @@ class Routes {
 
   /// Route for the Mpin Screen
   static const String mpin = "/mpin";
+
+  /// Route for the Choose Language
+  static const String chooseLanguage = "/chooseLanguage";
+
+  /// Route for the Reset Mpin Screen
+  static const String resetMpin = "/resetMpin";
+
+  /// Route for the Seeker Home Screen
+  static const String seekerHome = "/seekerHome";
+
+  static const String startCoursePage = "/startCoursePage";
+
+  /// Route for the Course Description
+  static const String courseDescription = "/courseDescription";
+
+  static const String chooseDomain = "/chooseDomain";
+
+  static const String selectCategory = "/selectCategory";
+
+  static const String seekerOnSearchResult = "/seekerOnSearchResult";
+
+  static const String addDoument = "/addDoument";
+
+  static const String seekerDashboard = "/seekerDashboard";
+
+  static const String seekersList = "/seekersList";
+
+  static const String applyCourse = "/applyCourse";
+
+  static const String courseDocument = "/courseDocument";
+
+  static const String thanksForApplying = "/thanksForApplying";
+
+  static const String editProfile = "/editProfile";
+
+  static const String myOrders = "/myOrders";
+
+  static const String certificate = "/certificate";
 }

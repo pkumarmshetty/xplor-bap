@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:xplor/features/wallet/domain/usecase/wallet_usecase.dart';
@@ -15,6 +17,7 @@ class EnterMPinBloc extends Bloc<EnterMPinEvent, EnterMPinState> {
   EnterMPinBloc({required this.useCase}) : super(MPinInitial()) {
     on<MPinValidatorEvent>(_onVerifyValidMPin);
     on<MPinVerifyEvent>(_onVerifyMPinFn);
+    on<MPinInitialEvent>(_onInitialEvent);
   }
 
   _onVerifyValidMPin(MPinValidatorEvent event, Emitter<EnterMPinState> emit) {
@@ -43,5 +46,9 @@ class EnterMPinBloc extends Bloc<EnterMPinEvent, EnterMPinState> {
       emit(FailureMPinState(AppUtils.getErrorMessage(e.toString())));
       return false;
     }
+  }
+
+  FutureOr<void> _onInitialEvent(MPinInitialEvent event, Emitter<EnterMPinState> emit) {
+    emit(MPinInitial());
   }
 }

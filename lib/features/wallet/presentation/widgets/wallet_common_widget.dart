@@ -55,7 +55,7 @@ class UpdateButtonWidget extends StatelessWidget {
 
 class RevokeButtonWidget extends StatelessWidget {
   final String text;
-  final String icon;
+  final SvgPicture icon;
   final int radius;
   final Color? backgroundColor;
   final VoidCallback onPressed;
@@ -74,6 +74,7 @@ class RevokeButtonWidget extends StatelessWidget {
     return OutlinedButton(
       onPressed: onPressed,
       style: ButtonStyle(
+        // backgroundColor: MaterialStateColor.resolveWith((states) => Colors.red),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radius.sp), // Set border radius here
@@ -92,11 +93,7 @@ class RevokeButtonWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SvgPicture.asset(
-            icon,
-            height: 16.w,
-            width: 16.w,
-          ), // Your icon
+          icon, // Your icon
           AppDimensions.small.hSpace(),
           text.titleBold(
             size: 12,

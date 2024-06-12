@@ -10,8 +10,9 @@ sealed class OtpEvent extends Equatable {
 class PhoneNumberSaveEvent extends OtpEvent {
   final String phoneNumber;
   final String key;
+  final String countryCode;
 
-  const PhoneNumberSaveEvent({required this.phoneNumber, required this.key});
+  const PhoneNumberSaveEvent({required this.phoneNumber, required this.key, required this.countryCode});
 }
 
 class PhoneOtpValidatorEvent extends OtpEvent {

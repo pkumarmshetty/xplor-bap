@@ -51,7 +51,7 @@ class WalletDocumentSelectedState extends WalletVcState {
   });
 
   @override
-  List<Object> get props => [docs];
+  List<Object> get props => [docs, selectedDocs];
 }
 
 class WalletDocumentUnSelectedState extends WalletVcState {
@@ -63,6 +63,19 @@ class WalletDocumentUnSelectedState extends WalletVcState {
 
   @override
   List<Object> get props => [vcData];
+}
+
+class WalletDocumentsSearchedState extends WalletVcState {
+  final List<DocumentVcData> searchedDocuments;
+  final List<DocumentVcData> selectedDocuments;
+
+  const WalletDocumentsSearchedState({
+    required this.searchedDocuments,
+    required this.selectedDocuments,
+  });
+
+  @override
+  List<Object> get props => [searchedDocuments, selectedDocuments];
 }
 
 class DelWalletSuccessState extends WalletVcState {

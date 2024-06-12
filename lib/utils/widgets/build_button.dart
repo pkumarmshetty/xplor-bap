@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:xplor/utils/app_dimensions.dart';
 import '../app_colors.dart';
 import '../extensions/font_style/font_styles.dart';
 
@@ -20,6 +22,9 @@ class ButtonWidget extends StatelessWidget {
   /// The font size of the button text.
   final double? fontSize;
 
+  /// The width of the button.
+  final double? width;
+
   /// A flag indicating whether the button is enabled or not.
   final bool isValid;
 
@@ -38,6 +43,10 @@ class ButtonWidget extends StatelessWidget {
   /// The shadow color of the button.
   final Color? shadowColor;
 
+  final bool isFilled;
+
+  final bool isShadow;
+
   /// Constructs a [ButtonWidget] with the given properties.
   const ButtonWidget({
     super.key,
@@ -48,35 +57,91 @@ class ButtonWidget extends StatelessWidget {
     this.radius,
     this.fontSize,
     this.isValid = false,
+    this.isShadow = true,
     this.onPressed,
     this.padding,
     this.shape,
+    this.width,
     this.shadowColor,
+    this.isFilled = true,
   });
 
   /// Builds the button widget.
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity, // Set width to full width
-      child: ElevatedButton(
-        onPressed: isValid ? onPressed : null,
-        style: ElevatedButton.styleFrom(
-          padding: padding,
-          backgroundColor: buttonBackgroundColor ?? AppColors.primaryColor,
-          // Button Background color
-          foregroundColor: buttonForegroundColor ?? Colors.white,
-          shadowColor: shadowColor,
-          // To set button text color
-          shape: shape ??
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(radius ?? 8.0),
-                ), // To remove the default radius.
+    if (kDebugMode) {
+      print('test....$radius');
+    }
+    var cornerRadius = radius ?? AppDimensions.medium;
+    var innerCornerRadius = radius == null ? cornerRadius - 5 : radius! - 4;
+    return isFilled
+        ? GestureDetector(
+            onTap: isValid ? onPressed : null,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(cornerRadius),
+                border: Border.all(
+                  color: AppColors.white, // Apply outer border color here
+                  width: AppDimensions.small, // Double the border width for the outer border
+                ),
+                boxShadow: isShadow
+                    ? [
+                        BoxShadow(
+                          color: AppColors.primaryLightColor.withOpacity(0.25),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: const Offset(0, 3), // changes position of shadow
+                        ),
+                      ]
+                    : null,
               ),
-        ),
-        child: customText ?? (title ?? '').buttonTextBold(size: fontSize ?? 14.sp),
-      ),
-    );
+              child: Container(
+                padding: const EdgeInsets.all(AppDimensions.smallXL),
+                decoration: BoxDecoration(
+                    color:
+                        buttonBackgroundColor ?? (isValid ? AppColors.primaryColor : AppColors.tabsHomeUnSelectedColor),
+                    borderRadius: BorderRadius.circular(innerCornerRadius)),
+                // width: width ?? double.infinity,
+                alignment: Alignment.center,
+                child: customText ?? (title ?? '').buttonTextBold(size: fontSize ?? 14.sp, color: Colors.white),
+              ),
+            ),
+          )
+        : GestureDetector(
+            onTap: onPressed,
+            child: Container(
+              //width: width ?? double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(cornerRadius),
+                border: Border.all(
+                  color: AppColors.white, // Apply outer border color here
+                  width: AppDimensions.small, // Double the border width for the outer border
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primaryLightColor.withOpacity(0.25),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Container(
+                alignment: Alignment.center,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: AppDimensions.large, vertical: AppDimensions.smallXL - 2),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(innerCornerRadius),
+                  border: Border.all(
+                    color: AppColors.primaryColor,
+                    width: 1,
+                  ),
+                ),
+                child: customText ?? (title ?? '').buttonTextBold(size: fontSize ?? 14.sp, color: Colors.white),
+              ),
+            ),
+          );
   }
 }

@@ -24,6 +24,7 @@ class _MyWalletTabState extends State<MyWalletTab> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<WalletVcBloc>().flowType = FlowType.document;
     return BlocBuilder<WalletVcBloc, WalletVcState>(builder: (context, state) {
       return state is WalletVcInitial
           ? Container()
@@ -31,7 +32,8 @@ class _MyWalletTabState extends State<MyWalletTab> {
               ? const LoadingAnimation()
               : ((state is WalletVcSuccessState && state.vcData.isNotEmpty) ||
                       state is WalletDocumentSelectedState ||
-                      state is WalletDocumentUnSelectedState)
+                      state is WalletDocumentUnSelectedState ||
+                      state is WalletDocumentsSearchedState)
                   ? const WalletDocumentView()
                   : const WalletNoDocumentView();
     });

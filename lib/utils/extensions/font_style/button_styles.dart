@@ -54,7 +54,10 @@ extension ButtonStyles on String {
     Color? color,
     double? size,
   }) {
-    return Text(this, style: GoogleFonts.manrope(fontSize: size ?? 14.sp, fontWeight: FontWeight.w700));
+    return Text(
+      this,
+      style: GoogleFonts.manrope(fontSize: size ?? 14.sp, fontWeight: FontWeight.w700, color: color),
+    );
   }
 
   /// Returns a Text widget with extra bold font style.

@@ -16,6 +16,10 @@ class SharedPreferencesHelper {
     return sharedPreferences.getString(key) ?? defaultValue;
   }
 
+  double getDouble(String key, {double defaultValue = 0}) {
+    return sharedPreferences.getDouble(key) ?? defaultValue;
+  }
+
   bool getBoolean(String key) {
     return sharedPreferences.getBool(key) ?? false;
   }
@@ -24,8 +28,20 @@ class SharedPreferencesHelper {
     return sharedPreferences.setString(key, value);
   }
 
+  Future<bool> setDouble(String key, double value) {
+    return sharedPreferences.setDouble(key, value);
+  }
+
   Future<bool> setBoolean(String key, bool value) {
     return sharedPreferences.setBool(key, value);
+  }
+
+  List<String> getStringList(String key, {List<String> defaultValue = const []}) {
+    return sharedPreferences.getStringList(key) ?? defaultValue;
+  }
+
+  Future<bool> setStringList(String key, List<String> value) {
+    return sharedPreferences.setStringList(key, value);
   }
 
 // Add more methods as needed.

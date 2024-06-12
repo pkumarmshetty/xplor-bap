@@ -9,6 +9,7 @@ class PreviousConsentEntity {
   VcShareDetails vcShareDetails;
   String createdAt;
   String updatedAt;
+  String sharedWithEntity;
   int v;
 
   PreviousConsentEntity({
@@ -22,6 +23,7 @@ class PreviousConsentEntity {
     required this.vcShareDetails,
     required this.createdAt,
     required this.updatedAt,
+    required this.sharedWithEntity,
     required this.v,
   });
 
@@ -37,6 +39,7 @@ class PreviousConsentEntity {
       vcShareDetails: VcShareDetails.fromJson(json['vcShareDetails']),
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
+      sharedWithEntity: json['sharedWithEntity'] ?? 'Self Shared',
       v: json['__v'],
     );
   }

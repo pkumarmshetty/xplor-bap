@@ -1,4 +1,5 @@
 import 'package:xplor/features/wallet/domain/entities/shared_data_entity.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
 import '../../../../core/connection/network_info.dart';
 import '../../../../core/exception_errors.dart';
 
@@ -21,7 +22,7 @@ class WalletRepositoryImpl implements WalletRepository {
     if (await networkInfo.isConnected!) {
       return apiService.addDocumentWallet(entity!);
     } else {
-      throw Exception(checkInternetConnection);
+      throw Exception(ExceptionErrors.checkInternetConnection.stringToString);
     }
   }
 
@@ -30,7 +31,7 @@ class WalletRepositoryImpl implements WalletRepository {
     if (await networkInfo.isConnected!) {
       return apiService.getWalletId();
     } else {
-      throw Exception(checkInternetConnection);
+      throw Exception(ExceptionErrors.checkInternetConnection.stringToString);
     }
   }
 
@@ -39,7 +40,7 @@ class WalletRepositoryImpl implements WalletRepository {
     if (await networkInfo.isConnected!) {
       return apiService.getWalletVcData();
     } else {
-      throw Exception(checkInternetConnection);
+      throw Exception(ExceptionErrors.checkInternetConnection.stringToString);
     }
   }
 
@@ -48,7 +49,7 @@ class WalletRepositoryImpl implements WalletRepository {
     if (await networkInfo.isConnected!) {
       return apiService.sharedVcId(vcIds, request);
     } else {
-      throw Exception(checkInternetConnection);
+      throw Exception(ExceptionErrors.checkInternetConnection.stringToString);
     }
   }
 
@@ -57,7 +58,7 @@ class WalletRepositoryImpl implements WalletRepository {
     if (await networkInfo.isConnected!) {
       return apiService.deletedVcIds(vcIds);
     } else {
-      throw Exception(checkInternetConnection);
+      throw Exception(ExceptionErrors.checkInternetConnection.stringToString);
     }
   }
 
@@ -66,7 +67,7 @@ class WalletRepositoryImpl implements WalletRepository {
     if (await networkInfo.isConnected!) {
       return apiService.getMyConsents();
     } else {
-      throw Exception(checkInternetConnection);
+      throw Exception(ExceptionErrors.checkInternetConnection.stringToString);
     }
   }
 
@@ -75,7 +76,7 @@ class WalletRepositoryImpl implements WalletRepository {
     if (await networkInfo.isConnected!) {
       return apiService.getMyPrevConsents();
     } else {
-      throw Exception(checkInternetConnection);
+      throw Exception(ExceptionErrors.checkInternetConnection.stringToString);
     }
   }
 
@@ -84,7 +85,7 @@ class WalletRepositoryImpl implements WalletRepository {
     if (await networkInfo.isConnected!) {
       return apiService.updateConsent(entity, requestId);
     } else {
-      throw Exception(checkInternetConnection);
+      throw Exception(ExceptionErrors.checkInternetConnection.stringToString);
     }
   }
 
@@ -93,7 +94,7 @@ class WalletRepositoryImpl implements WalletRepository {
     if (await networkInfo.isConnected!) {
       return apiService.revokeConsent(entity);
     } else {
-      throw Exception(checkInternetConnection);
+      throw Exception(ExceptionErrors.checkInternetConnection.stringToString);
     }
   }
 
@@ -102,7 +103,7 @@ class WalletRepositoryImpl implements WalletRepository {
     if (await networkInfo.isConnected!) {
       return apiService.verifyMpin(pin);
     } else {
-      throw Exception(checkInternetConnection);
+      throw Exception(ExceptionErrors.checkInternetConnection.stringToString);
     }
   }
 }

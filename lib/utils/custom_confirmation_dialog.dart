@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:xplor/features/multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
+import 'package:xplor/utils/widgets/blur_widget.dart';
 
 import 'app_colors.dart';
 import 'app_dimensions.dart';
@@ -39,7 +42,7 @@ class CustomConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    return blurWidget(Dialog(
       // Setting up dialog shape
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppDimensions.medium),
@@ -57,8 +60,8 @@ class CustomConfirmationDialog extends StatelessWidget {
           // Success icon
           SvgPicture.asset(
             assetPath,
-            height: 64.w,
-            width: 64.w,
+            height: 137.w,
+            width: 148.w,
           ),
           AppDimensions.large.vSpace(),
           // Dialog title
@@ -69,12 +72,12 @@ class CustomConfirmationDialog extends StatelessWidget {
           AppDimensions.mediumXL.vSpace(),
           // OK button
           ButtonWidget(
-            title: buttonTitle ?? 'Ok',
+            title: buttonTitle ?? OnBoardingKeys.okay.stringToString,
             isValid: true,
             onPressed: onConfirmPressed,
           ),
         ],
       ).paddingAll(padding: AppDimensions.mediumXL),
-    );
+    ));
   }
 }

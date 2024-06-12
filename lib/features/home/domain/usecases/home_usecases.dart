@@ -1,4 +1,4 @@
-import '../entities/user_data_entity.dart';
+import '../../../on_boarding/domain/entities/user_data_entity.dart';
 import '../repository/home_repository.dart';
 
 class HomeUseCase {

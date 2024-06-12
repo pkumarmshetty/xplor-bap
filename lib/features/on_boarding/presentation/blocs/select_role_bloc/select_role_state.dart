@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 import '../../../domain/entities/on_boarding_user_role_entity.dart';
 import '../../../../../const/app_state.dart';
 
+enum RoleState { loading, loaded, saved, failure }
+
 /// State class for the SelectRoleBloc.
 sealed class SelectRoleState extends Equatable {
   const SelectRoleState();
@@ -14,10 +16,11 @@ sealed class SelectRoleState extends Equatable {
 final class SelectRoleInitial extends SelectRoleState {}
 
 /// Loading state
-class SelectRoleLoadingState extends SelectRoleState {
-  final AppPageStatus status;
+class SelectRoleFetchedState extends SelectRoleState {
+  final List<OnBoardingUserRoleEntity> userRoles;
+  final RoleState status;
 
-  const SelectRoleLoadingState({this.status = AppPageStatus.loading});
+  const SelectRoleFetchedState({required this.userRoles, this.status = RoleState.loading});
 
   @override
   List<Object> get props => [status];
@@ -50,6 +53,3 @@ class SelectRoleErrorState extends SelectRoleState {
   @override
   List<Object> get props => [errorMessage, status];
 }
-
-/// Navigation state
-class SelectRoleNavigationState extends SelectRoleState {}

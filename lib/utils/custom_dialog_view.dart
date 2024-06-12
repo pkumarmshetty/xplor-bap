@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
+import 'package:xplor/utils/widgets/blur_widget.dart';
 
+import '../features/multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
 import 'app_colors.dart';
 import 'app_dimensions.dart';
 import 'extensions/font_style/font_styles.dart';
@@ -32,39 +35,34 @@ class CustomDialogView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppDimensions.medium),
-      ),
-      backgroundColor: AppColors.white,
-      elevation: 0,
-      insetPadding: const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          /// Vertical space above the title
-          TopHeaderForDialogs(title: title, isCrossIconVisible: false),
-
-          /// Message with custom styling
-          message
-              .titleRegular(color: AppColors.alertDialogMessageColor, size: 14.sp)
-              .symmetricPadding(horizontal: AppDimensions.medium),
-
-          /// Vertical space below the message
-          AppDimensions.large.vSpace(),
-
-          /// OK button
-          ButtonWidget(
-            title: 'Ok',
-            isValid: true,
-            onPressed: onConfirmPressed,
-          ).symmetricPadding(horizontal: AppDimensions.medium),
-
-          /// Vertical space below the OK button
-          AppDimensions.large.vSpace(),
-        ],
-      ),
-    );
+    return blurWidget(Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.medium),
+        ),
+        backgroundColor: AppColors.white,
+        elevation: 0,
+        insetPadding: const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Vertical space above the title
+            TopHeaderForDialogs(title: title, isCrossIconVisible: false),
+            // Message with custom styling
+            message
+                .titleRegular(color: AppColors.grey64697a, size: 14.sp)
+                .symmetricPadding(horizontal: AppDimensions.medium),
+            // Vertical space below the message
+            AppDimensions.large.vSpace(),
+            // OK button
+            ButtonWidget(
+              title: OnBoardingKeys.okay.stringToString,
+              isValid: true,
+              onPressed: onConfirmPressed,
+            ).symmetricPadding(horizontal: AppDimensions.medium),
+            // Vertical space below the OK button
+            AppDimensions.large.vSpace(),
+          ],
+        )));
   }
 }

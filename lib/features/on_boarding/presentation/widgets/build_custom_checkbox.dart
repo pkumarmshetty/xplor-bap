@@ -4,8 +4,9 @@ import 'package:xplor/utils/app_colors.dart';
 
 class CustomCheckbox extends StatefulWidget {
   final Function(bool isChecked) onChanged;
+  final bool isChecked;
 
-  const CustomCheckbox({super.key, required this.onChanged});
+  const CustomCheckbox({super.key, required this.isChecked, required this.onChanged});
 
   @override
   State<CustomCheckbox> createState() => _CustomCheckboxState();
@@ -13,13 +14,13 @@ class CustomCheckbox extends StatefulWidget {
 
 class _CustomCheckboxState extends State<CustomCheckbox> {
   bool isChecked = false;
-
   @override
   Widget build(BuildContext context) {
+    isChecked = widget.isChecked;
     return GestureDetector(
       onTap: () {
         setState(() {
-          isChecked = !isChecked;
+          isChecked = !widget.isChecked;
           widget.onChanged(isChecked);
 
           /// Notify parent class about the change

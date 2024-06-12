@@ -12,6 +12,8 @@ class HomeInitialState extends HomeState {}
 
 class HomeUserDataLoadingState extends HomeState {}
 
+class HomeProfileState extends HomeState {}
+
 class HomeUserDataFailureState extends HomeState {}
 
 final class HomeUserDataState extends HomeState {

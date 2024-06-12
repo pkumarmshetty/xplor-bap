@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:xplor/features/multi_lang/domain/mappers/wallet/wallet_keys.dart';
 import 'package:xplor/features/wallet/domain/entities/shared_data_entity.dart';
+import 'package:xplor/features/wallet/presentation/blocs/wallet_vc_bloc/wallet_vc_bloc.dart';
 import 'package:xplor/features/wallet/presentation/widgets/update_consent_dialog.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
 
 import '../../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../../core/dependency_injection.dart';
@@ -48,8 +52,9 @@ class _MyConsentListState extends State<MyConsentList> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      'Active Consents'.titleExtraBold(
+                      WalletKeys.activeConsents.stringToString.titleExtraBold(
                         size: 20.sp,
+                        color: AppColors.grey64697a,
                       ),
                     ],
                   ),
@@ -78,8 +83,9 @@ class _MyConsentListState extends State<MyConsentList> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        'Previous Consents'.titleExtraBold(
+                        WalletKeys.previousConsents.stringToString.titleExtraBold(
                           size: 20.sp,
+                          color: AppColors.grey64697a,
                         ),
                       ],
                     ),

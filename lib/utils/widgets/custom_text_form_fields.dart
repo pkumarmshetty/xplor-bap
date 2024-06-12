@@ -45,41 +45,57 @@ class CustomTextFormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (label != "") label.titleBold(size: 14.sp),
-        TextFormField(
-          maxLines: 3,
-          minLines: 1,
-          controller: controller,
-          onChanged: onChanged,
-          onFieldSubmitted: onFieldSubmitted,
-          validator: validator,
-          readOnly: readOnly,
-          keyboardType: inputType,
-          onTap: onTap,
-          inputFormatters: inputFormatters,
-          obscureText: isPassword ? obscureText : false,
-          style: GoogleFonts.manrope(fontWeight: FontWeight.w400, fontSize: 14.sp, color: AppColors.black),
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sp, horizontal: AppDimensions.smallXL.sp),
-            hintText: hintText,
-            hintStyle: GoogleFonts.manrope(fontWeight: FontWeight.w400, fontSize: 14.sp, color: AppColors.hintColor),
-            prefixIcon: prefixIcon,
-            suffixIcon: isPassword
-                ? IconButton(
-                    icon: Icon(
-                      // Based on passwordVisible state choose the icon
-                      obscureText ? Icons.visibility : Icons.visibility_off,
-                      color: Theme.of(context).primaryColorDark,
-                    ),
-                    onPressed: onPressed,
-                  )
-                : suffixIcon,
-            border: OutlineInputBorder(
-              borderSide: const BorderSide(width: 1, color: AppColors.hintColor),
-              borderRadius: BorderRadius.circular(AppDimensions.small),
+        if (label != "") label.titleBold(size: 14.sp, color: AppColors.grey64697a),
+        Container(
+          padding: EdgeInsets.zero,
+          decoration: const BoxDecoration(color: Colors.transparent, boxShadow: [
+            BoxShadow(
+              color: AppColors.grey100,
+              offset: Offset(0, 10),
+              blurRadius: 30,
+            )
+          ]),
+          child: TextFormField(
+            maxLines: 3,
+            minLines: 1,
+            controller: controller,
+            onChanged: onChanged,
+            onFieldSubmitted: onFieldSubmitted,
+            validator: validator,
+            readOnly: readOnly,
+            keyboardType: inputType,
+            onTap: onTap,
+            inputFormatters: inputFormatters,
+            obscureText: isPassword ? obscureText : false,
+            style: GoogleFonts.manrope(fontWeight: FontWeight.w400, fontSize: 14.sp, color: AppColors.black),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: AppColors.white,
+              contentPadding: EdgeInsets.symmetric(vertical: 16.sp, horizontal: AppDimensions.smallXL.sp),
+              hintText: hintText,
+              hintStyle: GoogleFonts.manrope(fontWeight: FontWeight.w400, fontSize: 14.sp, color: AppColors.grey200),
+              prefixIcon: prefixIcon,
+              suffixIcon: isPassword
+                  ? IconButton(
+                      icon: Icon(
+                        // Based on passwordVisible state choose the icon
+                        obscureText ? Icons.visibility : Icons.visibility_off,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                      onPressed: onPressed,
+                    )
+                  : suffixIcon,
+              border: InputBorder.none,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppDimensions.small),
+                borderSide: const BorderSide(
+                  color: AppColors.grey100,
+                  width: 1.0, // Border width
+                ),
+              ),
             ),
-          ),
-        ).symmetricPadding(vertical: AppDimensions.small.sp)
+          ).symmetricPadding(vertical: AppDimensions.small.sp),
+        )
       ],
     );
   }

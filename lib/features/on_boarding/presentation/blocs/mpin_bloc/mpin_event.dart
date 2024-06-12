@@ -7,6 +7,10 @@ abstract class MpinEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class PinInitialEvent extends MpinEvent {
+  const PinInitialEvent();
+}
+
 class PinChangedEvent extends MpinEvent {
   final String originalPin;
   final String confirmPin;

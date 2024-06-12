@@ -1,5 +1,7 @@
 part of 'share_doc_vc_bloc.dart';
 
+enum ShareState { initial, loading, mPinSuccess, success, failure }
+
 abstract class SharedDocVcState extends Equatable {
   const SharedDocVcState();
 }
@@ -9,45 +11,44 @@ class ShareDocVcInitial extends SharedDocVcState {
   List<Object> get props => [];
 }
 
-class SharedSuccessState extends SharedDocVcState {
-  @override
-  List<Object> get props => [];
-}
-
-class SharedLoaderState extends SharedDocVcState {
-  @override
-  List<Object> get props => [];
-}
-
-class SharedFailureState extends SharedDocVcState {
-  final String? message;
-
-  const SharedFailureState({this.message});
-
-  @override
-  List<Object> get props => [message!];
-}
-
-class ShareDialogUpdatedState extends SharedDocVcState {
-  final int selectedItem;
+class ShareDocumentsUpdatedState extends SharedDocVcState {
+  final Validity validity;
   final String inputText;
+  final String? errorMessage;
+  final ShareState shareState;
+  final List<DocumentVcData>? selectedDocs; // Marked as final and nullable
+  final DocumentVcData? documentVcData; // Marked as final and nullable
 
-  const ShareDialogUpdatedState({required this.selectedItem, required this.inputText});
+  const ShareDocumentsUpdatedState({
+    required this.validity,
+    required this.inputText,
+    this.selectedDocs,
+    required this.shareState,
+    this.documentVcData,
+    this.errorMessage,
+  });
 
-  ShareDialogUpdatedState copyWith({
-    String? text,
-    int? selectedItem,
+  @override
+  List<Object?> get props => [validity, inputText, selectedDocs, documentVcData, shareState, errorMessage];
+
+  ShareDocumentsUpdatedState copyWith({
+    Validity? validity,
+    String? inputText,
+    String? errorMessage,
+    ShareState? state,
+    List<DocumentVcData>? selectedDocs,
+    DocumentVcData? documentVcData,
   }) {
-    return ShareDialogUpdatedState(
-      inputText: text ?? inputText,
-      selectedItem: selectedItem ?? this.selectedItem,
+    return ShareDocumentsUpdatedState(
+      validity: validity ?? this.validity,
+      inputText: inputText ?? this.inputText,
+      errorMessage: errorMessage ?? this.errorMessage,
+      shareState: state ?? shareState,
+      selectedDocs: selectedDocs ?? this.selectedDocs,
+      documentVcData: documentVcData ?? this.documentVcData,
     );
   }
-
-  @override
-  List<Object> get props => [inputText, selectedItem];
 }
-
 // class ShareDialogSubmittedState extends SharedDocVcState {
 //   final int selectedItem;
 //   final String inputText;

@@ -9,9 +9,11 @@ import 'package:xplor/core/exception_errors.dart';
 import 'package:xplor/features/wallet/domain/entities/previous_consent_entity.dart';
 import 'package:xplor/features/wallet/domain/entities/shared_data_entity.dart';
 import 'package:xplor/features/wallet/domain/entities/update_consent_entity.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
 
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/api_constants.dart';
+import '../../../../core/connection/refresh_token_service.dart';
 import '../../domain/entities/wallet_add_document_entity.dart';
 import '../../domain/entities/wallet_vc_list_entity.dart';
 
@@ -40,7 +42,41 @@ abstract class WalletApiService {
 }
 
 class WalletApiServiceImpl implements WalletApiService {
-  WalletApiServiceImpl({required this.dio, required this.preferencesHelper, this.helper});
+  WalletApiServiceImpl({required this.dio, required this.preferencesHelper, this.helper}) {
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        handler.next(options);
+      },
+      onError: (DioException dioException, ErrorInterceptorHandler errorInterceptorHandler) async {
+        if (dioException.response?.statusCode == 511) {
+          await RefreshTokenService.refreshTokenAndRetry(
+            options: dioException.response!.requestOptions,
+            preferencesHelper: preferencesHelper,
+            helper: helper,
+            dio: dio,
+            handler: errorInterceptorHandler,
+          );
+        } else {
+          errorInterceptorHandler.next(dioException);
+        }
+      },
+      onResponse: (response, handler) async {
+        // Handle response, check for token expiration
+        if (response.statusCode == 511) {
+          // Token expired, refresh token
+          await RefreshTokenService.refreshTokenAndRetry(
+            options: response.requestOptions,
+            preferencesHelper: preferencesHelper,
+            helper: helper,
+            dio: dio,
+            handler: handler,
+          );
+        } else {
+          handler.next(response);
+        }
+      },
+    ));
+  }
 
   Dio dio;
   SharedPreferencesHelper preferencesHelper;
@@ -56,9 +92,9 @@ class WalletApiServiceImpl implements WalletApiService {
       String? userId = "";
 
       if (helper != null) {
-        authToken = helper!.getString(PrefConstKeys.token);
+        authToken = helper!.getString(PrefConstKeys.accessToken);
       } else {
-        authToken = preferencesHelper.getString(PrefConstKeys.token);
+        authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
         userId = preferencesHelper.getString(PrefConstKeys.userId);
       }
       if (kDebugMode) {
@@ -82,6 +118,11 @@ class WalletApiServiceImpl implements WalletApiService {
 
       return response.data != null ? response.data["data"]["_id"] : "";
     } catch (e) {
+      if (helper != null) {
+        await helper!.setString(PrefConstKeys.walletId, "");
+      } else {
+        await preferencesHelper.setString(PrefConstKeys.walletId, "");
+      }
       if (kDebugMode) {
         print("Wallet----> Catch ${handleError(e)}");
       }
@@ -96,9 +137,10 @@ class WalletApiServiceImpl implements WalletApiService {
       String? walletId = "";
 
       if (helper != null) {
-        authToken = helper!.getString(PrefConstKeys.token);
+        authToken = helper!.getString(PrefConstKeys.accessToken);
+        walletId = helper!.getString(PrefConstKeys.walletId);
       } else {
-        authToken = preferencesHelper.getString(PrefConstKeys.token);
+        authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
         walletId = preferencesHelper.getString(PrefConstKeys.walletId);
       }
 
@@ -133,9 +175,10 @@ class WalletApiServiceImpl implements WalletApiService {
       String? walletId = "";
 
       if (helper != null) {
-        authToken = helper!.getString(PrefConstKeys.token);
+        authToken = helper!.getString(PrefConstKeys.accessToken);
+        walletId = helper!.getString(PrefConstKeys.walletId);
       } else {
-        authToken = preferencesHelper.getString(PrefConstKeys.token);
+        authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
         walletId = preferencesHelper.getString(PrefConstKeys.walletId);
       }
 
@@ -144,6 +187,8 @@ class WalletApiServiceImpl implements WalletApiService {
 
       if (kDebugMode) {
         print("Wallet Base Url ==>$urlWithParams");
+        print('urlWithParams $urlWithParams');
+        print('share wallet request $request');
       }
       final response = await dio.put(
         urlWithParams,
@@ -193,9 +238,9 @@ class WalletApiServiceImpl implements WalletApiService {
       String? walletId = "";
 
       if (helper != null) {
-        authToken = helper!.getString(PrefConstKeys.token);
+        authToken = helper!.getString(PrefConstKeys.accessToken);
       } else {
-        authToken = preferencesHelper.getString(PrefConstKeys.token);
+        authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
         walletId = preferencesHelper.getString(PrefConstKeys.walletId);
       }
       // Construct query parameters
@@ -236,10 +281,10 @@ class WalletApiServiceImpl implements WalletApiService {
       String? walletId;
 
       if (helper != null) {
-        authToken = helper!.getString(PrefConstKeys.token);
+        authToken = helper!.getString(PrefConstKeys.accessToken);
         walletId = helper!.getString(PrefConstKeys.walletId);
       } else {
-        authToken = preferencesHelper.getString(PrefConstKeys.token);
+        authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
         walletId = preferencesHelper.getString(PrefConstKeys.walletId);
       }
 
@@ -278,10 +323,10 @@ class WalletApiServiceImpl implements WalletApiService {
       String? walletId;
 
       if (helper != null) {
-        authToken = helper!.getString(PrefConstKeys.token);
+        authToken = helper!.getString(PrefConstKeys.accessToken);
         walletId = helper!.getString(PrefConstKeys.walletId);
       } else {
-        authToken = preferencesHelper.getString(PrefConstKeys.token);
+        authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
         walletId = preferencesHelper.getString(PrefConstKeys.walletId);
       }
 
@@ -323,10 +368,10 @@ class WalletApiServiceImpl implements WalletApiService {
       String? walletId;
 
       if (helper != null) {
-        authToken = helper!.getString(PrefConstKeys.token);
+        authToken = helper!.getString(PrefConstKeys.accessToken);
         walletId = helper!.getString(PrefConstKeys.walletId);
       } else {
-        authToken = preferencesHelper.getString(PrefConstKeys.token);
+        authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
         walletId = preferencesHelper.getString(PrefConstKeys.walletId);
       }
 
@@ -367,10 +412,10 @@ class WalletApiServiceImpl implements WalletApiService {
       String? walletId;
 
       if (helper != null) {
-        authToken = helper!.getString(PrefConstKeys.token);
+        authToken = helper!.getString(PrefConstKeys.accessToken);
         walletId = helper!.getString(PrefConstKeys.walletId);
       } else {
-        authToken = preferencesHelper.getString(PrefConstKeys.token);
+        authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
         walletId = preferencesHelper.getString(PrefConstKeys.walletId);
       }
 
@@ -410,9 +455,9 @@ class WalletApiServiceImpl implements WalletApiService {
       String? authToken;
 
       if (helper != null) {
-        authToken = helper!.getString(PrefConstKeys.token);
+        authToken = helper!.getString(PrefConstKeys.accessToken);
       } else {
-        authToken = preferencesHelper.getString(PrefConstKeys.token);
+        authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
       }
 
       String getMimeType(String filename) {
@@ -423,6 +468,12 @@ class WalletApiServiceImpl implements WalletApiService {
       }
 
       String mimeType = getMimeType(entity.file!.path);
+
+      if (helper != null) {
+        await helper!.setString(PrefConstKeys.filePath, entity.file!.path);
+      } else {
+        await preferencesHelper.setString(PrefConstKeys.filePath, entity.file!.path);
+      }
 
       final formData = FormData.fromMap({
         'walletId': entity.walletId,
@@ -471,50 +522,51 @@ class WalletApiServiceImpl implements WalletApiService {
       DioException dioError = error;
       switch (dioError.type) {
         case DioExceptionType.cancel:
-          errorDescription = requestCancelError;
+          errorDescription = ExceptionErrors.requestCancelError.stringToString;
 
           return errorDescription;
         case DioExceptionType.connectionTimeout:
-          errorDescription = connectionTimeOutError;
+          errorDescription = ExceptionErrors.connectionTimeOutError.stringToString;
 
           return errorDescription;
         case DioExceptionType.unknown:
-          errorDescription = unknownConnectionError;
+          errorDescription = ExceptionErrors.unknownConnectionError.stringToString;
 
           return errorDescription;
         case DioExceptionType.receiveTimeout:
-          errorDescription = receiveTimeOutError;
+          errorDescription = ExceptionErrors.receiveTimeOutError.stringToString;
 
           return errorDescription;
         case DioExceptionType.badResponse:
           if (kDebugMode) {
-            print("$badResponseError  ${dioError.response!.data}");
+            print("${ExceptionErrors.badResponseError}  ${dioError.response!.data}");
           }
           return dioError.response!.data['message'];
 
         case DioExceptionType.sendTimeout:
-          errorDescription = sendTimeOutError;
+          errorDescription = ExceptionErrors.sendTimeOutError.stringToString;
 
           return errorDescription;
         case DioExceptionType.badCertificate:
-          errorDescription = badCertificate;
+          errorDescription = ExceptionErrors.badCertificate.stringToString;
 
           return errorDescription;
         case DioExceptionType.connectionError:
-          errorDescription = serverConnectingIssue;
+          errorDescription = ExceptionErrors.serverConnectingIssue.stringToString;
 
           return errorDescription;
       }
     } else {
-      errorDescription = unexpectedErrorOccurred;
+      errorDescription = ExceptionErrors.unexpectedErrorOccurred.stringToString;
       return errorDescription;
     }
   }
 
   @override
   Future<bool> verifyMpin(String pin) async {
-    final authToken =
-        helper == null ? preferencesHelper.getString(PrefConstKeys.token) : helper!.getString(PrefConstKeys.token);
+    final authToken = helper == null
+        ? preferencesHelper.getString(PrefConstKeys.accessToken)
+        : helper!.getString(PrefConstKeys.accessToken);
     try {
       Map<String, dynamic> data = {
         'mPin': pin.toString(),
@@ -522,7 +574,8 @@ class WalletApiServiceImpl implements WalletApiService {
       String jsonData = json.encode(data);
 
       if (kDebugMode) {
-        print("verifyMpin api: $pin");
+        print("verifyMpin api: $jsonData");
+        print("verifyMpin api: $verifyMpinApi");
       }
 
       final response = await dio.put(

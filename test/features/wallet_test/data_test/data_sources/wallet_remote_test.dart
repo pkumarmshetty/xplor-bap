@@ -25,7 +25,7 @@ void main() {
     SharedPreferences.setMockInitialValues({}); //set values here
     pref = await SharedPreferences.getInstance();
     pref.setString(
-      PrefConstKeys.token,
+      PrefConstKeys.accessToken,
       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyXzE0NmMzNTJjLTNiMzEtNGNjYS04OWYwLTJlYjM4YWU4NGRiMCIsImlhdCI6MTcxMjU3OTM4OSwiZXhwIjoxNzE2MTc5Mzg5fQ.tT_Rx8f1eUiFSrXX6DNsUH9FiGrhGzl8m5Z7YD3i6ug",
     );
     pref.setString(PrefConstKeys.walletId, "wallet_db9adfb2-a307-4cbb-807d-a43846018869");
@@ -366,7 +366,7 @@ void main() {
         queryParameters: queryParams,
         options: Options(
           contentType: Headers.jsonContentType,
-          headers: {"Authorization": PrefConstKeys.token},
+          headers: {"Authorization": PrefConstKeys.accessToken},
         ),
       ));
     });

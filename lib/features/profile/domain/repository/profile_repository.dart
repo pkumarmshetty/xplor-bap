@@ -1,5 +1,7 @@
-import '../entities/profile_user_data_entity.dart';
+import '../../../on_boarding/domain/entities/user_data_entity.dart';
 
 abstract class ProfileRepository {
-  Future<ProfileUserDataEntity> getUserData();
+  Future<UserDataEntity> getUserData();
+
+  Future<void> logout();
 }
