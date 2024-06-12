@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xplor/features/multi_lang/domain/mappers/wallet/wallet_keys.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
 
 import '../../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../../core/constants.dart';
@@ -69,15 +71,14 @@ class AddDocumentsBloc extends Bloc<AddDocumentsEvent, AddDocumentsState> {
   Future<void> _onFileName(FileNameEvent event, Emitter<AddDocumentsState> emit) async {
     fileName = event.fileName;
     if (fileName == null || fileName!.isEmpty) {
-      emit(const FileNameErrorState("Filename cannot be empty"));
+      emit(FileNameErrorState(WalletKeys.fileNameCannotBeEmpty.stringToString));
       fileNameDone = false;
       _emitAllStatesDone(emit);
       return;
     }
     if (!RegExp(RegexConstants.noSpecialCharacters).hasMatch(fileName!)) {
       fileNameDone = false;
-      emit(const FileNameErrorState(
-          "File name error. Please ensure the file name meets requirements (eg. no special characters) "));
+      emit(FileNameErrorState(WalletKeys.fileNameErrorMessage.stringToString));
       fileNameDone = false;
       _emitAllStatesDone(emit);
       return;
@@ -92,7 +93,7 @@ class AddDocumentsBloc extends Bloc<AddDocumentsEvent, AddDocumentsState> {
 
     // Check if file tags are empty
     if (fileTags == null || fileTags!.isEmpty) {
-      emit(const FileTagsErrorState("File tags cannot be empty"));
+      emit(FileTagsErrorState(WalletKeys.fileTagCannotBeEmpty.stringToString));
       fileTagsDone = false;
       _emitAllStatesDone(emit);
       return;

@@ -26,7 +26,7 @@ _buildPreviousConsentsTile(int index, BuildContext context, PreviousConsentEntit
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    'Self Shared'.titleBold(
+                    data.sharedWithEntity.stringToString.titleBold(
                       size: 14.sp,
                       color: AppColors.countryCodeColor,
                     ),
@@ -39,8 +39,8 @@ _buildPreviousConsentsTile(int index, BuildContext context, PreviousConsentEntit
                         // Add space between the date/time and dot
                         '•'.titleSemiBold(size: 20.sp, color: AppColors.hintColor),
                         AppDimensions.extraSmall.hSpace(),
-                        // Add space between the dot and the word "active"
-                        "Inactive".titleSemiBold(size: 12.sp, color: AppColors.errorColor),
+                        // Add space between the dot and the word "inactive"
+                        WalletKeys.inactive.stringToString.titleSemiBold(size: 12.sp, color: AppColors.errorColor),
                       ],
                     )
                   ],

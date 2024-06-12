@@ -9,6 +9,7 @@ class SharedVcDataEntity {
   final DocVcSharedDetails vcShareDetails;
   final String createdAt;
   final String updatedAt;
+  final String sharedWithEntity;
   final int v;
   final FileDetails fileDetails;
   final VcDetails vcDetails;
@@ -24,6 +25,7 @@ class SharedVcDataEntity {
     required this.vcShareDetails,
     required this.createdAt,
     required this.updatedAt,
+    required this.sharedWithEntity,
     required this.v,
     required this.fileDetails,
     required this.vcDetails,
@@ -41,6 +43,7 @@ class SharedVcDataEntity {
       vcShareDetails: DocVcSharedDetails.fromJson(json['vcShareDetails']),
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
+      sharedWithEntity: json['sharedWithEntity'] ?? 'Self Shared',
       v: json['__v'],
       fileDetails: FileDetails.fromJson(json['fileDetails']),
       vcDetails: VcDetails.fromJson(json['vcDetails']),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:xplor/features/multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
 import 'package:xplor/features/on_boarding/presentation/blocs/otp_bloc/otp_bloc.dart';
 import 'package:xplor/features/on_boarding/presentation/widgets/common_pin_code_text_field_view.dart';
 import 'package:xplor/utils/app_colors.dart';
@@ -10,12 +11,12 @@ import 'package:xplor/utils/extensions/conversion.dart';
 import 'package:xplor/utils/extensions/font_style/font_styles.dart';
 import 'package:xplor/utils/extensions/padding.dart';
 import 'package:xplor/utils/extensions/space.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
 
-import '../../../../../config/services/app_services.dart';
 import '../../../../../core/check_route.dart';
 import '../../../../../utils/app_dimensions.dart';
-import '../../../../../utils/widgets/loading_animation.dart';
 import '../../../../../utils/widgets/build_button.dart';
+import '../../widgets/build_gradient_with_card.dart';
 import '../../widgets/build_welcome.dart';
 
 /// This class represents the OTP verification view.
@@ -30,7 +31,7 @@ class OtpView extends StatefulWidget {
 class _OtpViewState extends State<OtpView> {
   bool isValid = false;
   final TextEditingController textEditingController = TextEditingController();
-  late Timer resendTimer;
+  Timer? resendTimer;
   int remainingTime = 30;
 
   @override
@@ -43,39 +44,20 @@ class _OtpViewState extends State<OtpView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: BlocListener<OtpBloc, OtpState>(
-          listener: (context, state) {
-            if (state is SuccessOtpState) {
-              Navigator.pushNamedAndRemoveUntil(
-                AppServices.navState.currentContext!,
-                checkRouteBasedOnUserJourney(),
-                (routes) => false,
-              );
-            }
+      body: BlocListener<OtpBloc, OtpState>(
+        listener: (context, state) {
+          if (state is SuccessOtpState) {
+            Navigator.pushNamed(
+              context,
+              checkRouteBasedOnUserJourney(),
+            );
+          }
+        },
+        child: BlocBuilder<OtpBloc, OtpState>(
+          builder: (context, state) {
+            return buildScreenContent(_buildMainContent(context, state), _buildButtonWidget(state), context,
+                (state is OtpLoadingState) ? true : false);
           },
-          child: BlocBuilder<OtpBloc, OtpState>(
-            builder: (context, state) {
-              return Form(
-                // key: state.formKey,
-                child: Stack(
-                  children: [
-                    CustomScrollView(
-                      slivers: <Widget>[
-                        SliverToBoxAdapter(
-                          child: _buildMainContent(
-                            context,
-                            state,
-                          ),
-                        ),
-                      ],
-                    ),
-                    if (state is OtpLoadingState) const LoadingAnimation(),
-                  ],
-                ),
-              );
-            },
-          ),
         ),
       ),
     );
@@ -89,21 +71,24 @@ class _OtpViewState extends State<OtpView> {
         /// Display the welcome content with the title and subtitle.
         BlocBuilder<OtpBloc, OtpState>(
           builder: (context, state) {
-            //print("Phone Number: ${context.read<OtpBloc>().phoneNumber}");
-            return WelcomeContentWidget(
-              title: 'OTP Verification',
-              subTitle: 'Enter the 6 digit OTP that we have sent to ${context.read<OtpBloc>().phoneNumber}',
-            );
+            return Column(children: [
+              AppDimensions.medium.vSpace(),
+              WelcomeContentWidget(
+                title: OnBoardingKeys.otpVerification.stringToString,
+                subTitle:
+                    '${OnBoardingKeys.enterSixDigitOtpThatWeHaveSentTo.stringToString} ${context.read<OtpBloc>().phoneNumber}',
+              )
+            ]);
           },
         ),
 
-        AppDimensions.extraSmall.vSpace(),
+        AppDimensions.small.vSpace(),
 
         GestureDetector(
           onTap: () {
             Navigator.pop(context); // Call method to show dialog
           },
-          child: 'Wrong number?'.titleSemiBold(
+          child: '${OnBoardingKeys.wrongNumber.stringToString}?'.titleSemiBold(
             size: 14.sp,
             color: AppColors.primaryColor,
           ),
@@ -113,6 +98,11 @@ class _OtpViewState extends State<OtpView> {
 
         /// Build the OTP digit field.
         CommonPinCodeTextField(
+          isReadOnly: (state is FailureOtpState &&
+                  state.message!.isNotEmpty &&
+                  state.message!.contains(OnBoardingKeys.exceeded.stringToString))
+              ? true
+              : false,
           textEditingController: textEditingController,
           onChanged: (value) => context.read<OtpBloc>().add(PhoneOtpValidatorEvent(otp: value)),
         ),
@@ -127,22 +117,9 @@ class _OtpViewState extends State<OtpView> {
         /// Display the resend OTP option.
         _resendOtp(context, state),
         AppDimensions.smallXL.vSpace(),
-
-        /// Build the verification button.
-        BlocBuilder<OtpBloc, OtpState>(
-          builder: (context, state) {
-            return ButtonWidget(
-              title: 'Continue',
-              isValid: state is OtpValidState,
-              onPressed: () {
-                context.read<OtpBloc>().add(PhoneOtpVerifyEvent(otp: textEditingController.text));
-              },
-            );
-          },
-        )
       ],
     ).symmetricPadding(
-      horizontal: AppDimensions.large,
+      horizontal: AppDimensions.medium,
     );
   }
 
@@ -151,15 +128,16 @@ class _OtpViewState extends State<OtpView> {
     return GestureDetector(
       child: remainingTime > 0
           ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              ('Send code again in ').titleBold(
+              '${OnBoardingKeys.sendCodeAgainIn.stringToString} '.titleBold(
                 size: 12.sp,
                 color: AppColors.subTitleText,
               ),
               (Conversion.formatSeconds(remainingTime)).titleRegular(size: 12.sp, color: AppColors.subTitleText)
             ])
           : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              ("I didn’t receive code. ").titleMedium(size: 12.sp, color: AppColors.subTitleText),
-              ('Resend').titleBold(size: 12.sp, color: AppColors.primaryColor)
+              '${OnBoardingKeys.didntReceiveCode.stringToString} '
+                  .titleMedium(size: 12.sp, color: AppColors.subTitleText),
+              OnBoardingKeys.resend.stringToString.titleSemiBold(size: 12.sp, color: AppColors.primaryColor)
             ]),
       onTap: () {
         if (remainingTime == 0) {
@@ -177,20 +155,38 @@ class _OtpViewState extends State<OtpView> {
 
   @override
   void dispose() {
-    resendTimer.cancel();
+    resendTimer?.cancel();
     super.dispose();
   }
 
   /// Starts the timer for OTP resend.
   void startResendTimer() {
+    if (resendTimer != null) {
+      resendTimer?.cancel();
+    }
     resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (remainingTime > 0) {
         setState(() {
           remainingTime--;
         });
       } else {
-        resendTimer.cancel();
+        resendTimer?.cancel();
       }
     });
+  }
+
+  Widget _buildButtonWidget(OtpState state) {
+    /// Build the verification button.
+    return BlocBuilder<OtpBloc, OtpState>(
+      builder: (context, state) {
+        return ButtonWidget(
+          title: OnBoardingKeys.verify.stringToString,
+          isValid: state is OtpValidState,
+          onPressed: () {
+            context.read<OtpBloc>().add(PhoneOtpVerifyEvent(otp: textEditingController.text));
+          },
+        );
+      },
+    );
   }
 }

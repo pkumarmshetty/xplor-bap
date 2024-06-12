@@ -2,18 +2,54 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xplor/core/exception_errors.dart';
-import '../../domain/entities/user_data_entity.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
+import '../../../../core/connection/refresh_token_service.dart';
+import '../../../../core/exception_errors.dart';
 
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/api_constants.dart';
+import '../../../on_boarding/domain/entities/user_data_entity.dart';
 
 abstract class HomeApiService {
   Future<UserDataEntity> getUserData();
 }
 
 class HomeApiServiceImpl implements HomeApiService {
-  HomeApiServiceImpl({required this.dio, required this.preferencesHelper, this.helper});
+  HomeApiServiceImpl({required this.dio, required this.preferencesHelper, this.helper}) {
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        handler.next(options);
+      },
+      onError: (DioException dioException, ErrorInterceptorHandler errorInterceptorHandler) async {
+        if (dioException.response?.statusCode == 511) {
+          await RefreshTokenService.refreshTokenAndRetry(
+            options: dioException.response!.requestOptions,
+            preferencesHelper: preferencesHelper,
+            helper: helper,
+            dio: dio,
+            handler: errorInterceptorHandler,
+          );
+        } else {
+          errorInterceptorHandler.next(dioException);
+        }
+      },
+      onResponse: (response, handler) async {
+        // Handle response, check for token expiration
+        if (response.statusCode == 511) {
+          // Token expired, refresh token
+          await RefreshTokenService.refreshTokenAndRetry(
+            options: response.requestOptions,
+            preferencesHelper: preferencesHelper,
+            helper: helper,
+            dio: dio,
+            handler: handler,
+          );
+        } else {
+          handler.next(response);
+        }
+      },
+    ));
+  }
 
   Dio dio;
   SharedPreferencesHelper preferencesHelper;
@@ -25,9 +61,9 @@ class HomeApiServiceImpl implements HomeApiService {
       String? authToken;
 
       if (helper != null) {
-        authToken = helper!.getString(PrefConstKeys.token);
+        authToken = helper!.getString(PrefConstKeys.accessToken);
       } else {
-        authToken = preferencesHelper.getString(PrefConstKeys.token);
+        authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
       }
 
       if (kDebugMode) {
@@ -35,6 +71,7 @@ class HomeApiServiceImpl implements HomeApiService {
       }
       final response = await dio.get(
         userDataApi,
+        //queryParameters: {"translate": false},
         options: Options(contentType: Headers.jsonContentType, headers: {
           "Authorization": authToken,
         }),
@@ -44,7 +81,11 @@ class HomeApiServiceImpl implements HomeApiService {
       }
 
       UserDataEntity userData = UserDataEntity.fromJson(response.data["data"]);
-
+      if (helper != null) {
+        helper!.setString(PrefConstKeys.phoneNumber, userData.phoneNumber ?? '');
+      } else {
+        preferencesHelper.setString(PrefConstKeys.phoneNumber, userData.phoneNumber ?? '');
+      }
       return userData;
     } catch (e) {
       if (kDebugMode) {
@@ -61,42 +102,42 @@ class HomeApiServiceImpl implements HomeApiService {
       DioException dioError = error;
       switch (dioError.type) {
         case DioExceptionType.cancel:
-          errorDescription = requestCancelError;
+          errorDescription = ExceptionErrors.requestCancelError.stringToString;
 
           return errorDescription;
         case DioExceptionType.connectionTimeout:
-          errorDescription = connectionTimeOutError;
+          errorDescription = ExceptionErrors.connectionTimeOutError.stringToString;
 
           return errorDescription;
         case DioExceptionType.unknown:
-          errorDescription = unknownConnectionError;
+          errorDescription = ExceptionErrors.unknownConnectionError.stringToString;
 
           return errorDescription;
         case DioExceptionType.receiveTimeout:
-          errorDescription = receiveTimeOutError;
+          errorDescription = ExceptionErrors.receiveTimeOutError.stringToString;
 
           return errorDescription;
         case DioExceptionType.badResponse:
           if (kDebugMode) {
-            print("$badResponseError  ${dioError.response!.data}");
+            print("${ExceptionErrors.badResponseError}  ${dioError.response!.data}");
           }
           return dioError.response!.data['message'];
 
         case DioExceptionType.sendTimeout:
-          errorDescription = sendTimeOutError;
+          errorDescription = ExceptionErrors.sendTimeOutError.stringToString;
 
           return errorDescription;
         case DioExceptionType.badCertificate:
-          errorDescription = badCertificate;
+          errorDescription = ExceptionErrors.badCertificate.stringToString;
 
           return errorDescription;
         case DioExceptionType.connectionError:
-          errorDescription = serverConnectingIssue;
+          errorDescription = ExceptionErrors.checkInternetConnection.stringToString;
 
           return errorDescription;
       }
     } else {
-      errorDescription = unexpectedErrorOccurred;
+      errorDescription = ExceptionErrors.unexpectedErrorOccurred.stringToString;
       return errorDescription;
     }
   }

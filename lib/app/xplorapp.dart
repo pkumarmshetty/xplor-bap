@@ -30,7 +30,10 @@ class XplorApp extends StatelessWidget {
                   title: 'Xplor',
                   //theme: state.themeData,
                   onGenerateRoute: AppRoutes.onGenerateRoutes,
-                  initialRoute: isLoggedIn ? Routes.home : Routes.main, // Navigate to home or login based on token
+                  /* initialRoute: isLoggedIn
+                      ? checkRouteBasedOnUserJourney()
+                      : Routes.main, */ // Navigate to home or login based on token
+                  initialRoute: Routes.main,
                 );
               }));
         });

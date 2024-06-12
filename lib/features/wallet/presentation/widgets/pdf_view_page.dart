@@ -102,8 +102,7 @@ class _PDFViewWidgetState extends State<PDFViewWidget> {
                   ),
                 ),
               ),
-        if (_isLoading && widget.doc.fileType == 'application/pdf')
-          const LoadingAnimation(),
+        if (_isLoading && widget.doc.fileType == 'application/pdf') const LoadingAnimation(),
       ]),
     );
   }

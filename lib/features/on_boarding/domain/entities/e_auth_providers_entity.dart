@@ -1,8 +1,8 @@
 class EAuthProviderEntity {
   final String code;
-  final String iconLink;
-  final String title;
-  final String subTitle;
+  String iconLink;
+  String title;
+  String subTitle;
   final String redirectUrl;
 
   EAuthProviderEntity({

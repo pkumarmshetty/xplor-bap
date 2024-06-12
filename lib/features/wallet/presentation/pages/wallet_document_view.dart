@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xplor/features/multi_lang/domain/mappers/wallet/wallet_keys.dart';
+import 'package:xplor/utils/app_colors.dart';
+import 'package:xplor/utils/common_top_header.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
 
+import '../../../../config/routes/path_routing.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_dimensions.dart';
 import '../../../../utils/utils.dart';
 import '../../../../utils/widgets/build_button.dart';
 import '../blocs/wallet_bloc/wallet_bloc.dart';
-import '../widgets/add_document_dialog_widget.dart';
 import '../widgets/my_consents_widgets/my_consent_widget.dart';
 import '../widgets/my_document_widget/my_document_widget.dart';
 import '../widgets/my_document_widget/tab_widget.dart';
@@ -28,13 +32,23 @@ class _WalletDocumentViewState extends State<WalletDocumentView> {
     return Stack(children: [
       Column(
         children: [
-          AppDimensions.mediumXL.vSpace(),
-          TabWidget(
-            index: state.tabIndex,
+          CommonTopHeader(
+            title: WalletKeys.wallet.stringToString,
+            onBackButtonPressed: () {},
+            isTitleOnly: true,
+            dividerColor: AppColors.hintColor,
           ),
+          Column(
+            children: [
+              AppDimensions.mediumXL.vSpace(),
+              TabWidget(
+                index: state.tabIndex,
+              ),
+            ],
+          ).symmetricPadding(horizontal: AppDimensions.mediumXL.w),
           AppDimensions.medium.sp.vSpace(),
           Expanded(
-            child: tabWidget(state.tabIndex),
+            child: tabWidget(state.tabIndex).symmetricPadding(horizontal: AppDimensions.mediumXL.w),
           )
         ],
       ),
@@ -42,25 +56,15 @@ class _WalletDocumentViewState extends State<WalletDocumentView> {
           ? Positioned(
               right: 0,
               bottom: 17.75,
-              child: SizedBox(
-                height: 48.25.w,
-                width: 48.25.w,
-                child: ButtonWidget(
-                    radius: 12.r,
-                    isValid: true,
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context) {
-                            return const AddDocumentDialogWidget();
-                          });
-                    },
-                    customText: SvgPicture.asset(Assets.images.add)),
-              ))
+              child: ButtonWidget(
+                width: 58.w,
+                padding: EdgeInsets.symmetric(horizontal: AppDimensions.smallXL.w, vertical: AppDimensions.smallXL.w),
+                customText: SvgPicture.asset(Assets.images.add),
+                isValid: true,
+                onPressed: () => Navigator.pushNamed(context, Routes.addDoument),
+              ).symmetricPadding(horizontal: AppDimensions.mediumXL.w))
           : Container(),
-    ]).symmetricPadding(horizontal: AppDimensions.mediumXL.w);
+    ]);
   }
 
   Widget tabWidget(int index) {
@@ -72,14 +76,5 @@ class _WalletDocumentViewState extends State<WalletDocumentView> {
       default:
         return Container();
     }
-  }
-
-  void addDocumentDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return const AddDocumentDialogWidget();
-        });
   }
 }

@@ -1,4 +1,6 @@
-class ProfileUserDataEntity {
+/*class ProfileUserDataEntity {
+  String? profileUrl;
+  String? countryCode;
   String? id;
   String? phoneNumber;
   bool? verified;
@@ -10,8 +12,11 @@ class ProfileUserDataEntity {
   int? v;
   Role role;
   Kyc kyc;
+  Count count;
 
   ProfileUserDataEntity({
+    required this.profileUrl,
+    required this.countryCode,
     required this.id,
     required this.phoneNumber,
     required this.verified,
@@ -23,10 +28,13 @@ class ProfileUserDataEntity {
     required this.v,
     required this.role,
     required this.kyc,
+    required this.count,
   });
 
   factory ProfileUserDataEntity.fromJson(Map<String, dynamic> json) {
     return ProfileUserDataEntity(
+      profileUrl: json['profileUrl'] ?? "",
+      countryCode: json['countryCode'] ?? "",
       id: json['_id'] ?? "",
       phoneNumber: json['phoneNumber'] ?? "",
       verified: json['verified'] ?? "",
@@ -38,11 +46,14 @@ class ProfileUserDataEntity {
       v: json['__v'],
       role: Role.fromJson(json['role']),
       kyc: Kyc.fromJson(json['kyc']),
+      count: Count.fromJson(json['count']),
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['profileUrl'] = profileUrl;
+    data['countryCode'] = countryCode;
     data['_id'] = id;
     data['phoneNumber'] = phoneNumber;
     data['verified'] = verified;
@@ -184,3 +195,35 @@ class Provider {
     return data;
   }
 }
+
+class Count {
+  String course;
+  String scholarship;
+  String retail;
+  String job;
+
+  Count({
+    required this.course,
+    required this.scholarship,
+    required this.retail,
+    required this.job,
+  });
+
+  factory Count.fromJson(Map<String, dynamic> json) {
+    return Count(
+      course: json['course'],
+      scholarship: json['scholarship'],
+      retail: json['retail'],
+      job: json['job'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['course'] = course;
+    data['scholarship'] = scholarship;
+    data['retail'] = retail;
+    data['job'] = job;
+    return data;
+  }
+}*/

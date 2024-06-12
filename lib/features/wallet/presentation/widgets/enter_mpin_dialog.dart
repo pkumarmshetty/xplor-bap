@@ -2,8 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:xplor/config/routes/path_routing.dart';
+import 'package:xplor/config/services/app_services.dart';
+import 'package:xplor/features/mpin/presentation/blocs/reset_mpin_bloc.dart';
+import 'package:xplor/features/wallet/presentation/blocs/share_doc_vc_bloc/share_doc_vc_bloc.dart';
 import 'package:xplor/features/wallet/presentation/blocs/wallet_vc_bloc/wallet_vc_bloc.dart';
-import 'package:xplor/features/wallet/presentation/blocs/wallet_vc_bloc/wallet_vc_event.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
 
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
@@ -13,19 +17,18 @@ import '../../../../utils/extensions/padding.dart';
 import '../../../../utils/extensions/space.dart';
 import '../../../../utils/widgets/build_button.dart';
 import '../../../../utils/widgets/top_header_for_dialogs.dart';
+import '../../../multi_lang/domain/mappers/wallet/wallet_keys.dart';
 import '../../../on_boarding/presentation/widgets/common_pin_code_text_field_view.dart';
 import '../blocs/enter_mpin_bloc/enter_mpin_bloc.dart';
 
 /// Custom dialog for confirmation
 class EnterMPinDialog extends StatefulWidget {
   /// Callback function for OK button press
-  final VoidCallback onConfirmPressed;
   final String title;
   final bool isCrossIconVisible;
 
   const EnterMPinDialog({
     super.key,
-    required this.onConfirmPressed,
     required this.title,
     required this.isCrossIconVisible,
   });
@@ -35,6 +38,12 @@ class EnterMPinDialog extends StatefulWidget {
 }
 
 class _EnterMPinDialogState extends State<EnterMPinDialog> {
+  @override
+  void initState() {
+    context.read<EnterMPinBloc>().add(const MPinInitialEvent());
+    super.initState();
+  }
+
   var textEditingController = TextEditingController();
 
   @override
@@ -52,9 +61,11 @@ class _EnterMPinDialogState extends State<EnterMPinDialog> {
               if (kDebugMode) {
                 print('MPIN Verify');
               }
-              AppUtils.shareFile('Sharing HSC Marksheet');
-              context.read<WalletVcBloc>().add(const WalletDocumentsUnselectedEvent());
-              Navigator.pop(context);
+              context.read<SharedDocVcBloc>().add(const PinVerifiedEvent());
+              if (context.read<WalletVcBloc>().flowType == FlowType.consent) {
+                AppUtils.shareFile('');
+                Navigator.pop(context);
+              }
             }
           },
           child: BlocBuilder<EnterMPinBloc, EnterMPinState>(builder: (context, state) {
@@ -65,6 +76,8 @@ class _EnterMPinDialogState extends State<EnterMPinDialog> {
                 TopHeaderForDialogs(title: widget.title, isCrossIconVisible: widget.isCrossIconVisible),
                 CommonPinCodeTextField(
                   hidePin: true,
+                  pinFilledColor: AppColors.primaryColor.withOpacity(0.05),
+                  pinBorderColor: AppColors.primaryColor,
                   textEditingController: textEditingController,
                   onChanged: (value) => context.read<EnterMPinBloc>().add(MPinValidatorEvent(mPIn: value)),
                 ).symmetricPadding(horizontal: AppDimensions.mediumXL),
@@ -74,21 +87,26 @@ class _EnterMPinDialogState extends State<EnterMPinDialog> {
                     children: [
                       state.message
                           .toString()
-                          .titleSemiBold(size: 12.sp, color: AppColors.errorColor)
+                          .titleSemiBold(
+                              size: 12.sp, color: AppColors.errorColor, maxLine: 3, overflow: TextOverflow.visible)
                           .symmetricPadding(horizontal: AppDimensions.mediumXL),
                       AppDimensions.smallXL.vSpace(),
                     ],
                   ),
-                /*Center(
-                  child: 'Forgot PIN?'.titleBold(
-                    size: 12.sp,
-                    color: AppColors.primaryColor,
-                  ),
+                Center(
+                  child: InkWell(
+                      onTap: () {
+                        context.read<ResetMpinBloc>().add(ResetMpinOtpEvent());
+                        Navigator.pushNamed(AppServices.navState.currentContext!, Routes.resetMpin);
+                      },
+                      child: '${WalletKeys.forgotMPin.stringToString}?'
+                          .titleBold(color: AppColors.primaryColor, size: 12.sp)),
                 ),
-                */
                 AppDimensions.medium.vSpace(),
                 ButtonWidget(
-                  title: state is MPinLoadingState ? "Please wait..." : 'Verify & Share',
+                  title: state is MPinLoadingState
+                      ? WalletKeys.pleaseWait.stringToString
+                      : WalletKeys.verifyShare.stringToString,
                   isValid: state is MPinValidState || state is MPinLoadingState,
                   onPressed: () {
                     if (state is MPinLoadingState) {

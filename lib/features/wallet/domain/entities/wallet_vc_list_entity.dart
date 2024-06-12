@@ -36,6 +36,7 @@ class DocumentVcData {
   String? iconUrl;
   String? templateId;
   String? restrictedUrl;
+  String? sharedVcUrl;
   String? createdAt;
   String? updatedAt;
   int? version;
@@ -54,6 +55,7 @@ class DocumentVcData {
     this.iconUrl,
     this.templateId,
     this.restrictedUrl,
+    this.sharedVcUrl,
     this.createdAt,
     this.updatedAt,
     this.version,
@@ -80,23 +82,25 @@ class DocumentVcData {
     );
   }
 
-  DocumentVcData copyWith(
-      {String? fileType,
-      String? id,
-      String? did,
-      String? fileId,
-      String? walletId,
-      String? type,
-      String? category,
-      List<String>? tags,
-      String? name,
-      String? iconUrl,
-      String? templateId,
-      String? restrictedUrl,
-      String? createdAt,
-      String? updatedAt,
-      int? version,
-      bool? isSelected}) {
+  DocumentVcData copyWith({
+    String? fileType,
+    String? id,
+    String? did,
+    String? fileId,
+    String? walletId,
+    String? type,
+    String? category,
+    List<String>? tags,
+    String? name,
+    String? iconUrl,
+    String? templateId,
+    String? restrictedUrl,
+    String? sharedVcUrl,
+    String? createdAt,
+    String? updatedAt,
+    int? version,
+    bool? isSelected,
+  }) {
     return DocumentVcData(
       fileType: fileType ?? this.fileType,
       id: id ?? this.id,
@@ -110,6 +114,7 @@ class DocumentVcData {
       iconUrl: iconUrl ?? this.iconUrl,
       templateId: templateId ?? this.templateId,
       restrictedUrl: restrictedUrl ?? this.restrictedUrl,
+      sharedVcUrl: sharedVcUrl ?? this.sharedVcUrl,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       version: version ?? this.version,

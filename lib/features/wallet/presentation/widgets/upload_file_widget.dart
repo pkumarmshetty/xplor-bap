@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:path/path.dart' as obj;
+import 'package:xplor/features/multi_lang/domain/mappers/wallet/wallet_keys.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
 
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_colors.dart';
@@ -48,14 +50,18 @@ class _UploadFileWidgetState extends State<UploadFileWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: AppColors.hintColor,
-                              width: 1.w,
-                            ),
-                            borderRadius: BorderRadius.circular(AppDimensions.small),
-                          ),
+                              borderRadius: BorderRadius.circular(AppDimensions.small),
+                              border: Border.all(width: 1, color: AppColors.grey100),
+                              color: AppColors.white,
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: AppColors.grey100,
+                                  offset: Offset(0, 10),
+                                  blurRadius: 30,
+                                )
+                              ]),
                           child: Row(
                             children: [
                               AppDimensions.small.hSpace(),
@@ -70,7 +76,7 @@ class _UploadFileWidgetState extends State<UploadFileWidget> {
                                       width: 24.w,
                                     )
                                   : Container(),
-                              8.hSpace(),
+                              12.hSpace(),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +107,7 @@ class _UploadFileWidgetState extends State<UploadFileWidget> {
                         if (fileSizeError)
                           Column(
                             children: [
-                              "File size should be less than 10 MB"
+                              WalletKeys.fileSizeShouldBeLess.stringToString
                                   .titleSemiBold(size: 12.sp, color: AppColors.errorColor),
                               AppDimensions.smallXL.vSpace(),
                             ],
@@ -111,7 +117,7 @@ class _UploadFileWidgetState extends State<UploadFileWidget> {
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        'Select File'.titleBold(size: 14.sp),
+                        WalletKeys.selectFile.stringToString.titleBold(size: 14.sp, color: AppColors.grey64697a),
                         AppDimensions.small.vSpace(),
                         DottedBorder(
                           color: state is FileSelectedErrorState ? AppColors.errorColor : AppColors.hintColor,
@@ -159,13 +165,15 @@ class _UploadFileWidgetState extends State<UploadFileWidget> {
                                   RichText(
                                     text: TextSpan(
                                       children: [
-                                        'Choose '.textSpanSemiBold(),
-                                        'file to upload'.textSpanRegular(fontWeight: FontWeight.w600),
+                                        '${WalletKeys.choose.stringToString} '.textSpanSemiBold(),
+                                        WalletKeys.fileToUpload.stringToString
+                                            .textSpanRegular(fontWeight: FontWeight.w600),
                                       ],
                                     ),
                                   ),
                                   AppDimensions.extraSmall.vSpace(),
-                                  'Select image,pdf'.titleRegular(size: 12.sp),
+                                  '${WalletKeys.upload.stringToString} jpeg, png, or pdf (max 10MB)'
+                                      .titleRegular(size: 12.sp),
                                 ],
                               ),
                             ),
@@ -182,8 +190,8 @@ class _UploadFileWidgetState extends State<UploadFileWidget> {
                     ),
               AppDimensions.smallXL.vSpace(),
               CustomTextFormField(
-                label: 'File Name',
-                hintText: 'Enter File Name',
+                label: WalletKeys.fileName.stringToString,
+                hintText: WalletKeys.enterFileName.stringToString,
                 onChanged: (fileName) => context.read<AddDocumentsBloc>().add(FileNameEvent(fileName: fileName)),
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),

@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
 
 import '../../../../../utils/app_utils/app_utils.dart';
+import '../../../../multi_lang/domain/mappers/mpin/generate_mpin_keys.dart';
 
 part 'mpin_event.dart';
 part 'mpin_state.dart';
@@ -10,6 +14,7 @@ part 'mpin_state.dart';
 class MpinBloc extends Bloc<MpinEvent, MpinState> {
   OnBoardingUseCase useCase;
   MpinBloc({required this.useCase}) : super(const MpinInitial()) {
+    on<PinInitialEvent>(onInitialEvent);
     on<PinChangedEvent>(_onOriginalPinInput);
     on<ConfirmPinChangedEvent>(_onConfirmPinInput);
     on<ValidatePinsEvent>(_onValidatePin);
@@ -30,8 +35,7 @@ class MpinBloc extends Bloc<MpinEvent, MpinState> {
     if (event.originalPin == event.confirmPin) {
       await _executeGenerateMpin(event.confirmPin, emit);
     } else {
-      emit(const PinsMisMatchedState(
-          errorMessage: 'The PINs you entered do not match. Please ensure that both PINs match before proceeding.'));
+      emit(PinsMisMatchedState(errorMessage: GenerateMpinKeys.thePinYouEnteredDoNotMatch.stringToString));
     }
   }
 
@@ -53,5 +57,9 @@ class MpinBloc extends Bloc<MpinEvent, MpinState> {
       emit(PinFailedState(errorMessage: AppUtils.getErrorMessage(e.toString())));
       return false;
     }
+  }
+
+  FutureOr<void> onInitialEvent(PinInitialEvent event, Emitter<MpinState> emit) {
+    emit(const MpinInitial());
   }
 }

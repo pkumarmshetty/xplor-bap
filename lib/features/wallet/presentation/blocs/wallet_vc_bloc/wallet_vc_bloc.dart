@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:xplor/features/wallet/domain/entities/wallet_vc_list_entity.dart';
 
@@ -5,17 +7,22 @@ import '../../../domain/usecase/wallet_usecase.dart';
 import 'wallet_vc_event.dart';
 import 'wallet_vc_state.dart';
 
+enum FlowType { course, document, consent }
+
 class WalletVcBloc extends Bloc<WalletVcEvent, WalletVcState> {
   WalletUseCase useCase;
 
   List<DocumentVcData> documentsList = [];
-  List<DocumentVcData> selectedDocumentsList = [];
+  List<DocumentVcData> selectedDocuments = [];
+  List<DocumentVcData> searchedDocumentsList = [];
+  FlowType flowType = FlowType.document;
 
   WalletVcBloc({required this.useCase}) : super(WalletVcInitial()) {
     on<GetWalletVcEvent>(_onGetUserWalletVc);
     on<WalletDocumentSelectedEvent>(_onDocumentSelected);
     on<WalletDelVcEvent>(_walletDeletedEvents);
     on<WalletDocumentsUnselectedEvent>(_onDocumentsUnselectedEvents);
+    on<WalletSearchDocumentsEvent>(_onDocumentsSearchEvent);
   }
 
   Future<void> _onGetUserWalletVc(
@@ -38,15 +45,41 @@ class WalletVcBloc extends Bloc<WalletVcEvent, WalletVcState> {
     WalletDocumentSelectedEvent event,
     Emitter<WalletVcState> emit,
   ) async {
-    documentsList[event.position] = documentsList[event.position].copyWith(isSelected: event.isSelected);
-
-    List<DocumentVcData> selectedDocs = [];
-    for (DocumentVcData i in documentsList) {
-      if (i.isSelected ?? false) {
-        selectedDocs.add(i);
+    if (state is WalletVcSuccessState ||
+        state is WalletDocumentSelectedState ||
+        state is WalletDocumentUnSelectedState) {
+      documentsList[event.position] = documentsList[event.position].copyWith(isSelected: event.isSelected);
+      selectedDocuments = [];
+      for (DocumentVcData i in documentsList) {
+        if (i.isSelected ?? false) {
+          selectedDocuments.add(i);
+        }
       }
+      emit(WalletDocumentSelectedState(docs: List.from(documentsList), selectedDocs: List.from(selectedDocuments)));
+    } else if (state is WalletDocumentsSearchedState) {
+      searchedDocumentsList[event.position] =
+          searchedDocumentsList[event.position].copyWith(isSelected: event.isSelected);
+      documentsList = documentsList.map((item) {
+        if (item.id == event.id) {
+          return item.copyWith(isSelected: event.isSelected); // Update the item
+        }
+        return item; // Return unchanged item if condition is not met
+      }).toList();
+      selectedDocuments = [];
+      List<DocumentVcData> selectedDocs = [];
+      for (DocumentVcData i in documentsList) {
+        if (i.isSelected ?? false) {
+          selectedDocuments.add(i);
+        }
+      }
+      for (DocumentVcData i in searchedDocumentsList) {
+        if (i.isSelected ?? false) {
+          selectedDocs.add(i);
+        }
+      }
+      emit(WalletDocumentsSearchedState(
+          searchedDocuments: List.from(searchedDocumentsList), selectedDocuments: selectedDocs));
     }
-    emit(WalletDocumentSelectedState(docs: List.from(documentsList), selectedDocs: List.from(selectedDocs)));
   }
 
   Future<void> _walletDeletedEvents(
@@ -70,7 +103,34 @@ class WalletVcBloc extends Bloc<WalletVcEvent, WalletVcState> {
   ) async {
     if (state is WalletDocumentSelectedState) {
       documentsList = documentsList.map((doc) => doc.copyWith(isSelected: false)).toList();
+      selectedDocuments = [];
       emit(WalletDocumentUnSelectedState(vcData: documentsList));
+    }
+  }
+
+  FutureOr<void> _onDocumentsSearchEvent(WalletSearchDocumentsEvent event, Emitter<WalletVcState> emit) {
+    if (event.documentsName == '') {
+      if (selectedDocuments.isNotEmpty) {
+        emit(WalletDocumentSelectedState(docs: documentsList, selectedDocs: selectedDocuments));
+      } else {
+        emit(WalletVcSuccessState(vcData: documentsList));
+      }
+    } else {
+      searchedDocumentsList = [];
+      for (DocumentVcData i in documentsList) {
+        if (i.name.toLowerCase().contains(event.documentsName.toLowerCase())) {
+          searchedDocumentsList.add(i);
+        }
+      }
+      bool isSelected = false;
+      for (var element in searchedDocumentsList) {
+        if (element.isSelected ?? false) {
+          isSelected = true;
+          break;
+        }
+      }
+      emit(WalletDocumentsSearchedState(
+          searchedDocuments: List.from(searchedDocumentsList), selectedDocuments: isSelected ? selectedDocuments : []));
     }
   }
 }

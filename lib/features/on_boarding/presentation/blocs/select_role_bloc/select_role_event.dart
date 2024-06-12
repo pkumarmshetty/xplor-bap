@@ -21,3 +21,7 @@ class AssignRoleEvent extends SelectRoleEvent {
 
   const AssignRoleEvent({this.entity});
 }
+
+class SaveRoleOnServerForBelem extends SelectRoleEvent {
+  const SaveRoleOnServerForBelem();
+}

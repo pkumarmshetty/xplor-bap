@@ -301,6 +301,20 @@ class MockSharedPreferencesHelper extends _i1.Mock implements _i13.SharedPrefere
       ) as String);
 
   @override
+  double getDouble(
+    String? key, {
+    double? defaultValue = 0.0,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getDouble,
+          [key],
+          {#defaultValue: defaultValue},
+        ),
+        returnValue: 0.0,
+      ) as double);
+
+  @override
   bool getBoolean(String? key) => (super.noSuchMethod(
         Invocation.method(
           #getBoolean,
@@ -326,6 +340,22 @@ class MockSharedPreferencesHelper extends _i1.Mock implements _i13.SharedPrefere
       ) as _i6.Future<bool>);
 
   @override
+  _i6.Future<bool> setDouble(
+    String? key,
+    double? value,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setDouble,
+          [
+            key,
+            value,
+          ],
+        ),
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
+
+  @override
   _i6.Future<bool> setBoolean(
     String? key,
     bool? value,
@@ -333,6 +363,36 @@ class MockSharedPreferencesHelper extends _i1.Mock implements _i13.SharedPrefere
       (super.noSuchMethod(
         Invocation.method(
           #setBoolean,
+          [
+            key,
+            value,
+          ],
+        ),
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
+
+  @override
+  List<String> getStringList(
+    String? key, {
+    List<String>? defaultValue = const [],
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getStringList,
+          [key],
+          {#defaultValue: defaultValue},
+        ),
+        returnValue: <String>[],
+      ) as List<String>);
+
+  @override
+  _i6.Future<bool> setStringList(
+    String? key,
+    List<String>? value,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setStringList,
           [
             key,
             value,

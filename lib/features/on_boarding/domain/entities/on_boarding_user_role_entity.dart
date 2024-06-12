@@ -9,6 +9,7 @@ class OnBoardingUserRoleEntity {
   String? updatedAt;
   String? createdAt;
   int? v;
+  bool? isSelected;
 
   OnBoardingUserRoleEntity({
     this.id,
@@ -19,6 +20,7 @@ class OnBoardingUserRoleEntity {
     this.updatedAt,
     this.createdAt,
     this.v,
+    this.isSelected,
   });
 
   /// Creates a [OnBoardingUserRoleEntity] object from a JSON map.
@@ -28,8 +30,8 @@ class OnBoardingUserRoleEntity {
         title: json["title"],
         description: json["description"],
         imageUrl: json["imageUrl"],
-        updatedAt: json["updated_at"],
-        createdAt: json["created_at"],
+        updatedAt: json["updatedAt"],
+        createdAt: json["createdAt"],
         v: json["__v"],
       );
 
@@ -44,6 +46,30 @@ class OnBoardingUserRoleEntity {
         "created_at": createdAt,
         "__v": v,
       };
+
+  OnBoardingUserRoleEntity copyWith({
+    String? id,
+    String? type,
+    String? title,
+    String? description,
+    String? imageUrl,
+    String? updatedAt,
+    String? createdAt,
+    int? v,
+    bool? isSelected,
+  }) {
+    return OnBoardingUserRoleEntity(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      v: v ?? this.v,
+      isSelected: isSelected ?? this.isSelected,
+    );
+  }
 }
 
 /// Converts a JSON string to a [OnBoardingUserRoleEntity] object.

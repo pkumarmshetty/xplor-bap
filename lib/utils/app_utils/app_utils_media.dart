@@ -10,30 +10,30 @@ mixin AppUtilsMediaMixin {
           actions: <Widget>[
             CupertinoActionSheetAction(
               onPressed: () async => getMediaData.call(await getMediaFile()),
-              child: 'File Manager'.titleRegular(
+              child: AppUtilsKeys.fileManager.stringToString.titleRegular(
                 color: AppColors.primaryColor,
                 size: 18.sp,
               ),
             ),
             CupertinoActionSheetAction(
               onPressed: () async => getMediaData.call(await getMediaFile()),
-              child: 'Photo Gallery'.titleRegular(
+              child: AppUtilsKeys.photoGallery.stringToString.titleRegular(
                 color: AppColors.primaryColor,
                 size: 18.sp,
               ),
             ),
-            CupertinoActionSheetAction(
+            /*CupertinoActionSheetAction(
               onPressed: () async => getMediaData.call(await getMediaFile()),
-              child: 'Camera'.titleRegular(
+              child: AppUtilsKeys.camera.stringToString.titleRegular(
                 color: AppColors.primaryColor,
                 size: 18.sp,
               ),
-            ),
+            ),*/
           ],
           cancelButton: CupertinoActionSheetAction(
             onPressed: () => Navigator.pop(context),
             isDefaultAction: true,
-            child: 'Cancel'.titleBold(
+            child: OnBoardingKeys.cancel.stringToString.titleBold(
               color: AppColors.primaryColor,
               size: 18.sp,
             ),

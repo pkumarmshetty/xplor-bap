@@ -6,10 +6,17 @@ sealed class PhoneEvent {
 
 class PhoneSubmitEvent extends PhoneEvent {
   final String phone;
+  final bool userCheck;
 
-  const PhoneSubmitEvent({required this.phone});
+  const PhoneSubmitEvent({required this.phone, required this.userCheck});
 
-  List<Object> get props => [phone];
+  List<Object> get props => [phone, userCheck];
+}
+
+class PhoneInitialEvent extends PhoneEvent {
+  const PhoneInitialEvent();
+
+  List<Object> get props => [];
 }
 
 class CheckPhoneEvent extends PhoneEvent {

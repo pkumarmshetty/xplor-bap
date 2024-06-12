@@ -1,3 +1,4 @@
+import 'package:xplor/features/on_boarding/domain/entities/user_data_entity.dart';
 import 'package:xplor/features/on_boarding/domain/entities/e_auth_providers_entity.dart';
 import 'package:xplor/features/on_boarding/domain/entities/ob_boarding_verify_otp_entity.dart';
 import 'package:xplor/features/on_boarding/domain/entities/on_boarding_assign_role_entity.dart';
@@ -5,6 +6,9 @@ import 'package:xplor/features/on_boarding/domain/entities/on_boarding_send_otp_
 import 'package:xplor/features/on_boarding/domain/repository/on_boarding_repository.dart';
 
 import '../../../../core/use_case.dart';
+import '../entities/categories_entity.dart';
+import '../entities/domains_entity.dart';
+import '../entities/kyc_sse_response.dart';
 import '../entities/on_boarding_user_role_entity.dart';
 
 class OnBoardingUseCase implements UseCase<void, OnBoardingSendOtpEntity> {
@@ -43,5 +47,33 @@ class OnBoardingUseCase implements UseCase<void, OnBoardingSendOtpEntity> {
 
   Future<bool> createMpin(String pin) async {
     return await repository.createMpin(pin);
+  }
+
+  Future<void> getAssignedRoleUserData() async {
+    return await repository.getAssignedRoleUserData();
+  }
+
+  Future<bool> updateDevicePreference(Map<String, dynamic> data) async {
+    return await repository.updateDevicePreference(data);
+  }
+
+  Future<List<DomainData>> getDomains() async {
+    return await repository.getDomainsList();
+  }
+
+  Future<bool> getDeviceIdEvent(String deviceId) async {
+    return await repository.getDeviceInfoApi(deviceId);
+  }
+
+  Future<List<CategoryEntity>> getCategories() async {
+    return await repository.getCategories();
+  }
+
+  Future<UserDataEntity> getUserData() async {
+    return await repository.getUserData();
+  }
+
+  Stream<KycSseResponse> getKycSuccessStatusResponse(Duration timeout) {
+    return repository.getKycStatusResponse(timeout);
   }
 }

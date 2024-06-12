@@ -18,3 +18,7 @@ class MPinVerifyEvent extends EnterMPinEvent {
 
   const MPinVerifyEvent({required this.mPin});
 }
+
+class MPinInitialEvent extends EnterMPinEvent {
+  const MPinInitialEvent();
+}

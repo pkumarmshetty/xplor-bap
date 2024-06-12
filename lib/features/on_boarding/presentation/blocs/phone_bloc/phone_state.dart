@@ -15,6 +15,14 @@ final class PhoneInvalidState extends PhoneState {}
 
 final class PhoneLoadingState extends PhoneState {}
 
+final class CountryCodeState extends PhoneState {
+  final String countryCode;
+
+  const CountryCodeState({
+    required this.countryCode,
+  });
+}
+
 final class PhoneSubmittingState extends PhoneState {
   final String phoneNumber;
 

@@ -20,14 +20,16 @@ class TopHeaderForDialogs extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         /// Vertical space above the title
-        AppDimensions.smallXL.vSpace(),
+        AppDimensions.medium.vSpace(),
 
         /// Title with custom styling
         isCrossIconVisible
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  title.titleExtraBold(size: 20.sp).symmetricPadding(horizontal: AppDimensions.mediumXL),
+                  title
+                      .titleExtraBold(size: 20.sp, color: AppColors.countryCodeColor)
+                      .symmetricPadding(horizontal: AppDimensions.mediumXL),
                   IconButton(
                     icon: const Icon(Icons.close, color: AppColors.crossIconColor),
                     // Set custom close icon
@@ -40,13 +42,14 @@ class TopHeaderForDialogs extends StatelessWidget {
             : title.titleExtraBold(size: 20.sp).symmetricPadding(horizontal: AppDimensions.mediumXL),
 
         /// Divider below the title
+        AppDimensions.small.vSpace(),
         Divider(
           color: AppColors.cancelButtonBgColor,
           thickness: 0.5.w,
         ),
 
         /// Vertical space below the divider
-        AppDimensions.mediumXL.vSpace(),
+        AppDimensions.smallXL.vSpace(),
       ],
     );
   }

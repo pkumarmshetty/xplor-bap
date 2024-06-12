@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:xplor/features/profile/presentation/pages/profile_page_view.dart';
+import 'package:xplor/utils/widgets/app_background_widget.dart';
+import '../../../multi_lang/domain/mappers/home/home_keys.dart';
+import '../../../profile/presentation/pages/agent_profile/agent_profile_page_view.dart';
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
@@ -9,7 +13,7 @@ import '../../../../utils/app_utils/app_utils.dart';
 import '../../../../utils/extensions/font_style/font_styles.dart';
 import '../../../../utils/utils.dart';
 
-import '../../../wallet/presentation/pages/wallet_tab_view.dart';
+import '../bloc/home_bloc.dart';
 import '../pages/home_page_view.dart';
 
 class HomeTabBarWidget extends StatefulWidget {
@@ -24,12 +28,19 @@ class _HomeTabBarWidgetState extends State<HomeTabBarWidget> {
 
   final List<Widget> _screens = [
     const HomePageView(),
-    const MyWalletTab(),
     Center(
-      child: 'Coming Soon!'.titleBold(),
+      child: HomeKeys.comingSoon.stringToString.titleBold(),
     ),
-    const ProfileTabView(),
+    Center(
+      child: HomeKeys.comingSoon.stringToString.titleBold(),
+    ),
+    const AgentProfilePageView(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,22 +50,31 @@ class _HomeTabBarWidgetState extends State<HomeTabBarWidget> {
         AppUtils.showAlertDialog(context, false);
       },
       child: Scaffold(
-        body: SafeArea(child: _screens[_currentIndex]),
+        resizeToAvoidBottomInset: false,
+        body: BlocListener<HomeBloc, HomeState>(listener: (context, state) {
+          if (state is HomeProfileState) {
+            setState(() {
+              _currentIndex = 3;
+            });
+          }
+        }, child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+          return AppBackgroundDecoration(child: SafeArea(child: _screens[_currentIndex]));
+        })),
         bottomNavigationBar: Container(
-          color: AppColors.white,
+          color: AppColors.cancelButtonBgColor,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildTabItem(0, 'Home'),
-              _buildTabItem(1, 'Wallet'),
-              _buildTabItem(2, 'Graph'),
-              _buildTabItem(3, 'Profile'),
+              _buildTabItem(0, HomeKeys.home.stringToString),
+              _homeTabItem(1).symmetricPadding(horizontal: 8.sp),
+              _buildTabItem(2, HomeKeys.wallet.stringToString),
             ],
-          ).symmetricPadding(
-            horizontal: AppDimensions.mediumXL.sp,
-            vertical: AppDimensions.extraSmall.sp,
+          ).singleSidePadding(
+            left: AppDimensions.xxlLarge.sp,
+            right: AppDimensions.xxlLarge.sp,
+            bottom: AppDimensions.small.sp,
           ),
         ),
       ),
@@ -66,12 +86,8 @@ class _HomeTabBarWidgetState extends State<HomeTabBarWidget> {
     switch (index) {
       case 0:
         return Assets.images.homeSelected;
-      case 1:
-        return Assets.images.walletSelected;
       case 2:
-        return Assets.images.graphUnselected;
-      case 3:
-        return Assets.images.userSelected;
+        return Assets.images.walletSelected;
       default:
         return Assets.images.homeSelected;
     }
@@ -82,15 +98,40 @@ class _HomeTabBarWidgetState extends State<HomeTabBarWidget> {
     switch (index) {
       case 0:
         return Assets.images.homeUnselected;
-      case 1:
-        return Assets.images.walletUnselected;
       case 2:
-        return Assets.images.graphUnselected;
-      case 3:
-        return Assets.images.userUnselected;
+        return Assets.images.walletUnselected;
       default:
         return Assets.images.homeUnselected;
     }
+  }
+
+  Widget _homeTabItem(int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+      child: Container(
+        height: 83.sp,
+        width: 83.sp,
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppColors.white,
+        ),
+        child: Center(
+          child: Container(
+            width: 60.sp,
+            height: 60.sp,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.primaryColor,
+            ),
+            child: SvgPicture.asset(Assets.images.add).paddingAll(padding: 20.sp),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildTabItem(int index, String label) {
@@ -98,6 +139,7 @@ class _HomeTabBarWidgetState extends State<HomeTabBarWidget> {
         onTap: () {
           setState(() {
             _currentIndex = index;
+            context.read<HomeBloc>().add(const HomeUserDataEvent());
           });
         },
         child: Container(
@@ -107,25 +149,13 @@ class _HomeTabBarWidgetState extends State<HomeTabBarWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 64.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: _currentIndex == index ? AppColors.primaryColor : AppColors.white,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(0),
-                    topRight: Radius.circular(0),
-                    bottomLeft: Radius.circular(6),
-                    bottomRight: Radius.circular(6),
-                  ),
-                ),
-              ),
-              AppDimensions.smallXL.h.vSpace(),
               SvgPicture.asset(
                 _currentIndex == index ? getSelectedIcon(index) : getUnSelectedIcon(index),
               ),
-              AppDimensions.extraSmall.vSpace(),
-              _currentIndex == index ? label.titleMedium(size: 12.sp, color: AppColors.primaryColor) : const Text(''),
+              5.vSpace(),
+              _currentIndex == index
+                  ? label.titleBold(size: 11.sp, color: AppColors.primaryColor)
+                  : label.titleBold(size: 11.sp, color: AppColors.tabsUnselectedTextColor.withOpacity(0.6)),
             ],
           ),
         ));

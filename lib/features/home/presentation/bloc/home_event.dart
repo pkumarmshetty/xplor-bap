@@ -11,3 +11,7 @@ sealed class HomeEvent extends Equatable {
 class HomeUserDataEvent extends HomeEvent {
   const HomeUserDataEvent();
 }
+
+class HomeProfileEvent extends HomeEvent {
+  const HomeProfileEvent();
+}

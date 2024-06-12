@@ -24,7 +24,7 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    'Self Shared'.titleBold(
+                    data.sharedWithEntity.titleBold(
                       size: 14.sp,
                       color: AppColors.countryCodeColor,
                     ),
@@ -68,7 +68,7 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        'Shared File:'.titleSemiBold(
+                        WalletKeys.sharedFile.stringToString.titleSemiBold(
                           size: 10.sp,
                           color: AppColors.countryCodeColor,
                         ),
@@ -80,6 +80,7 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                     ),
                     GestureDetector(
                         onTap: () {
+                          context.read<WalletVcBloc>().flowType = FlowType.consent;
                           String url = "${data.vcDetails.name}: ${data.restrictedUrl}";
 
                           sl<SharedPreferencesHelper>().setString(PrefConstKeys.sharedId, url);
@@ -100,7 +101,8 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                         ))
                   ],
                 ),
-                'Consent given for:'.titleSemiBold(
+                AppDimensions.small.vSpace(),
+                WalletKeys.consentGivenFor.stringToString.titleSemiBold(
                   size: 10.sp,
                   color: AppColors.countryCodeColor,
                 ),
@@ -111,7 +113,7 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                   children: [
                     Expanded(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      'Modified On:'.titleSemiBold(
+                      WalletKeys.modifiedOn.stringToString.titleSemiBold(
                         size: 10.sp,
                         color: AppColors.countryCodeColor,
                       ),
@@ -121,7 +123,7 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                     AppDimensions.large.hSpace(),
                     Expanded(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      'Validity:'.titleSemiBold(
+                      WalletKeys.validity.stringToString.titleSemiBold(
                         size: 10.sp,
                         color: AppColors.countryCodeColor,
                       ),
@@ -136,13 +138,25 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                   children: [
                     Expanded(
                       child: RevokeButtonWidget(
-                        text: 'Revoke',
-                        icon: Assets.images.deleteIcon,
+                        text: WalletKeys.revoke.stringToString,
+                        icon: SvgPicture.asset(
+                          Assets.images.deleteIcon,
+                          colorFilter: const ColorFilter.mode(
+                            AppColors.redColor,
+                            BlendMode.srcIn,
+                          ),
+                          height: 16.w,
+                          width: 16.w,
+                        ),
                         radius: 4,
                         onPressed: () {
-                          AppUtils.showAlertDialogForConfirmation(
-                              context, 'Revoke', 'Are you sure, you want to revoke access?', 'Cancel', 'Revoke',
-                              onConfirm: () {
+                          AppUtils.showAlertDialogForRevokeAccess(
+                              context,
+                              WalletKeys.revoke.stringToString,
+                              '${WalletKeys.revokeMessage.stringToString}?',
+                              WalletKeys.cancel.stringToString,
+                              WalletKeys.revoke.stringToString,
+                              false, () {
                             // Example: Deriving a constant value from data
                             context.read<MyConsentBloc>().add(
                                   ConsentRevokeEvent(entity: data),
@@ -150,12 +164,12 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                             Navigator.pop(context);
                           });
                         },
-                      ),
+                      ).singleSidePadding(right: AppDimensions.medium),
                     ),
-                    AppDimensions.large.hSpace(),
+                    AppDimensions.smallXL.hSpace(),
                     Expanded(
                       child: UpdateButtonWidget(
-                        text: 'Update',
+                        text: WalletKeys.update.stringToString,
                         onPressed: () {
                           showDialog(
                               barrierDismissible: false,
@@ -164,7 +178,7 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                                 return UpdateConsentDialogWidget(entity: data, onConfirmPressed: () {});
                               });
                         },
-                      ),
+                      ).singleSidePadding(right: AppDimensions.medium),
                     )
                   ],
                 )
