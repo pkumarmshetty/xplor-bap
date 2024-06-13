@@ -4,6 +4,7 @@ class SeekerHomeKeys {
   static const categories = "Categories";
   static const viewAll = "View All";
   static const recommendedCourses = "Recommended Courses";
+  static const trendingCourses = "Trending Courses";
   static const products = "Products";
   static const engineering = "Engineering";
   static const art = "Art";

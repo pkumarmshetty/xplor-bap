@@ -56,19 +56,25 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
       print("on init inside seeker home");
     }
     courseLabels.clear();
-    String categoriesJson = sl<SharedPreferencesHelper>().getString(PrefConstKeys.listOfCategory);
+    String categoriesJson =
+        sl<SharedPreferencesHelper>().getString(PrefConstKeys.listOfCategory);
     debugPrint('Category JSON.... $categoriesJson');
     List<dynamic> jsonList = jsonDecode(categoriesJson);
 
-    String domains = sl<SharedPreferencesHelper>().getString(PrefConstKeys.savedDomainsNames);
+    String domains = sl<SharedPreferencesHelper>()
+        .getString(PrefConstKeys.savedDomainsNames);
 
     debugPrint("Domains...$domains");
 
-    courseLabels = jsonList.map((json) => CategoryEntity.fromJson(json)).toList();
+    courseLabels =
+        jsonList.map((json) => CategoryEntity.fromJson(json)).toList();
     _determinePosition();
-    final searchInputText = sl<SharedPreferencesHelper>().getString(PrefConstKeys.searchCategoryInput);
+    final searchInputText = sl<SharedPreferencesHelper>()
+        .getString(PrefConstKeys.searchCategoryInput);
     _searchController.text = searchInputText == "NA" ? "" : searchInputText;
-    context.read<SeekerHomeBloc>().add(const SeekerSSEvent(search: '', isFirstTime: true));
+    context
+        .read<SeekerHomeBloc>()
+        .add(const SeekerSSEvent(search: '', isFirstTime: true));
     scrollController.addListener(_loadMoreData);
     super.initState();
   }
@@ -76,8 +82,11 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
   ScrollController scrollController = ScrollController();
 
   void _loadMoreData() {
-    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
-      context.read<SeekerHomeBloc>().add(const SeekerSSEvent(search: '', isFirstTime: false));
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      context
+          .read<SeekerHomeBloc>()
+          .add(const SeekerSSEvent(search: '', isFirstTime: false));
     }
   }
 
@@ -107,15 +116,20 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
       await Geolocator.openLocationSettings();
 
       // Permissions are denied forever, handle appropriately.
-      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
 
-    sl<SharedPreferencesHelper>().setDouble(PrefConstKeys.latitude, position.latitude);
-    sl<SharedPreferencesHelper>().setDouble(PrefConstKeys.longitude, position.longitude);
+    sl<SharedPreferencesHelper>()
+        .setDouble(PrefConstKeys.latitude, position.latitude);
+    sl<SharedPreferencesHelper>()
+        .setDouble(PrefConstKeys.longitude, position.longitude);
 
-    List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark firstPlacemark = placemarks.first;
 
     String city = firstPlacemark.locality ?? 'Unknown City';
@@ -150,7 +164,8 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
         }
         if (state is SeekerHomeUpdatedState &&
             state.state == DataState.error &&
-            state.errorMessage == ExceptionErrors.checkInternetConnection.stringToString) {
+            state.errorMessage ==
+                ExceptionErrors.checkInternetConnection.stringToString) {
           AppUtils.showSnackBar(context, state.errorMessage!);
         }
       },
@@ -161,7 +176,9 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
             children: [
               CustomScrollView(slivers: [
                 // SliverAppBar with flexible space for image and overlay
-                SeekerAppBarWidget(address: address == "NA" ? _addressController.text : address),
+                SeekerAppBarWidget(
+                    address:
+                        address == "NA" ? _addressController.text : address),
                 // SliverToBoxAdapter with detailed information
                 SliverToBoxAdapter(
                   child: _buildMainContent(state),
@@ -177,10 +194,12 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
 
   search(String input) {
     if (kDebugMode) {
-      print("context.read<SeekerHomeBloc>().add(SeekerSSEvent(search: val));  $input");
+      print(
+          "context.read<SeekerHomeBloc>().add(SeekerSSEvent(search: val));  $input");
     }
     if (_searchController.text.isNotEmpty) {
-      sl<SharedPreferencesHelper>().setString(PrefConstKeys.searchHomeInput, _searchController.text);
+      sl<SharedPreferencesHelper>()
+          .setString(PrefConstKeys.searchHomeInput, _searchController.text);
       Navigator.pushNamed(context, Routes.seekerOnSearchResult);
       _searchController.clear();
     }
@@ -222,19 +241,29 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                       _selectedLabel = selectedLabel;
                     }
 
-                    String selectedValue = _selectedLabel == selectedLabel ? value.toString() : "";
+                    String selectedValue =
+                        _selectedLabel == selectedLabel ? value.toString() : "";
 
                     debugPrint("Selected category... $selectedValue");
 
-                    context.read<SeekerHomeBloc>().add(SeekerSSEvent(search: selectedValue));
+                    context
+                        .read<SeekerHomeBloc>()
+                        .add(SeekerSSEvent(search: selectedValue));
                   });
                 },
               );
             },
           ),
         ),
-        if (state is SeekerHomeUpdatedState && state.providerData!.isNotEmpty) _providerData([], isProviderTitle: true),
-        if (state is SeekerHomeUpdatedState && state.providerData!.isNotEmpty) _providerData(state.providerData!),
+        if (state is SeekerHomeUpdatedState && state.providerData!.isNotEmpty)
+          _providerData([], isProviderTitle: true),
+        if (state is SeekerHomeUpdatedState && state.providerData!.isNotEmpty)
+          _providerData(state.providerData!),
+        AppDimensions.extraSmall.vSpace(),
+        if (state is SeekerHomeUpdatedState && state.providerData!.isNotEmpty)
+          _providerTrendingData([], isProviderTitle: true),
+        if (state is SeekerHomeUpdatedState && state.providerData!.isNotEmpty)
+          _providerTrendingData(state.providerData!.reversed.toList()),
         AppDimensions.mediumXL.vSpace(),
       ],
     ).symmetricPadding(horizontal: AppDimensions.medium.sp);
@@ -251,7 +280,8 @@ _listViewData(SeekerHomeState state) {
           width: 150.w,
         ).paddingAll(padding: AppDimensions.medium),
       );
-    } else if (state.state == DataState.success && state.providerData!.isEmpty) {
+    } else if (state.state == DataState.success &&
+        state.providerData!.isEmpty) {
       return Center(
         child: ListView(children: [
           Column(
@@ -277,6 +307,26 @@ _listViewData(SeekerHomeState state) {
 _providerData(List<SearchItemEntity> provider, {bool isProviderTitle = false}) {
   return isProviderTitle
       ? coursesHeader(title: SeekerHomeKeys.recommendedCourses.stringToString)
+      : AspectRatio(
+          aspectRatio: 1.4,
+          child: ListView.separated(
+            key: UniqueKey(),
+            separatorBuilder: (context, index) {
+              return AppDimensions.smallXL.hSpace();
+            },
+            scrollDirection: Axis.horizontal,
+            itemCount: provider.length,
+            itemBuilder: (context, index) {
+              return courseCardList(context, provider[index]);
+            },
+          ),
+        );
+}
+
+_providerTrendingData(List<SearchItemEntity> provider,
+    {bool isProviderTitle = false}) {
+  return isProviderTitle
+      ? coursesHeader(title: SeekerHomeKeys.trendingCourses.stringToString)
       : AspectRatio(
           aspectRatio: 1.4,
           child: ListView.separated(
@@ -374,8 +424,11 @@ Widget courseCardList(BuildContext context, SearchItemEntity data) {
         if (kDebugMode) {
           print("data adsadfa  ${data.domain}");
         }
-        context.read<CourseDescriptionBloc>().add(CourseSelectedEvent(course: data));
-        Navigator.pushNamed(context, Routes.courseDescription, arguments: context.read<SeekerHomeBloc>().transactionId);
+        context
+            .read<CourseDescriptionBloc>()
+            .add(CourseSelectedEvent(course: data));
+        Navigator.pushNamed(context, Routes.courseDescription,
+            arguments: context.read<SeekerHomeBloc>().transactionId);
       },
       child: CoursesPreviewWidget(
         course: data,

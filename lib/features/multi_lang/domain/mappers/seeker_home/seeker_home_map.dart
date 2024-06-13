@@ -6,6 +6,7 @@ final Map<String, dynamic> originalSeekerHomeMap = {
   SeekerHomeKeys.categories: "Categories",
   SeekerHomeKeys.viewAll: "View All",
   SeekerHomeKeys.recommendedCourses: "Recommended Courses",
+  SeekerHomeKeys.trendingCourses: "Trending Courses",
   SeekerHomeKeys.products: "Products",
   SeekerHomeKeys.engineering: "Engineering",
   SeekerHomeKeys.art: "Art",

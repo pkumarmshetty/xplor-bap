@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:xplor/const/local_storage/shared_preferences_helper.dart';
 import 'package:xplor/features/multi_lang/domain/mappers/profile/profile_keys.dart';
 import 'package:xplor/features/my_orders/presentation/blocs/my_orders_bloc/my_orders_bloc.dart';
 import 'package:xplor/features/my_orders/presentation/blocs/my_orders_bloc/my_orders_state.dart';
@@ -18,8 +17,8 @@ import 'package:xplor/utils/widgets/app_background_widget.dart';
 import 'package:xplor/utils/widgets/loading_animation.dart';
 
 import '../../../../config/routes/path_routing.dart';
-import '../../../../core/dependency_injection.dart';
 import '../../../../utils/app_dimensions.dart';
+import '../../domain/entities/my_orders_entity.dart';
 import '../blocs/my_orders_bloc/my_orders_event.dart';
 import '../widgets/order_list_empty_widget.dart';
 import '../widgets/orders_card_widget.dart';
@@ -106,10 +105,7 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                   Column(
                     children: [
                       AppDimensions.mediumXL.vSpace(),
-                      if (state is MyOrdersFetchedState &&
-                          (state.ongoingOrdersEntity.isNotEmpty ||
-                              state.completedOrdersEntity.isNotEmpty))
-                        _buildTabItem(state),
+                      if (state is MyOrdersFetchedState) _buildTabItem(state),
                     ],
                   ).symmetricPadding(horizontal: AppDimensions.mediumXL.w),
                   AppDimensions.small.vSpace(),
@@ -129,9 +125,7 @@ class _MyOrdersViewState extends State<MyOrdersView> {
             ),
             SliverFillRemaining(
               child: Stack(children: [
-                if (state is MyOrdersFetchedState &&
-                    (state.ongoingOrdersEntity.isNotEmpty ||
-                        state.completedOrdersEntity.isNotEmpty))
+                if (state is MyOrdersFetchedState)
                   tabWidget(_currentIndex, state)
                       .symmetricPadding(horizontal: AppDimensions.mediumXL.w),
                 if (state is MyOrdersFetchedState &&
@@ -146,6 +140,9 @@ class _MyOrdersViewState extends State<MyOrdersView> {
   }
 
   Widget _buildTabItem(MyOrdersFetchedState state) {
+    List<MyOrdersEntity> compOrderData = [];
+    compOrderData.addAll(state.ongoingOrdersEntity);
+    compOrderData.addAll(state.completedOrdersEntity);
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -164,12 +161,12 @@ class _MyOrdersViewState extends State<MyOrdersView> {
           tabButtonWidget(
               index: 0,
               label:
-                  "${ProfileKeys.ongoing.stringToString} (${sl<SharedPreferencesHelper>().getString(PrefConstKeys.ongoingOrdersCount)})",
+                  "${ProfileKeys.ongoing.stringToString} (${state.onGoingCount})",
               position: 0),
           tabButtonWidget(
               index: 1,
               label:
-                  "${ProfileKeys.completed.stringToString} (${sl<SharedPreferencesHelper>().getString(PrefConstKeys.completedOrdersCount)})",
+                  "${ProfileKeys.completed.stringToString} (${compOrderData.length.toString()})",
               position: 1),
         ],
       ).symmetricPadding(horizontal: AppDimensions.extraSmall.sp),
@@ -177,9 +174,16 @@ class _MyOrdersViewState extends State<MyOrdersView> {
   }
 
   Widget tabWidget(int index, MyOrdersFetchedState state) {
+    List<MyOrdersEntity> compOrderData = [];
+    compOrderData.addAll(state.ongoingOrdersEntity);
+    compOrderData.addAll(state.completedOrdersEntity);
+
+    debugPrint("compOrderData  ${compOrderData.length}");
+
     switch (index) {
       case 0:
-        return state.ongoingOrdersEntity.isEmpty
+        return state.orderState != OrderState.loading &&
+                state.ongoingOrdersEntity.isEmpty
             ? const OrderListEmptyWidget()
             : ListView.separated(
                 controller: scrollControllerOngoing,
@@ -198,7 +202,7 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                 itemCount: state.ongoingOrdersEntity.length,
               );
       case 1:
-        return state.completedOrdersEntity.isEmpty
+        return state.orderState != OrderState.loading && compOrderData.isEmpty
             ? const OrderListEmptyWidget()
             : ListView.separated(
                 controller: scrollControllerCompleted,
@@ -211,10 +215,10 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                   return OrdersCardWidget(
                     progress: 1,
                     isCompleted: true,
-                    myOrdersEntity: state.completedOrdersEntity[index],
+                    myOrdersEntity: compOrderData[index],
                   );
                 },
-                itemCount: state.completedOrdersEntity.length,
+                itemCount: compOrderData.length,
               );
       default:
         return Container();

@@ -86,11 +86,11 @@ dependencies:
   fl_chart:
   flutter_client_sse:
   readmore: ^3.0.0
-  flutter_rating_bar: ^4.0.1
   just_the_tooltip: ^0.0.12
   permission_handler: ^10.2.0
   #url_launcher:
   path_provider: ^2.0.9
+  rating_bar_updated:
 
 
 dev_dependencies:

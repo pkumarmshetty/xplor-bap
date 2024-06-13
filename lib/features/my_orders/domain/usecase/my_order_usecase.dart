@@ -8,11 +8,11 @@ class MyOrdersUseCase {
 
   MyOrdersUseCase({required this.repository});
 
-  Future<List<MyOrdersEntity>> getOngoingOrdersData(String initialIndex, String lastIndex) async {
+  Future<MyOrdersListEntity> getOngoingOrdersData(String initialIndex, String lastIndex) async {
     return await repository.getOngoingOrdersData(initialIndex, lastIndex);
   }
 
-  Future<List<MyOrdersEntity>> getCompletedOrdersData(String initialIndex, String lastIndex) async {
+  Future<MyOrdersListEntity> getCompletedOrdersData(String initialIndex, String lastIndex) async {
     return await repository.getCompletedOrdersData(initialIndex, lastIndex);
   }
 
