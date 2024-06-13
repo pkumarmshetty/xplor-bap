@@ -10,6 +10,8 @@ import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/dependency_injection.dart';
 import '../../../../utils/common_top_header.dart';
 import '../../../multi_lang/domain/mappers/seeker_home/seeker_home_keys.dart';
+import '../../../my_orders/presentation/blocs/my_orders_bloc/my_orders_bloc.dart';
+import '../../../my_orders/presentation/blocs/my_orders_bloc/my_orders_event.dart';
 
 class StartCoursePage extends StatefulWidget {
   const StartCoursePage({super.key, required this.courseUrl});
@@ -29,7 +31,8 @@ class _StartCoursePageState extends State<StartCoursePage> {
   void initState() {
     super.initState();
 
-    debugPrint("media_url... ${context.read<ApplyCourseBloc>().courseMediaUrl}");
+    debugPrint(
+        "media_url... ${context.read<ApplyCourseBloc>().courseMediaUrl}");
 
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -68,9 +71,11 @@ class _StartCoursePageState extends State<StartCoursePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: PopScope(
-      canPop: sl<SharedPreferencesHelper>().getBoolean(PrefConstKeys.isStartUrlMyCourse),
+      canPop: sl<SharedPreferencesHelper>()
+          .getBoolean(PrefConstKeys.isStartUrlMyCourse),
       onPopInvoked: (val) {
-        bool data = sl<SharedPreferencesHelper>().getBoolean(PrefConstKeys.isStartUrlMyCourse);
+        bool data = sl<SharedPreferencesHelper>()
+            .getBoolean(PrefConstKeys.isStartUrlMyCourse);
 
         if (!data) {
           Navigator.pushNamedAndRemoveUntil(
@@ -78,6 +83,8 @@ class _StartCoursePageState extends State<StartCoursePage> {
             Routes.seekerHome,
             (routes) => false,
           );
+        } else {
+          _callOrderApi();
         }
       },
       child: Column(
@@ -90,10 +97,12 @@ class _StartCoursePageState extends State<StartCoursePage> {
     return CommonTopHeader(
         title: SeekerHomeKeys.startCourse.stringToString,
         onBackButtonPressed: () {
-          bool data = sl<SharedPreferencesHelper>().getBoolean(PrefConstKeys.isStartUrlMyCourse);
+          bool data = sl<SharedPreferencesHelper>()
+              .getBoolean(PrefConstKeys.isStartUrlMyCourse);
 
           if (data) {
             Navigator.pop(context);
+            //_callOrderApi();
           } else {
             Navigator.pushNamedAndRemoveUntil(
               context,
@@ -107,7 +116,19 @@ class _StartCoursePageState extends State<StartCoursePage> {
   _bodyView() {
     return Expanded(
         child: Stack(
-      children: [WebViewWidget(controller: controller!), if (isLoading) const LoadingAnimation()],
+      children: [
+        WebViewWidget(controller: controller!),
+        if (isLoading) const LoadingAnimation()
+      ],
     ));
+  }
+
+  void _callOrderApi() {
+    context
+        .read<MyOrdersBloc>()
+        .add(const MyOrdersDataEvent(isFirstTime: true));
+    context
+        .read<MyOrdersBloc>()
+        .add(const MyOrdersCompletedEvent(isFirstTime: true));
   }
 }

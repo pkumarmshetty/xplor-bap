@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:xplor/features/multi_lang/domain/mappers/profile/profile_keys.dart';
 import 'package:xplor/features/my_orders/presentation/blocs/course_rating_bloc/course_ratings_bloc.dart';
 import 'package:xplor/features/my_orders/presentation/blocs/my_orders_bloc/my_orders_bloc.dart';
-import 'package:xplor/gen/assets.gen.dart';
 import 'package:xplor/utils/app_colors.dart';
 import 'package:xplor/utils/app_dimensions.dart';
 import 'package:xplor/utils/extensions/font_style/font_styles.dart';
@@ -16,6 +14,7 @@ import 'package:xplor/utils/utils.dart';
 import 'package:xplor/utils/widgets/build_button.dart';
 import 'package:xplor/utils/widgets/loading_animation.dart';
 
+import '../../../../utils/widgets/rating_bar.dart';
 import '../blocs/my_orders_bloc/my_orders_event.dart';
 
 class CourseRatingWidget extends StatefulWidget {
@@ -99,6 +98,9 @@ class _CourseRatingWidgetState extends State<CourseRatingWidget> {
           CourseRatingWidget.showThanksForFeedbackDialog(context);
           context
               .read<MyOrdersBloc>()
+              .add(const MyOrdersDataEvent(isFirstTime: true));
+          context
+              .read<MyOrdersBloc>()
               .add(const MyOrdersCompletedEvent(isFirstTime: true));
         }
       },
@@ -128,37 +130,20 @@ class _CourseRatingWidgetState extends State<CourseRatingWidget> {
                         ProfileKeys.loveToKnow.stringToString.titleRegular(
                             color: AppColors.grey9098A3, size: 16.sp),
                         AppDimensions.medium.verticalSpace,
-                        RatingBar(
-                          initialRating: state is CourseRatingsUpdatedState
-                              ? state.ratings
-                              : 0,
-                          direction: Axis.horizontal,
-                          allowHalfRating: true,
-                          itemCount: 5,
-                          itemSize: 36.w,
-                          ratingWidget: RatingWidget(
-                            full: SvgPicture.asset(Assets.images.rating,
-                                colorFilter: const ColorFilter.mode(
-                                  AppColors.yellowfab,
-                                  BlendMode.srcIn,
-                                )),
-                            half: SvgPicture.asset(Assets.images.ratingHalf,
-                                colorFilter: const ColorFilter.mode(
-                                  AppColors.yellowfab,
-                                  BlendMode.srcIn,
-                                )),
-                            empty: SvgPicture.asset(
-                              Assets.images.ratingHollow,
-                            ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: RatingBarWidget(
+                            rating: state is CourseRatingsUpdatedState
+                                ? state.ratings
+                                : 0.0,
+                            onChanged: (val) {
+                              rating = val;
+                              context.read<CourseRatingsBloc>().add(
+                                  RatingsUpdateEvent(
+                                      ratings: rating,
+                                      feedback: feedbackController.text));
+                            },
                           ),
-                          itemPadding: EdgeInsets.symmetric(horizontal: 10.w),
-                          onRatingUpdate: (selectedRating) {
-                            rating = selectedRating;
-                            context.read<CourseRatingsBloc>().add(
-                                RatingsUpdateEvent(
-                                    ratings: rating,
-                                    feedback: feedbackController.text));
-                          },
                         ),
                         AppDimensions.large.verticalSpace,
                         Container(

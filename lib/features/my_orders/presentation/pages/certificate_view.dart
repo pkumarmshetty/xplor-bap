@@ -14,6 +14,8 @@ import '../../../../utils/widgets/loading_animation.dart';
 import '../../../multi_lang/domain/mappers/profile/profile_keys.dart';
 import '../blocs/certificate_bloc/cerificate_bloc.dart';
 import '../blocs/certificate_bloc/certificate_state.dart';
+import '../blocs/my_orders_bloc/my_orders_bloc.dart';
+import '../blocs/my_orders_bloc/my_orders_event.dart';
 
 class CertificateView extends StatefulWidget {
   const CertificateView({super.key, required this.certificateUrl});
@@ -119,72 +121,87 @@ class _CertificateViewState extends State<CertificateView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: AppBackgroundDecoration(
-          child: BlocListener<DownloadBloc, DownloadState>(
-        listener: (context, state) {
-          if (state is DownloadSuccess) {
-            AppUtils.showSnackBar(context, ProfileKeys.fileDownloadedSuccessfully.stringToString,
-                bgColor: AppColors.primaryColor);
-          }
-          if (state is DownloadFailure) {
-            AppUtils.showSnackBar(context, '${ProfileKeys.downloadFailed.stringToString}: ${state.error}',
-                bgColor: AppColors.primaryColor);
-          }
-        },
-        child: BlocBuilder<DownloadBloc, DownloadState>(builder: (context, state) {
-          return Stack(children: [
-            Column(
-              children: [
-                CommonTopHeader(
-                  title: ProfileKeys.certificate.stringToString,
-                  onBackButtonPressed: () => Navigator.pop(context),
-                ),
-                AppDimensions.medium.vSpace(),
-                Expanded(
-                  child: Card(
-                    elevation: AppDimensions.extraSmall.w,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.w),
-                    ),
-                    color: AppColors.white,
-                    surfaceTintColor: AppColors.white,
-                    child: WebViewWidget(controller: webViewController),
-                  ).symmetricPadding(horizontal: AppDimensions.smallXL.w),
-                ),
-                AppDimensions.medium.vSpace(),
-                /*ButtonWidget(
-                title: ProfileKeys.addToWallet.stringToString,
-                onPressed: () {},
-                isValid: true,
-              ).symmetricPadding(horizontal: AppDimensions.smallXL.w),
-              AppDimensions.small.vSpace(),*/
-                /* ButtonWidget(
-                  onPressed: () {
-                    context.read<DownloadBloc>().add(StartDownload(
-                        widget.certificateUrl, 'certificate.pdf'));
-                  },
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (val) {
+          _callOrderApi();
+      },
+      child: Scaffold(
+        body: AppBackgroundDecoration(
+            child: BlocListener<DownloadBloc, DownloadState>(
+          listener: (context, state) {
+            if (state is DownloadSuccess) {
+              AppUtils.showSnackBar(context, ProfileKeys.fileDownloadedSuccessfully.stringToString,
+                  bgColor: AppColors.primaryColor);
+            }
+            if (state is DownloadFailure) {
+              AppUtils.showSnackBar(context, '${ProfileKeys.downloadFailed.stringToString}: ${state.error}',
+                  bgColor: AppColors.primaryColor);
+            }
+          },
+          child: BlocBuilder<DownloadBloc, DownloadState>(builder: (context, state) {
+            return Stack(children: [
+              Column(
+                children: [
+                  CommonTopHeader(
+                    title: ProfileKeys.certificate.stringToString,
+                    onBackButtonPressed: () => Navigator.pop(context),
+                  ),
+                  AppDimensions.medium.vSpace(),
+                  Expanded(
+                    child: Card(
+                      elevation: AppDimensions.extraSmall.w,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.w),
+                      ),
+                      color: AppColors.white,
+                      surfaceTintColor: AppColors.white,
+                      child: WebViewWidget(controller: webViewController),
+                    ).symmetricPadding(horizontal: AppDimensions.smallXL.w),
+                  ),
+                  AppDimensions.medium.vSpace(),
+                  /*ButtonWidget(
+                  title: ProfileKeys.addToWallet.stringToString,
+                  onPressed: () {},
                   isValid: true,
-                  isFilled: false,
-                  customText: state is DownloadInProgress
-                      ? '${ProfileKeys.downloading.stringToString} (${state.progress * 100}%)'
-                          .titleBold(
-                          size: 14.sp,
-                          color: AppColors.primaryColor,
-                        )
-                      : ProfileKeys.downloadCertificate.stringToString
-                          .titleBold(
-                          size: 14.sp,
-                          color: AppColors.primaryColor,
-                        ),
                 ).symmetricPadding(horizontal: AppDimensions.smallXL.w),
-                AppDimensions.medium.vSpace(),*/
-              ],
-            ),
-            if (isLoading) const LoadingAnimation()
-          ]);
-        }),
-      )),
+                AppDimensions.small.vSpace(),*/
+                  /* ButtonWidget(
+                    onPressed: () {
+                      context.read<DownloadBloc>().add(StartDownload(
+                          widget.certificateUrl, 'certificate.pdf'));
+                    },
+                    isValid: true,
+                    isFilled: false,
+                    customText: state is DownloadInProgress
+                        ? '${ProfileKeys.downloading.stringToString} (${state.progress * 100}%)'
+                            .titleBold(
+                            size: 14.sp,
+                            color: AppColors.primaryColor,
+                          )
+                        : ProfileKeys.downloadCertificate.stringToString
+                            .titleBold(
+                            size: 14.sp,
+                            color: AppColors.primaryColor,
+                          ),
+                  ).symmetricPadding(horizontal: AppDimensions.smallXL.w),
+                  AppDimensions.medium.vSpace(),*/
+                ],
+              ),
+              if (isLoading) const LoadingAnimation()
+            ]);
+          }),
+        )),
+      ),
     );
+  }
+
+  void _callOrderApi() {
+    context
+        .read<MyOrdersBloc>()
+        .add(const MyOrdersDataEvent(isFirstTime: true));
+    context
+        .read<MyOrdersBloc>()
+        .add(const MyOrdersCompletedEvent(isFirstTime: true));
   }
 }

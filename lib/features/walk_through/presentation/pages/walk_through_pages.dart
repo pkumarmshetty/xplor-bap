@@ -62,15 +62,28 @@ class _WalkThroughPagesState extends State<WalkThroughPages> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: AppBackgroundDecoration(
-            child: SafeArea(
-                child: Stack(
-      children: [
-        _bodySliderPageView(context),
-        _appBarView(),
-      ],
-    ))));
+    return WillPopScope(
+      onWillPop: () async {
+        if (currentPageValue == 0) {
+          return true; // Allow popping the screen
+        } else {
+          controller.previousPage(
+            duration: const Duration(milliseconds: 800),
+            curve: Curves.decelerate,
+          );
+          return false; // Prevent popping the screen
+        }
+      },
+      child: Scaffold(
+          body: AppBackgroundDecoration(
+              child: SafeArea(
+                  child: Stack(
+        children: [
+          _bodySliderPageView(context),
+          _appBarView(),
+        ],
+      )))),
+    );
   }
 
   _appBarView() {
@@ -81,11 +94,13 @@ class _WalkThroughPagesState extends State<WalkThroughPages> {
       child: Container(
         height: 38.w,
         width: 38.w,
-        margin: const EdgeInsets.symmetric(horizontal: AppDimensions.medium, vertical: AppDimensions.mediumXL),
+        margin: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.medium, vertical: AppDimensions.mediumXL),
         decoration: BoxDecoration(
           color: AppColors.blueWith10Opacity,
           // Set your desired background color
-          borderRadius: BorderRadius.circular(10), // Set your desired border radius
+          borderRadius:
+              BorderRadius.circular(10), // Set your desired border radius
         ),
         child: SvgPicture.asset(height: 16.w, width: 16.w, Assets.images.icBack)
             .paddingAll(padding: AppDimensions.smallXL),
@@ -122,7 +137,9 @@ class _WalkThroughPagesState extends State<WalkThroughPages> {
             Expanded(child: Container()),
             model.title.titleBlack().fadeAnimation(),
             AppDimensions.extraSmall.vSpace(),
-            model.subTitle.titleBold(color: AppColors.grey64697a, size: 14.sp).fadeAnimation(),
+            model.subTitle
+                .titleBold(color: AppColors.grey64697a, size: 14.sp)
+                .fadeAnimation(),
             AppDimensions.smallXL.vSpace(),
             Wrap(
               direction: Axis.horizontal,
@@ -132,9 +149,13 @@ class _WalkThroughPagesState extends State<WalkThroughPages> {
                   (index) => Container(
                         height: AppDimensions.small,
                         width: AppDimensions.small,
-                        margin: const EdgeInsets.only(right: AppDimensions.extraSmall),
+                        margin: const EdgeInsets.only(
+                            right: AppDimensions.extraSmall),
                         decoration: BoxDecoration(
-                            color: pos == index ? AppColors.primaryColor : AppColors.grey200, shape: BoxShape.circle),
+                            color: pos == index
+                                ? AppColors.primaryColor
+                                : AppColors.grey200,
+                            shape: BoxShape.circle),
                       )),
             ),
             50.w.vSpace(),
@@ -142,29 +163,40 @@ class _WalkThroughPagesState extends State<WalkThroughPages> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    if (sl<SharedPreferencesHelper>().getBoolean(PrefConstKeys.appForBelem)) {
-                      Navigator.pushNamed(context, Routes.chooseDomain);
-                    } else {
-                      Navigator.pushNamed(context, Routes.chooseRole);
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                        right: AppDimensions.medium, top: AppDimensions.medium, bottom: AppDimensions.medium),
-                    color: Colors.transparent,
-                    child: OnBoardingKeys.skip.stringToString.titleMedium(color: AppColors.grey64697a, size: 14.sp),
+                if (pos != 2)
+                  GestureDetector(
+                    onTap: () {
+                      if (sl<SharedPreferencesHelper>()
+                          .getBoolean(PrefConstKeys.appForBelem)) {
+                        Navigator.pushNamed(context, Routes.chooseDomain);
+                      } else {
+                        Navigator.pushNamed(context, Routes.chooseRole);
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                          right: AppDimensions.medium,
+                          top: AppDimensions.medium,
+                          bottom: AppDimensions.medium),
+                      color: Colors.transparent,
+                      child: OnBoardingKeys.skip.stringToString.titleMedium(
+                          color: AppColors.grey64697a, size: 14.sp),
+                    ),
                   ),
-                ),
                 const Spacer(),
                 ButtonWidget(
                   customText: Row(
                     children: [
-                      pos == 2 ? AppDimensions.extraSmall.hSpace() : AppDimensions.mediumXL.hSpace(),
-                      (pos == 2 ? OnBoardingKeys.getStarted.stringToString : OnBoardingKeys.next.stringToString)
+                      pos == 2
+                          ? AppDimensions.extraSmall.hSpace()
+                          : AppDimensions.mediumXL.hSpace(),
+                      (pos == 2
+                              ? OnBoardingKeys.getStarted.stringToString
+                              : OnBoardingKeys.next.stringToString)
                           .buttonTextBold(size: 14.sp, color: Colors.white),
-                      pos == 2 ? AppDimensions.medium.hSpace() : AppDimensions.xxl.hSpace(),
+                      pos == 2
+                          ? AppDimensions.medium.hSpace()
+                          : AppDimensions.xxl.hSpace(),
                       const Icon(
                         Icons.arrow_forward_ios_sharp,
                         color: AppColors.white,
@@ -175,13 +207,16 @@ class _WalkThroughPagesState extends State<WalkThroughPages> {
                   isValid: true,
                   onPressed: () {
                     if (pos == 2) {
-                      if (sl<SharedPreferencesHelper>().getBoolean(PrefConstKeys.appForBelem)) {
+                      if (sl<SharedPreferencesHelper>()
+                          .getBoolean(PrefConstKeys.appForBelem)) {
                         Navigator.pushNamed(context, Routes.chooseDomain);
                       } else {
                         Navigator.pushNamed(context, Routes.chooseRole);
                       }
                     } else {
-                      controller.nextPage(duration: const Duration(milliseconds: 800), curve: Curves.decelerate);
+                      controller.nextPage(
+                          duration: const Duration(milliseconds: 800),
+                          curve: Curves.decelerate);
                     }
                   },
                 ),
@@ -190,12 +225,14 @@ class _WalkThroughPagesState extends State<WalkThroughPages> {
             AppDimensions.small.w.vSpace(),
             Center(
               child: 'Powered by Xplor-Beckn'
-                  .titleSemiBold(color: AppColors.primaryLightColor, size: 14.sp)
+                  .titleSemiBold(
+                      color: AppColors.primaryLightColor, size: 14.sp)
                   .singleSidePadding(top: AppDimensions.small)
                   .fadeInAnimated(),
             ),
           ],
-        ).symmetricPadding(horizontal: AppDimensions.medium, vertical: AppDimensions.large),
+        ).symmetricPadding(
+            horizontal: AppDimensions.medium, vertical: AppDimensions.large),
       ],
     );
   }

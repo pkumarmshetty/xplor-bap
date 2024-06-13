@@ -34,8 +34,6 @@ class PrefConstKeys {
   static const String loginFrom = "loginFrom";
   static const String appForBelem = "appForBelem";
   static const String kycRedirectUrl = "kycRedirectUrl";
-  static const String ongoingOrdersCount = "ongoingOrdersCount";
-  static const String completedOrdersCount = "completedOrdersCount";
 
   /// User journey tracking keys
   static const String roles = "role";

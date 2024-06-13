@@ -14,7 +14,7 @@ class MyOrdersRepositoryImpl implements MyOrdersRepository {
   NetworkInfo networkInfo;
 
   @override
-  Future<List<MyOrdersEntity>> getOngoingOrdersData(String initialIndex, String lastIndex) async {
+  Future<MyOrdersListEntity> getOngoingOrdersData(String initialIndex, String lastIndex) async {
     if (await networkInfo.isConnected!) {
       return apiService.getOngoingOrdersData(initialIndex, lastIndex);
     } else {
@@ -23,7 +23,7 @@ class MyOrdersRepositoryImpl implements MyOrdersRepository {
   }
 
   @override
-  Future<List<MyOrdersEntity>> getCompletedOrdersData(String initialIndex, String lastIndex) async {
+  Future<MyOrdersListEntity> getCompletedOrdersData(String initialIndex, String lastIndex) async {
     if (await networkInfo.isConnected!) {
       return apiService.getCompletedOrdersData(initialIndex, lastIndex);
     } else {

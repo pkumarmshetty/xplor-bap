@@ -17,24 +17,29 @@ import '../../domain/entities/my_orders_entity.dart';
 import '../../domain/entities/status_entity_model.dart';
 
 abstract class MyOrdersApiService {
-  Future<List<MyOrdersEntity>> getOngoingOrdersData(String initialIndex, String lastIndex);
+  Future<MyOrdersListEntity> getOngoingOrdersData(
+      String initialIndex, String lastIndex);
 
-  Future<List<MyOrdersEntity>> getCompletedOrdersData(String initialIndex, String lastIndex);
+  Future<MyOrdersListEntity> getCompletedOrdersData(
+      String initialIndex, String lastIndex);
 
   Future<bool> rateOrder(String orderId, String rating, String feedback);
 
   Future<void> statusRequest(String body);
 
-  Stream<StatusEntityModel> sseConnectionResponse(String transactionId, Duration timeout);
+  Stream<StatusEntityModel> sseConnectionResponse(
+      String transactionId, Duration timeout);
 }
 
 class MyOrdersApiServiceImpl implements MyOrdersApiService {
-  MyOrdersApiServiceImpl({required this.dio, required this.preferencesHelper, this.helper}) {
+  MyOrdersApiServiceImpl(
+      {required this.dio, required this.preferencesHelper, this.helper}) {
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
         handler.next(options);
       },
-      onError: (DioException dioException, ErrorInterceptorHandler errorInterceptorHandler) async {
+      onError: (DioException dioException,
+          ErrorInterceptorHandler errorInterceptorHandler) async {
         if (dioException.response?.statusCode == 511) {
           await RefreshTokenService.refreshTokenAndRetry(
             options: dioException.response!.requestOptions,
@@ -70,7 +75,8 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
   SharedPreferences? helper;
 
   @override
-  Future<List<MyOrdersEntity>> getOngoingOrdersData(String initialIndex, String lastIndex) async {
+  Future<MyOrdersListEntity> getOngoingOrdersData(
+      String initialIndex, String lastIndex) async {
     try {
       String? authToken;
 
@@ -81,7 +87,8 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
       }
       if (kDebugMode) {
         print("Orders token==>$authToken");
-        print("Orders token==>$myOrdersApi?page=$initialIndex&pageSize=$lastIndex");
+        print(
+            "Orders token==>$myOrdersApi?page=$initialIndex&pageSize=$lastIndex");
       }
 
       final response = await dio.get(
@@ -100,18 +107,7 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
         print("Orders Progress Data----> Response ${response.data}");
       }
 
-      final List<dynamic> responseData = response.data['data']["orders"];
-
-      if (helper != null) {
-        await helper!.setString(PrefConstKeys.ongoingOrdersCount, response.data["data"]["totalCount"].toString());
-      } else {
-        await preferencesHelper.setString(
-            PrefConstKeys.ongoingOrdersCount, response.data["data"]["totalCount"].toString());
-      }
-
-      final List<MyOrdersEntity> entity = responseData.map((i) => MyOrdersEntity.fromJson(i)).toList();
-
-      return entity;
+      return MyOrdersListEntity.fromJson(response.data['data']);
     } catch (e) {
       if (kDebugMode) {
         print("Orders Progress Data----> Catch ${handleError(e)}");
@@ -121,7 +117,8 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
   }
 
   @override
-  Future<List<MyOrdersEntity>> getCompletedOrdersData(String initialIndex, String lastIndex) async {
+  Future<MyOrdersListEntity> getCompletedOrdersData(
+      String initialIndex, String lastIndex) async {
     try {
       String? authToken;
 
@@ -132,7 +129,8 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
       }
       if (kDebugMode) {
         print("Orders token==>$authToken");
-        print("Orders token==>$myOrdersApi?page=$initialIndex&pageSize=$lastIndex");
+        print(
+            "Orders token==>$myOrdersApi?page=$initialIndex&pageSize=$lastIndex");
       }
 
       final response = await dio.get(
@@ -140,8 +138,8 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
         queryParameters: {
           'page': initialIndex,
           'pageSize': lastIndex,
-          //'status': "COMPLETED",
-          'status': "TILL_IN_PROGRESS",
+
+          'status': "COMPLETED",
           // Add your query parameters here
         },
         options: Options(contentType: Headers.jsonContentType, headers: {
@@ -152,18 +150,7 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
         print("Orders Completed Data----> Response ${response.data}");
       }
 
-      final List<dynamic> responseData = response.data['data']["orders"];
-
-      if (helper != null) {
-        await helper!.setString(PrefConstKeys.completedOrdersCount, response.data["data"]["totalCount"].toString());
-      } else {
-        await preferencesHelper.setString(
-            PrefConstKeys.completedOrdersCount, response.data["data"]["totalCount"].toString());
-      }
-
-      final List<MyOrdersEntity> entity = responseData.map((i) => MyOrdersEntity.fromJson(i)).toList();
-
-      return entity;
+      return MyOrdersListEntity.fromJson(response.data['data']);
     } catch (e) {
       if (kDebugMode) {
         print("Orders Completed Data----> Catch ${handleError(e)}");
@@ -218,11 +205,14 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
   }
 
   @override
-  Stream<StatusEntityModel> sseConnectionResponse(String transactionId, Duration timeout) {
-    final StreamController<StatusEntityModel> stringStream = StreamController.broadcast();
+  Stream<StatusEntityModel> sseConnectionResponse(
+      String transactionId, Duration timeout) {
+    final StreamController<StatusEntityModel> stringStream =
+        StreamController.broadcast();
 
     if (kDebugMode) {
-      print("Apply Body Datta $seekerSearchSSEApi/transaction_id=$transactionId");
+      print(
+          "Apply Body Datta $seekerSearchSSEApi/transaction_id=$transactionId");
     }
 
     // Start a timer to enforce the timeout
@@ -340,11 +330,13 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
 
           return errorDescription;
         case DioExceptionType.connectionTimeout:
-          errorDescription = ExceptionErrors.connectionTimeOutError.stringToString;
+          errorDescription =
+              ExceptionErrors.connectionTimeOutError.stringToString;
 
           return errorDescription;
         case DioExceptionType.unknown:
-          errorDescription = ExceptionErrors.unknownConnectionError.stringToString;
+          errorDescription =
+              ExceptionErrors.unknownConnectionError.stringToString;
 
           return errorDescription;
         case DioExceptionType.receiveTimeout:
@@ -353,7 +345,8 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
           return errorDescription;
         case DioExceptionType.badResponse:
           if (kDebugMode) {
-            print("${ExceptionErrors.badResponseError}  ${dioError.response!.data}");
+            print(
+                "${ExceptionErrors.badResponseError}  ${dioError.response!.data}");
           }
           return dioError.response!.data['message'];
 
@@ -366,7 +359,8 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
 
           return errorDescription;
         case DioExceptionType.connectionError:
-          errorDescription = ExceptionErrors.serverConnectingIssue.stringToString;
+          errorDescription =
+              ExceptionErrors.serverConnectingIssue.stringToString;
 
           return errorDescription;
       }

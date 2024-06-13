@@ -21,6 +21,12 @@ class TabWidget extends StatefulWidget {
 
 class _TabWidgetState extends State<TabWidget> {
   @override
+  void initState() {
+    super.initState();
+    context.read<WalletDataBloc>().updateWalletTabIndex(index: 0);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return _buildTabItem(widget.index);
   }
@@ -30,7 +36,8 @@ class _TabWidgetState extends State<TabWidget> {
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(12), // Set border radius for all corners
+          borderRadius: BorderRadius.circular(12),
+          // Set border radius for all corners
           boxShadow: const [
             BoxShadow(
               color: AppColors.grey100,
@@ -40,8 +47,14 @@ class _TabWidgetState extends State<TabWidget> {
           ]),
       child: Row(
         children: [
-          tabButtonWidget(index: index, label: WalletKeys.myDocuments.stringToString, position: 0),
-          tabButtonWidget(index: index, label: WalletKeys.myConsents.stringToString, position: 1),
+          tabButtonWidget(
+              index: index,
+              label: WalletKeys.myDocuments.stringToString,
+              position: 0),
+          tabButtonWidget(
+              index: index,
+              label: WalletKeys.myConsents.stringToString,
+              position: 1),
         ],
       ).symmetricPadding(horizontal: AppDimensions.extraSmall.sp),
     );
@@ -58,8 +71,8 @@ class _TabWidgetState extends State<TabWidget> {
           padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
           // minimumSize: Size(0, 0),
           elevation: MaterialStateProperty.all<double>(0),
-          backgroundColor:
-              MaterialStateProperty.all<Color>(index == position ? AppColors.primaryColor : Colors.transparent),
+          backgroundColor: MaterialStateProperty.all<Color>(
+              index == position ? AppColors.primaryColor : Colors.transparent),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
@@ -76,7 +89,9 @@ class _TabWidgetState extends State<TabWidget> {
             context.read<WalletDataBloc>().updateWalletTabIndex(index: 1);
           }
         },
-        child: label.titleBold(size: 14.sp, color: index == position ? AppColors.white : AppColors.grey9898a5),
+        child: label.titleBold(
+            size: 14.sp,
+            color: index == position ? AppColors.white : AppColors.grey9898a5),
       ),
     );
   }

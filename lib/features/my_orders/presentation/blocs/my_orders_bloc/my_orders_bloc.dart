@@ -22,6 +22,8 @@ class MyOrdersBloc extends Bloc<MyOrdersEvent, MyOrdersState> {
   MyOrdersEntity? orderItem;
   int pageCompleted = 1;
   final String pageSize = "10";
+  int onGoingTotalCount = 0;
+  int onCompTotalCount = 0;
 
   MyOrdersBloc({required this.myOrdersUseCase})
       : super(const MyOrdersInitialState()) {
@@ -39,7 +41,6 @@ class MyOrdersBloc extends Bloc<MyOrdersEvent, MyOrdersState> {
       MyOrdersDataEvent event, Emitter<MyOrdersState> emit) async {
     if (event.isFirstTime) {
       ongoingOrders = [];
-      completedOrders = [];
       pageCompleted = 1;
 
       emit(MyOrdersFetchedState(
@@ -50,11 +51,16 @@ class MyOrdersBloc extends Bloc<MyOrdersEvent, MyOrdersState> {
     }
 
     try {
-      List<MyOrdersEntity> response = await myOrdersUseCase
-          .getOngoingOrdersData(pageCompleted.toString(), pageSize);
+      MyOrdersListEntity response = await myOrdersUseCase.getOngoingOrdersData(
+          pageCompleted.toString(), pageSize);
       pageCompleted++;
-      ongoingOrders.addAll(response);
+      ongoingOrders.addAll(response.myOrders);
+
+      onGoingTotalCount = response.totalCount;
+
       emit(MyOrdersFetchedState(
+        onGoingCount: onGoingTotalCount,
+        onCompletedCount: onCompTotalCount,
         completedOrdersEntity: List.from(completedOrders),
         ongoingOrdersEntity: List.from(ongoingOrders),
         orderState: OrderState.loaded,
@@ -64,6 +70,8 @@ class MyOrdersBloc extends Bloc<MyOrdersEvent, MyOrdersState> {
           errorMessage: AppUtils.getErrorMessage(e.toString())));*/
 
       emit(MyOrdersFetchedState(
+          onGoingCount: onCompTotalCount,
+          onCompletedCount: onCompTotalCount,
           ongoingOrdersEntity: ongoingOrders,
           completedOrdersEntity: completedOrders,
           orderState: OrderState.failure,
@@ -85,11 +93,15 @@ class MyOrdersBloc extends Bloc<MyOrdersEvent, MyOrdersState> {
     }
 
     try {
-      List<MyOrdersEntity> completedOrdersResponse = await myOrdersUseCase
+      MyOrdersListEntity completedOrdersResponse = await myOrdersUseCase
           .getCompletedOrdersData(pageCompleted.toString(), pageSize);
       pageCompleted++;
-      completedOrders.addAll(completedOrdersResponse);
+      completedOrders.addAll(completedOrdersResponse.myOrders);
+
+      onCompTotalCount = completedOrdersResponse.totalCount;
       emit(MyOrdersFetchedState(
+        onGoingCount: onGoingTotalCount,
+        onCompletedCount: onCompTotalCount,
         completedOrdersEntity: List.from(completedOrders),
         ongoingOrdersEntity: List.from(ongoingOrders),
         orderState: OrderState.loaded,
@@ -99,6 +111,8 @@ class MyOrdersBloc extends Bloc<MyOrdersEvent, MyOrdersState> {
           errorMessage: AppUtils.getErrorMessage(e.toString())));*/
 
       emit(MyOrdersFetchedState(
+          onGoingCount: onCompTotalCount,
+          onCompletedCount: onCompTotalCount,
           ongoingOrdersEntity: ongoingOrders,
           completedOrdersEntity: completedOrders,
           orderState: OrderState.failure,
