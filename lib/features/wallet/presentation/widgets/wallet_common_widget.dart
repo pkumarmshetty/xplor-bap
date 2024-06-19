@@ -74,21 +74,21 @@ class RevokeButtonWidget extends StatelessWidget {
     return OutlinedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+        padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.zero),
         // backgroundColor: MaterialStateColor.resolveWith((states) => Colors.red),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius:
                 BorderRadius.circular(radius.sp), // Set border radius here
           ),
         ),
-        side: MaterialStateProperty.all<BorderSide>(
+        side: WidgetStateProperty.all<BorderSide>(
           const BorderSide(
             color: AppColors.redColor, // Set border color here
             width: 1.0, // Set border width here
           ),
         ),
-        backgroundColor: MaterialStateColor.resolveWith(
+        backgroundColor: WidgetStateColor.resolveWith(
             (states) => backgroundColor ?? Colors.transparent),
       ),
       child: Row(

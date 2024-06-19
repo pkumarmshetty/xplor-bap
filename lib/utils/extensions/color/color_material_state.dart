@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../app_colors.dart';
 
-extension MaterialStateColorExtension on Set<MaterialState> {
+extension MaterialStateColorExtension on Set<WidgetState> {
   Color getFillColor() {
-    if (contains(MaterialState.selected)) {
+    if (contains(WidgetState.selected)) {
       return AppColors.primaryColor; // Selected color
     }
     return AppColors.hintColor; // Unselected color

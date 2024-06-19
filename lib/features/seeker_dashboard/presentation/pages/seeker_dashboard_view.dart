@@ -8,6 +8,7 @@ import 'package:xplor/utils/extensions/font_style/font_styles.dart';
 import 'package:xplor/utils/extensions/string_to_string.dart';
 import 'package:xplor/utils/utils.dart';
 import 'package:xplor/utils/widgets/app_background_widget.dart';
+
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_dimensions.dart';
 import '../widgets/dashboard_tab_widget.dart';
@@ -35,10 +36,11 @@ class _SeekerDashboardViewState extends State<SeekerDashboardView> {
                 children: [
                   CommonTopHeader(
                     dividerColor: AppColors.hintColor,
-                    title: "Shital's ${SeekerDashboardKeys.dashboard.stringToString}",
+                    title:
+                        "Shital's ${SeekerDashboardKeys.dashboard.stringToString}",
                     onBackButtonPressed: () => Navigator.pop(context),
-                    suffixWidget:
-                        SvgPicture.asset(Assets.images.search).singleSidePadding(right: AppDimensions.medium.sp),
+                    suffixWidget: SvgPicture.asset(Assets.images.search)
+                        .singleSidePadding(right: AppDimensions.medium.sp),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -62,13 +64,23 @@ class _SeekerDashboardViewState extends State<SeekerDashboardView> {
       decoration: BoxDecoration(
           color: AppColors.dashboardTabBackgroundColor.withOpacity(0.3),
           border: Border.all(color: AppColors.checkBoxDisableColor),
-          borderRadius: BorderRadius.circular(AppDimensions.smallXL.sp) // Set border radius for all corners
+          borderRadius: BorderRadius.circular(
+              AppDimensions.smallXL.sp) // Set border radius for all corners
           ),
       child: Row(
         children: [
-          tabButtonWidget(index: index, label: SeekerDashboardKeys.dashboard.stringToString, position: 0),
-          tabButtonWidget(index: index, label: SeekerDashboardKeys.wallet.stringToString, position: 1),
-          tabButtonWidget(index: index, label: SeekerDashboardKeys.profile.stringToString, position: 2),
+          tabButtonWidget(
+              index: index,
+              label: SeekerDashboardKeys.dashboard.stringToString,
+              position: 0),
+          tabButtonWidget(
+              index: index,
+              label: SeekerDashboardKeys.wallet.stringToString,
+              position: 1),
+          tabButtonWidget(
+              index: index,
+              label: SeekerDashboardKeys.profile.stringToString,
+              position: 2),
         ],
       ).symmetricPadding(horizontal: AppDimensions.extraSmall.sp),
     );
@@ -82,10 +94,11 @@ class _SeekerDashboardViewState extends State<SeekerDashboardView> {
     return Expanded(
       child: ElevatedButton(
         style: ButtonStyle(
-          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-          elevation: MaterialStateProperty.all<double>(0),
-          backgroundColor: MaterialStateProperty.all<Color>(index == position ? AppColors.white : Colors.transparent),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+          elevation: WidgetStateProperty.all<double>(0),
+          backgroundColor: WidgetStateProperty.all<Color>(
+              index == position ? AppColors.white : Colors.transparent),
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               side: index == position
                   ? const BorderSide(
@@ -105,7 +118,8 @@ class _SeekerDashboardViewState extends State<SeekerDashboardView> {
           });
         },
         child: label.titleBold(
-            size: AppDimensions.smallXXL.sp, color: index == position ? AppColors.black : AppColors.grey9898a5),
+            size: AppDimensions.smallXXL.sp,
+            color: index == position ? AppColors.black : AppColors.grey9898a5),
       ),
     );
   }

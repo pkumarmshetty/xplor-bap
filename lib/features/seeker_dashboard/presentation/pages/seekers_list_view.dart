@@ -35,7 +35,8 @@ class _SeekersListViewState extends State<SeekersListView> {
                 dividerColor: AppColors.hintColor,
                 title: SeekerDashboardKeys.seekers.stringToString,
                 onBackButtonPressed: () => Navigator.pop(context),
-                suffixWidget: SvgPicture.asset(Assets.images.search).singleSidePadding(right: AppDimensions.medium.sp),
+                suffixWidget: SvgPicture.asset(Assets.images.search)
+                    .singleSidePadding(right: AppDimensions.medium.sp),
               ),
               Column(
                 children: [
@@ -55,14 +56,27 @@ class _SeekersListViewState extends State<SeekersListView> {
       decoration: BoxDecoration(
           color: AppColors.dashboardTabBackgroundColor.withOpacity(0.3),
           border: Border.all(color: AppColors.checkBoxDisableColor),
-          borderRadius: BorderRadius.circular(AppDimensions.smallXL.sp) // Set border radius for all corners
+          borderRadius: BorderRadius.circular(
+              AppDimensions.smallXL.sp) // Set border radius for all corners
           ),
       child: Row(
         children: [
-          tabButtonWidget(index: index, label: SeekerDashboardKeys.skill.stringToString, position: 0),
-          tabButtonWidget(index: index, label: SeekerDashboardKeys.retail.stringToString, position: 1),
-          tabButtonWidget(index: index, label: SeekerDashboardKeys.agriculture.stringToString, position: 2),
-          tabButtonWidget(index: index, label: SeekerDashboardKeys.job.stringToString, position: 3),
+          tabButtonWidget(
+              index: index,
+              label: SeekerDashboardKeys.skill.stringToString,
+              position: 0),
+          tabButtonWidget(
+              index: index,
+              label: SeekerDashboardKeys.retail.stringToString,
+              position: 1),
+          tabButtonWidget(
+              index: index,
+              label: SeekerDashboardKeys.agriculture.stringToString,
+              position: 2),
+          tabButtonWidget(
+              index: index,
+              label: SeekerDashboardKeys.job.stringToString,
+              position: 3),
         ],
       ).symmetricPadding(horizontal: AppDimensions.extraSmall.sp),
     );
@@ -76,10 +90,11 @@ class _SeekersListViewState extends State<SeekersListView> {
     return Expanded(
       child: ElevatedButton(
         style: ButtonStyle(
-          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-          elevation: MaterialStateProperty.all<double>(0),
-          backgroundColor: MaterialStateProperty.all<Color>(index == position ? AppColors.white : Colors.transparent),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+          elevation: WidgetStateProperty.all<double>(0),
+          backgroundColor: WidgetStateProperty.all<Color>(
+              index == position ? AppColors.white : Colors.transparent),
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               side: index == position
                   ? const BorderSide(
@@ -99,7 +114,8 @@ class _SeekersListViewState extends State<SeekersListView> {
           });
         },
         child: label.titleBold(
-            size: AppDimensions.smallXXL.sp, color: index == position ? AppColors.black : AppColors.grey9898a5),
+            size: AppDimensions.smallXXL.sp,
+            color: index == position ? AppColors.black : AppColors.grey9898a5),
       ),
     );
   }

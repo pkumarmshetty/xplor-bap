@@ -68,12 +68,12 @@ class _TabWidgetState extends State<TabWidget> {
     return Expanded(
       child: ElevatedButton(
         style: ButtonStyle(
-          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+          padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.zero),
           // minimumSize: Size(0, 0),
-          elevation: MaterialStateProperty.all<double>(0),
-          backgroundColor: MaterialStateProperty.all<Color>(
+          elevation: WidgetStateProperty.all<double>(0),
+          backgroundColor: WidgetStateProperty.all<Color>(
               index == position ? AppColors.primaryColor : Colors.transparent),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(8.0),

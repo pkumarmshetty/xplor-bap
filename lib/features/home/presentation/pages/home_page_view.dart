@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/utils/widgets/loading_animation.dart';
-import '../bloc/home_bloc.dart';
-import '../widgets/dashboard_header_widget.dart';
 import 'package:xplor/features/multi_lang/domain/mappers/home/home_keys.dart';
 import 'package:xplor/utils/extensions/string_to_string.dart';
-import '../widgets/overview_tab.dart';
-import '../../../../utils/utils.dart';
+import 'package:xplor/utils/widgets/loading_animation.dart';
+
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
 import '../../../../utils/app_utils/app_utils.dart';
 import '../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../utils/utils.dart';
+import '../bloc/home_bloc.dart';
 import '../widgets/dashboard_app_bar_widget.dart';
+import '../widgets/dashboard_header_widget.dart';
+import '../widgets/overview_tab.dart';
 import '../widgets/seekers_tab.dart';
 
 class HomePageView extends StatefulWidget {
@@ -70,13 +71,23 @@ class _HomePageViewState extends State<HomePageView> {
       decoration: BoxDecoration(
           color: AppColors.dashboardTabBackgroundColor.withOpacity(0.3),
           border: Border.all(color: AppColors.checkBoxDisableColor),
-          borderRadius: BorderRadius.circular(12) // Set border radius for all corners
+          borderRadius:
+              BorderRadius.circular(12) // Set border radius for all corners
           ),
       child: Row(
         children: [
-          tabButtonWidget(index: index, label: HomeKeys.overview.stringToString, position: 0),
-          tabButtonWidget(index: index, label: HomeKeys.seekers.stringToString, position: 1),
-          tabButtonWidget(index: index, label: HomeKeys.earnings.stringToString, position: 2),
+          tabButtonWidget(
+              index: index,
+              label: HomeKeys.overview.stringToString,
+              position: 0),
+          tabButtonWidget(
+              index: index,
+              label: HomeKeys.seekers.stringToString,
+              position: 1),
+          tabButtonWidget(
+              index: index,
+              label: HomeKeys.earnings.stringToString,
+              position: 2),
         ],
       ).symmetricPadding(horizontal: AppDimensions.extraSmall.sp),
     );
@@ -90,10 +101,11 @@ class _HomePageViewState extends State<HomePageView> {
     return Expanded(
       child: ElevatedButton(
         style: ButtonStyle(
-          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-          elevation: MaterialStateProperty.all<double>(0),
-          backgroundColor: MaterialStateProperty.all<Color>(index == position ? AppColors.white : Colors.transparent),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+          elevation: WidgetStateProperty.all<double>(0),
+          backgroundColor: WidgetStateProperty.all<Color>(
+              index == position ? AppColors.white : Colors.transparent),
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               side: index == position
                   ? const BorderSide(
@@ -112,7 +124,9 @@ class _HomePageViewState extends State<HomePageView> {
             _currentIndex = position;
           });
         },
-        child: label.titleBold(size: 14.sp, color: index == position ? AppColors.black : AppColors.grey9898a5),
+        child: label.titleBold(
+            size: 14.sp,
+            color: index == position ? AppColors.black : AppColors.grey9898a5),
       ),
     );
   }

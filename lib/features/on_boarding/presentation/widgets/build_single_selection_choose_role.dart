@@ -144,8 +144,8 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
   }
 
   /// Extension functions
-  Color getFillColor(Set<MaterialState> states) {
-    if (states.contains(MaterialState.selected)) {
+  Color getFillColor(Set<WidgetState> states) {
+    if (states.contains(WidgetState.selected)) {
       return AppColors.primaryColor; // Selected color
     }
     return AppColors.hintColor; // Unselected color

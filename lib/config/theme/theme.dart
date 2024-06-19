@@ -43,12 +43,10 @@ final ThemeData myTheme = ThemeData(
       primary: Color(0xff2196f3),
       secondary: Color(0xff2196f3),
       surface: Color(0xffffffff),
-      background: Color(0xff90caf9),
       error: Color(0xffd32f2f),
       onPrimary: Color(0xffffffff),
       onSecondary: Color(0xffffffff),
       onSurface: Color(0xff000000),
-      onBackground: Color(0xffffffff),
       onError: Color(0xffffffff),
       brightness: Brightness.light,
     ),
@@ -240,7 +238,8 @@ final ThemeData myTheme = ThemeData(
     ),
     errorMaxLines: null,
     isDense: false,
-    contentPadding: const EdgeInsets.only(top: 12, bottom: 12, left: 0, right: 0),
+    contentPadding:
+        const EdgeInsets.only(top: 12, bottom: 12, left: 0, right: 0),
     isCollapsed: false,
     prefixStyle: GoogleFonts.manrope(
       color: const Color(0xdd000000),
@@ -391,42 +390,46 @@ final ThemeData myTheme = ThemeData(
     selectionHandleColor: Color(0xff64b5f6),
   ),
   checkboxTheme: CheckboxThemeData(
-    fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-      if (states.contains(MaterialState.disabled)) {
+    fillColor:
+        WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+      if (states.contains(WidgetState.disabled)) {
         return null;
       }
-      if (states.contains(MaterialState.selected)) {
+      if (states.contains(WidgetState.selected)) {
         return const Color(0xff1e88e5);
       }
       return null;
     }),
   ),
   radioTheme: RadioThemeData(
-    fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-      if (states.contains(MaterialState.disabled)) {
+    fillColor:
+        WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+      if (states.contains(WidgetState.disabled)) {
         return null;
       }
-      if (states.contains(MaterialState.selected)) {
+      if (states.contains(WidgetState.selected)) {
         return const Color(0xff1e88e5);
       }
       return null;
     }),
   ),
   switchTheme: SwitchThemeData(
-    thumbColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-      if (states.contains(MaterialState.disabled)) {
+    thumbColor:
+        WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+      if (states.contains(WidgetState.disabled)) {
         return null;
       }
-      if (states.contains(MaterialState.selected)) {
+      if (states.contains(WidgetState.selected)) {
         return const Color(0xff1e88e5);
       }
       return null;
     }),
-    trackColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-      if (states.contains(MaterialState.disabled)) {
+    trackColor:
+        WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+      if (states.contains(WidgetState.disabled)) {
         return null;
       }
-      if (states.contains(MaterialState.selected)) {
+      if (states.contains(WidgetState.selected)) {
         return const Color(0xff1e88e5);
       }
       return null;
@@ -435,6 +438,6 @@ final ThemeData myTheme = ThemeData(
   bottomAppBarTheme: const BottomAppBarTheme(color: Color(0xffffffff)),
   colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
       .copyWith(secondary: const Color(0xff2196f3))
-      .copyWith(background: const Color(0xff90caf9))
+      .copyWith(surface: const Color(0xff90caf9))
       .copyWith(error: const Color(0xffd32f2f)),
 );

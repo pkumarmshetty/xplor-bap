@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xplor/features/multi_lang/domain/mappers/profile/profile_keys.dart';
@@ -253,14 +252,14 @@ class _MyOrdersViewState extends State<MyOrdersView> {
     return Expanded(
       child: ElevatedButton(
         style: ButtonStyle(
-          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+          padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.zero),
           // minimumSize: Size(0, 0),
-          elevation: MaterialStateProperty.all<double>(0),
-          backgroundColor: MaterialStateProperty.all<Color>(
+          elevation: WidgetStateProperty.all<double>(0),
+          backgroundColor: WidgetStateProperty.all<Color>(
               _currentIndex == position
                   ? AppColors.primaryColor
                   : Colors.transparent),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8.0))),
           ),
