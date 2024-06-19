@@ -11,6 +11,7 @@ class SearchItemEntity {
   final String domain;
   final String rating;
   final bool enrolled;
+  final String status;
   final ItemDescriptor descriptor;
   final PriceEntity price;
   final String providerId;
@@ -27,6 +28,7 @@ class SearchItemEntity {
     required this.providerId,
     required this.provider,
     required this.enrolled,
+    required this.status,
   });
 
   factory SearchItemEntity.fromJson(Map<String, dynamic> json) {
@@ -37,13 +39,18 @@ class SearchItemEntity {
       itemId: json['item_id'] ?? "",
       rating: json['rating'] ?? "0",
       enrolled: json['enrolled'] ?? false,
+      status: json['status'] ?? "",
       descriptor: json['descriptor'] == null
-          ? ItemDescriptor(itemId: "", name: "", shortDesc: "", longDesc: "", images: [])
+          ? ItemDescriptor(
+              itemId: "", name: "", shortDesc: "", longDesc: "", images: [])
           : ItemDescriptor.fromJson(json['descriptor']),
-      price: json['price'] == null ? PriceEntity(currency: "INR", value: "NA") : PriceEntity.fromJson(json['price']),
+      price: json['price'] == null
+          ? PriceEntity(currency: "INR", value: "NA")
+          : PriceEntity.fromJson(json['price']),
       providerId: json['provider_id'] ?? "",
       provider: json['provider'] == null
-          ? ProviderInfoEntity(id: "", name: "", shortDesc: "", longDesc: "", images: [])
+          ? ProviderInfoEntity(
+              id: "", name: "", shortDesc: "", longDesc: "", images: [])
           : ProviderInfoEntity.fromJson(json['provider']),
     );
   }

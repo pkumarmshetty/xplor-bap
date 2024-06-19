@@ -12,6 +12,7 @@ class CourseDetailsDataEntity {
   final String domain;
   final String rating;
   final bool rateable;
+  final String status;
   final bool enrolled;
   final ItemDescriptor descriptor;
   final PriceEntity price;
@@ -31,6 +32,7 @@ class CourseDetailsDataEntity {
     required this.providerId,
     required this.provider,
     required this.enrolled,
+    required this.status,
     required this.tagData,
   });
 
@@ -43,14 +45,21 @@ class CourseDetailsDataEntity {
       rating: json['rating'] ?? "0",
       rateable: json['rateable'] ?? false,
       enrolled: json['enrolled'] ?? false,
-      tagData: json['itemTag'] == null ? null : ItemTagData.fromJson(json['itemTag']),
+      status: json['status'] ?? "",
+      tagData: json['itemTag'] == null
+          ? null
+          : ItemTagData.fromJson(json['itemTag']),
       descriptor: json['descriptor'] == null
-          ? ItemDescriptor(itemId: "", name: "", shortDesc: "", longDesc: "", images: [])
+          ? ItemDescriptor(
+              itemId: "", name: "", shortDesc: "", longDesc: "", images: [])
           : ItemDescriptor.fromJson(json['descriptor']),
-      price: json['price'] == null ? PriceEntity(currency: "INR", value: "NA") : PriceEntity.fromJson(json['price']),
+      price: json['price'] == null
+          ? PriceEntity(currency: "INR", value: "NA")
+          : PriceEntity.fromJson(json['price']),
       providerId: json['provider_id'] ?? "",
       provider: json['provider'] == null
-          ? ProviderInfoEntity(id: "", name: "", shortDesc: "", longDesc: "", images: [])
+          ? ProviderInfoEntity(
+              id: "", name: "", shortDesc: "", longDesc: "", images: [])
           : ProviderInfoEntity.fromJson(json['provider']),
     );
   }

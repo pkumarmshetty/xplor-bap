@@ -42,6 +42,7 @@ class MyOrdersBloc extends Bloc<MyOrdersEvent, MyOrdersState> {
     if (event.isFirstTime) {
       ongoingOrders = [];
       pageCompleted = 1;
+      onGoingTotalCount = 0;
 
       emit(MyOrdersFetchedState(
         ongoingOrdersEntity: ongoingOrders,
@@ -84,6 +85,7 @@ class MyOrdersBloc extends Bloc<MyOrdersEvent, MyOrdersState> {
     if (event.isFirstTime) {
       pageCompleted = 1;
       completedOrders = [];
+      onCompTotalCount = 0;
 
       emit(MyOrdersFetchedState(
         ongoingOrdersEntity: ongoingOrders,
