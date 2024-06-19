@@ -73,18 +73,21 @@ class DescriptionHeaderWidget extends StatelessWidget {
             ],
           ),
         AppDimensions.medium.vSpace(),
-        course.enrolled
-            ? SeekerHomeKeys.enrolled.stringToString.titleExtraBold(
-                size: 18.sp,
-                color: AppColors.green,
-              )
-            : (course.price.value != "0"
-                    ? "${course.price.value} ${course.price.currency}"
-                    : SeekerHomeKeys.free.stringToString)
-                .titleExtraBold(
-                size: 24.sp,
-                color: AppColors.green,
-              ),
+        course.status == "COMPLETED"
+            ? SeekerHomeKeys.completed.stringToString
+                .titleExtraBold(size: 18.sp, color: AppColors.green)
+            : course.enrolled
+                ? SeekerHomeKeys.enrolled.stringToString.titleExtraBold(
+                    size: 18.sp,
+                    color: AppColors.green,
+                  )
+                : (course.price.value != "0"
+                        ? "${course.price.value} ${course.price.currency}"
+                        : SeekerHomeKeys.free.stringToString)
+                    .titleExtraBold(
+                    size: 24.sp,
+                    color: AppColors.green,
+                  ),
         AppDimensions.small.vSpace(),
       ],
     );

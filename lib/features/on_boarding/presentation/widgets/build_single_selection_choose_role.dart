@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +26,8 @@ class SingleSelectionChooseRole extends StatefulWidget {
   });
 
   @override
-  State<SingleSelectionChooseRole> createState() => _SingleSelectionChooseRoleState();
+  State<SingleSelectionChooseRole> createState() =>
+      _SingleSelectionChooseRoleState();
 }
 
 /// _SingleSelectionChooseRoleState class
@@ -36,7 +36,8 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
   Widget build(BuildContext context) {
     return BlocListener<SelectRoleBloc, SelectRoleState>(
         listener: (context, state) {},
-        child: BlocBuilder<SelectRoleBloc, SelectRoleState>(builder: (context, state) {
+        child: BlocBuilder<SelectRoleBloc, SelectRoleState>(
+            builder: (context, state) {
           // Handle state changes
           if (state is SelectRoleFetchedState) {
             return ListView.builder(
@@ -49,8 +50,10 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
                     if (kDebugMode) {
                       print("Role ID: ${role.id} TYPE: ${role.type}");
                     }
-                    sl<SharedPreferencesHelper>().setString(PrefConstKeys.roleID, role.id ?? '');
-                    sl<SharedPreferencesHelper>().setString(PrefConstKeys.selectedRole, role.type ?? '');
+                    sl<SharedPreferencesHelper>()
+                        .setString(PrefConstKeys.roleID, role.id ?? '');
+                    sl<SharedPreferencesHelper>()
+                        .setString(PrefConstKeys.selectedRole, role.type ?? '');
                     setState(() {
                       widget.onIndexChanged(index);
                     });
@@ -66,7 +69,9 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
                           color: widget.selectedIndex == index
                               ? AppColors.blueBorder1581.withOpacity(0.26)
                               : AppColors.white,
-                          width: widget.selectedIndex == index ? 2 : 1), // Border color and width
+                          width: widget.selectedIndex == index
+                              ? 2
+                              : 1), // Border color and width
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,12 +89,7 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
                                 height: 20.w,
                                 width: 20.w,
                               ),
-                        /*SvgPicture.asset(
-                          role.imageUrl ?? '',
-                          height: 147.w,
-                          width: 147.w,
-                        )*/
-                        CachedNetworkImage(
+                        /*CachedNetworkImage(
                           width: 147.w,
                           height: 147.w,
                           imageUrl: role.imageUrl ?? '',
@@ -102,12 +102,34 @@ class _SingleSelectionChooseRoleState extends State<SingleSelectionChooseRole> {
                             ),
                           ),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
+                        ),*/
+                        SvgPicture.network(
+                          role.imageUrl ?? '',
+                          width: 147.0,
+                          height: 147.0,
+                          fit: BoxFit.cover,
+                          placeholderBuilder: (BuildContext context) =>
+                              const Center(
+                                  child: SizedBox(
+                            width: 147.0,
+                            height: 147.0,
+                            child: Padding(
+                                padding: EdgeInsets.all(60),
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primaryColor,
+                                  strokeWidth: 3.0,
+                                )),
+                          )),
                         ),
                         10.verticalSpace,
-                        role.title?.titleExtraBold(color: AppColors.black3939, size: 20.sp) ?? const SizedBox(),
+                        role.title?.titleExtraBold(
+                                color: AppColors.black3939, size: 20.sp) ??
+                            const SizedBox(),
                         5.verticalSpace,
-                        role.description
-                                ?.titleRegular(color: AppColors.grey6469, size: 12.sp, align: TextAlign.center) ??
+                        role.description?.titleRegular(
+                                color: AppColors.grey6469,
+                                size: 12.sp,
+                                align: TextAlign.center) ??
                             const SizedBox(),
                       ],
                     ).paddingAll(padding: 20.w),

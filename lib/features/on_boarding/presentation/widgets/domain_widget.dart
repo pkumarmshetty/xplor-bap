@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,7 +7,6 @@ import 'package:xplor/gen/assets.gen.dart';
 import 'package:xplor/utils/app_colors.dart';
 import 'package:xplor/utils/extensions/font_style/font_styles.dart';
 import 'package:xplor/utils/utils.dart';
-import 'package:xplor/utils/widgets/loading_animation.dart';
 
 class DomainWidget extends StatelessWidget {
   final DomainData domainData;
@@ -30,12 +28,14 @@ class DomainWidget extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.w),
             side: BorderSide(
-                color: domainData.isSelected ? AppColors.blueBorder1581.withOpacity(0.26) : AppColors.white,
+                color: domainData.isSelected
+                    ? AppColors.blueBorder1581.withOpacity(0.26)
+                    : AppColors.white,
                 width: domainData.isSelected ? 2 : 1), // Border color and width
           ),
           child: Row(
             children: [
-              CachedNetworkImage(
+              /*CachedNetworkImage(
                 height: 60.w,
                 width: 60.w,
                 filterQuality: FilterQuality.high,
@@ -47,15 +47,34 @@ class DomainWidget extends StatelessWidget {
                   onTap: () {},
                   child: const Icon(Icons.error),
                 ),
+              ),*/
+              SvgPicture.network(
+                domainData.icon,
+                width: 60.w,
+                height: 60.w,
+                fit: BoxFit.cover,
+                placeholderBuilder: (BuildContext context) => const Center(
+                    child: SizedBox(
+                  width: 60.0,
+                  height: 60.0,
+                  child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: CircularProgressIndicator(
+                        color: AppColors.primaryColor,
+                        strokeWidth: 3.0,
+                      )),
+                )),
               ),
               SizedBox(width: 20.w), // Add spacing between leading and title
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    domainData.title.titleBold(size: 16.sp, color: AppColors.black100),
+                    domainData.title
+                        .titleBold(size: 16.sp, color: AppColors.black100),
                     5.verticalSpace,
-                    domainData.description.titleRegular(size: 12.sp, color: AppColors.black100),
+                    domainData.description
+                        .titleRegular(size: 12.sp, color: AppColors.black100),
                   ],
                 ),
               ),

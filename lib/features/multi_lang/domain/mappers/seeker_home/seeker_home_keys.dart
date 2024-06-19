@@ -14,6 +14,7 @@ class SeekerHomeKeys {
   static const frontend = "Frontend";
   static const applyNow = "Apply Now";
   static const enrolled = "Enrolled";
+  static const completed = "COMPLETED";
   static const enrollNow = "Enroll Now";
   static const plsWait = "Please wait";
   static const applicationForm = "Application Form";
@@ -36,7 +37,7 @@ class SeekerHomeKeys {
   static const String curriculum = 'Curriculum';
   static const String scholarship = 'Scholarship:';
   static const String instructor = 'Offered By';
-  static const String free = 'Free';
+  static const String free = 'FREE';
   static const String whatGet = "What you'll get:";
   static const String feedbacks = "Feedbacks";
   static const String noDataFound = "No Data Found";

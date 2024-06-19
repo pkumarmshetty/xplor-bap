@@ -32,13 +32,16 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                       children: [
                         AppDimensions.extraSmall.vSpace(),
                         AppUtils.convertDateFormat(data.createdAt)
-                            .titleSemiBold(size: 10.sp, color: AppColors.hintColor),
+                            .titleSemiBold(
+                                size: 10.sp, color: AppColors.hintColor),
                         AppDimensions.extraSmall.hSpace(),
                         // Add space between the date/time and dot
-                        '•'.titleSemiBold(size: 20.sp, color: AppColors.hintColor),
+                        '•'.titleSemiBold(
+                            size: 20.sp, color: AppColors.hintColor),
                         AppDimensions.extraSmall.hSpace(),
                         // Add space between the dot and the word "active"
-                        data.status.titleSemiBold(size: 12.sp, color: AppColors.activeGreen),
+                        data.status.titleSemiBold(
+                            size: 12.sp, color: AppColors.activeGreen),
                       ],
                     )
                   ],
@@ -73,17 +76,21 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                           color: AppColors.countryCodeColor,
                         ),
                         AppDimensions.extraExtraSmall.vSpace(),
-                        data.vcDetails.name.titleRegular(size: 10.sp, color: AppColors.hintColor),
+                        data.vcDetails.name.titleRegular(
+                            size: 10.sp, color: AppColors.hintColor),
                       ],
                     ).singleSidePadding(
                       top: AppDimensions.medium,
                     ),
                     GestureDetector(
                         onTap: () {
-                          context.read<WalletVcBloc>().flowType = FlowType.consent;
-                          String url = "${data.vcDetails.name}: ${data.restrictedUrl}";
+                          context.read<WalletVcBloc>().flowType =
+                              FlowType.consent;
+                          String url =
+                              "${data.vcDetails.name}: ${data.restrictedUrl}";
 
-                          sl<SharedPreferencesHelper>().setString(PrefConstKeys.sharedId, url);
+                          sl<SharedPreferencesHelper>()
+                              .setString(PrefConstKeys.sharedId, url);
                           AppUtilsDialogMixin.askForMPINDialog(context);
                         },
                         child: Container(
@@ -107,30 +114,39 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                   color: AppColors.countryCodeColor,
                 ),
                 AppDimensions.extraExtraSmall.vSpace(),
-                data.remarks.titleRegular(size: 10.sp, color: AppColors.hintColor),
+                data.remarks
+                    .titleRegular(size: 10.sp, color: AppColors.hintColor),
                 AppDimensions.smallXL.vSpace(),
                 Row(
                   children: [
                     Expanded(
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      WalletKeys.modifiedOn.stringToString.titleSemiBold(
-                        size: 10.sp,
-                        color: AppColors.countryCodeColor,
-                      ),
-                      AppDimensions.extraExtraSmall.vSpace(),
-                      AppUtils.convertDateFormat(data.updatedAt).titleRegular(size: 10.sp, color: AppColors.hintColor),
-                    ])),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                          WalletKeys.modifiedOn.stringToString.titleSemiBold(
+                            size: 10.sp,
+                            color: AppColors.countryCodeColor,
+                          ),
+                          AppDimensions.extraExtraSmall.vSpace(),
+                          AppUtils.convertDateFormat(data.updatedAt)
+                              .titleRegular(
+                                  size: 10.sp, color: AppColors.hintColor),
+                        ])),
                     AppDimensions.large.hSpace(),
                     Expanded(
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      WalletKeys.validity.stringToString.titleSemiBold(
-                        size: 10.sp,
-                        color: AppColors.countryCodeColor,
-                      ),
-                      AppDimensions.extraExtraSmall.vSpace(),
-                      AppUtils.convertValidityToDays(data.vcShareDetails.restrictions.expiresIn)
-                          .titleRegular(size: 10.sp, color: AppColors.hintColor),
-                    ]))
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                          WalletKeys.validity.stringToString.titleSemiBold(
+                            size: 10.sp,
+                            color: AppColors.countryCodeColor,
+                          ),
+                          AppDimensions.extraExtraSmall.vSpace(),
+                          AppUtils.convertValidityToDays(
+                                  data.vcShareDetails.restrictions.expiresIn)
+                              .titleRegular(
+                                  size: 10.sp, color: AppColors.hintColor),
+                        ]))
                   ],
                 ),
                 AppDimensions.smallXL.vSpace(),
@@ -175,7 +191,8 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                               barrierDismissible: false,
                               context: context,
                               builder: (BuildContext context) {
-                                return UpdateConsentDialogWidget(entity: data, onConfirmPressed: () {});
+                                return UpdateConsentDialogWidget(
+                                    entity: data, onConfirmPressed: () {});
                               });
                         },
                       ).singleSidePadding(right: AppDimensions.medium),

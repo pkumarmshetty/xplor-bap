@@ -42,12 +42,15 @@ class CoursesPreviewWidget extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(AppDimensions.smallXL), topLeft: Radius.circular(AppDimensions.smallXL)),
+                  topRight: Radius.circular(AppDimensions.smallXL),
+                  topLeft: Radius.circular(AppDimensions.smallXL)),
               child: CachedNetworkImage(
                   height: 140.w,
                   fit: BoxFit.cover,
                   filterQuality: FilterQuality.high,
-                  imageUrl: course.descriptor.images.isNotEmpty ? course.descriptor.images[0] : "",
+                  imageUrl: course.descriptor.images.isNotEmpty
+                      ? course.descriptor.images[0]
+                      : "",
                   placeholder: (context, url) => SvgPicture.asset(
                         Assets.images.productThumnail,
                         fit: BoxFit.fill,
@@ -81,7 +84,8 @@ class CoursesPreviewWidget extends StatelessWidget {
                                       fit: BoxFit.fill,
                                       width: double.infinity,
                                     ),
-                                errorWidget: (context, url, error) => SvgPicture.asset(
+                                errorWidget: (context, url, error) =>
+                                    SvgPicture.asset(
                                       Assets.images.icAvtarMale,
                                       fit: BoxFit.fill,
                                       width: double.infinity,
@@ -99,37 +103,48 @@ class CoursesPreviewWidget extends StatelessWidget {
                   ],
                 ),
                 AppDimensions.extraSmall.vSpace(),
-                course.descriptor.name.titleSemiBold(size: AppDimensions.medium.sp, maxLine: 2),
+                course.descriptor.name
+                    .titleSemiBold(size: AppDimensions.medium.sp, maxLine: 2),
                 5.vSpace(),
-                course.enrolled
-                    ? SeekerHomeKeys.enrolled.stringToString.titleExtraBold(
-                        size: 14.sp, color: AppColors.green, maxLines: 1, overflow: TextOverflow.ellipsis)
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              child: (course.price.value != "0"
-                                      ? "${course.price.value} ${course.price.currency}"
-                                      : SeekerHomeKeys.free.stringToString)
-                                  .titleExtraBold(
+                course.status == "COMPLETED"
+                    ? SeekerHomeKeys.completed.stringToString.titleExtraBold(
+                        size: 14.sp,
+                        color: AppColors.green,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis)
+                    : course.enrolled
+                        ? SeekerHomeKeys.enrolled.stringToString.titleExtraBold(
                             size: 14.sp,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                             color: AppColors.green,
-                          )),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis)
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              SeekerHomeKeys.enrollNow.stringToString.titleBold(
-                                size: AppDimensions.smallXL.sp,
-                                color: AppColors.primaryColor,
-                              ),
-                              AppDimensions.extraSmall.hSpace(),
-                              SvgPicture.asset(Assets.images.rightBlueArrow)
+                              Expanded(
+                                  child: (course.price.value != "0"
+                                          ? "${course.price.value} ${course.price.currency}"
+                                          : SeekerHomeKeys.free.stringToString)
+                                      .titleExtraBold(
+                                size: 14.sp,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                color: AppColors.green,
+                              )),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SeekerHomeKeys.enrollNow.stringToString
+                                      .titleBold(
+                                    size: AppDimensions.smallXL.sp,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  AppDimensions.extraSmall.hSpace(),
+                                  SvgPicture.asset(Assets.images.rightBlueArrow)
+                                ],
+                              )
                             ],
                           )
-                        ],
-                      )
               ],
             ).symmetricPadding(horizontal: 12.sp, vertical: 8.sp),
           ],

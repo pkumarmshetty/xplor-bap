@@ -1,8 +1,9 @@
 //Dev URl
-const String domain = "https://implementation-layer-dev.thewitslab.com/";
+//const String domain = "https://implementation-layer-dev.thewitslab.com/";
 
 //Staging URl
-//const String domain = "https://implementation-layer-staging.thewitslab.com/";
+const String domain = "https://implementation-layer-stage.thewitslab.com/";
+
 const String applyFormSubmit = "${domain}submitApplication";
 
 const String baseUrl = "${domain}api/v1/";
