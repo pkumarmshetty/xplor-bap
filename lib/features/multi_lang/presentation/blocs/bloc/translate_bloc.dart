@@ -1,17 +1,13 @@
-// ignore: depend_on_referenced_packages
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
-import 'package:xplor/const/local_storage/shared_preferences_helper.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/home/home_map.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/on_boarding/on_boarding_map.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/profile/profile_map.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/wallet/wallet_map.dart';
-import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.dart';
-import 'package:xplor/utils/app_utils/app_utils.dart';
-
+import '../../../../../const/local_storage/shared_preferences_helper.dart';
+import '../../../domain/mappers/home/home_map.dart';
+import '../../../domain/mappers/on_boarding/on_boarding_map.dart';
+import '../../../domain/mappers/profile/profile_map.dart';
+import '../../../domain/mappers/wallet/wallet_map.dart';
+import '../../../../on_boarding/domain/usecase/on_boarding_usecase.dart';
+import '../../../../../utils/app_utils/app_utils.dart';
 import '../../../../../const/app_state.dart';
 import '../../../../../core/dependency_injection.dart';
 import '../../../../../utils/mapping_const.dart';
@@ -19,10 +15,9 @@ import '../../../data/models/lang_translation_model.dart';
 import '../../../domain/mappers/network_errors/network_errors_map.dart';
 import '../../../domain/mappers/seeker_home/seeker_home_map.dart';
 import '../../../domain/usecases/lang_translation_use_case.dart';
-
 part 'translate_event.dart';
-
 part 'translate_state.dart';
+part 'translation_bloc_methods.dart';
 
 class TranslationBloc extends Bloc<TranslateEvent, TranslateState> {
   Map<String, dynamic> dummyMapKey = {};
@@ -45,7 +40,6 @@ class TranslationBloc extends Bloc<TranslateEvent, TranslateState> {
 
   _getLanguageList(GetLanguageListEvent event, Emitter<TranslateState> emit) async {
     /// emit loading state
-
     try {
       emit(TranslationLoading());
 
@@ -56,7 +50,6 @@ class TranslationBloc extends Bloc<TranslateEvent, TranslateState> {
 
       for (var model in langModel) {
         double percentage = double.tryParse(model.percentage.replaceAll('%', '')) ?? 0;
-
         if (percentage > highestPercentage) {
           highestPercentage = percentage;
           highestPercentageObject = model;
@@ -86,9 +79,6 @@ class TranslationBloc extends Bloc<TranslateEvent, TranslateState> {
           recommendedLangModel: model,
           selectedLanguage: model,
           message: 'Other Languages are not available due to the server error'));
-
-      /// emit error state for any error encountered
-      //emit(TranslationFailure(message: 'Other Languages are not available due to the server error'));
     }
   }
 
@@ -100,10 +90,7 @@ class TranslationBloc extends Bloc<TranslateEvent, TranslateState> {
   _chooseLangApi(ChooseLangCodeEvent event, Emitter<TranslateState> emit) async {
     try {
       emit(TranslationLoading());
-
-      if (kDebugMode) {
-        print(event.hasRegisterId);
-      }
+      AppUtils.printLogs(event.hasRegisterId.toString());
       if (event.hasRegisterId) {
         Map<String, dynamic> dataMap = <String, dynamic>{};
         dataMap['deviceId'] = sl<SharedPreferencesHelper>().getString(PrefConstKeys.deviceId);
@@ -129,13 +116,13 @@ class TranslationBloc extends Bloc<TranslateEvent, TranslateState> {
         translationTextMap = getMapping(event.moduleTypes);
         emit(TranslationLoaded(textMap: translationTextMap, isNavigation: event.isNavigation));
       } else {
-        var onBoardingTranslatedData = sl<SharedPreferencesHelper>().getString(onBoardingModule);
-        if (event.moduleTypes == onBoardingModule &&
-            (onBoardingTranslatedData != "NA" && onBoardingTranslatedData != "")) {
-          Map<String, dynamic> data = jsonDecode(onBoardingTranslatedData);
+        var moduleTranslatedData = sl<SharedPreferencesHelper>().getString(event.moduleTypes);
+        if (moduleTranslatedData != "NA" && moduleTranslatedData != "") {
+          Map<String, dynamic> data = jsonDecode(moduleTranslatedData);
           translationTextMap.addAll(data);
+          AppUtils.printLogs("Translation Loaded from local storage... ${event.moduleTypes}");
         } else {
-          debugPrint("translationTextMap before Translation: ${translationTextMap.length}");
+          AppUtils.printLogs("translationTextMap before Translation: ${translationTextMap.length}");
           var body = json.encode({
             "targetLanguage": sl<SharedPreferencesHelper>().getString(PrefConstKeys.selectedLanguageCode),
             "sourceLanguage": "en",
@@ -143,67 +130,19 @@ class TranslationBloc extends Bloc<TranslateEvent, TranslateState> {
           });
 
           final value = await useCase.call(params: body);
-          debugPrint("translationTextMap after Translation: ${translationTextMap.length}");
+          AppUtils.printLogs("translationTextMap after Translation: ${translationTextMap.length}");
           translationTextMap.addAll(value);
-
-          if (event.moduleTypes == onBoardingModule) {
-            String jsonString = jsonEncode(value);
-            sl<SharedPreferencesHelper>().setString(onBoardingModule, jsonString);
-          }
+          String jsonString = jsonEncode(value);
+          sl<SharedPreferencesHelper>().setString(event.moduleTypes, jsonString);
         }
 
-        debugPrint("translationTextMap after adding Translation: ${translationTextMap.length}");
+        AppUtils.printLogs("translationTextMap after adding Translation: ${translationTextMap.length}");
         emit(TranslationLoaded(textMap: translationTextMap, isNavigation: event.isNavigation));
         emit(TranslateInitial());
       }
     } catch (e) {
       /// emit error state for any error encountered
       emit(TranslationFailure(message: AppUtils.getErrorMessage(e.toString())));
-    }
-  }
-
-  Map<String, dynamic> getMapping(String type) {
-    Map<String, dynamic> mapping = {};
-    switch (type) {
-      case onBoardingModule:
-        mapping.clear();
-        mapping.addAll(originalOnBoardingMap);
-        return mapping;
-
-      case homeModule:
-        mapping.clear();
-        mapping.addAll(originalHomeMap);
-        return mapping;
-
-      case walletModule:
-        mapping.clear();
-        mapping.addAll(originalWalletMap);
-        return mapping;
-
-      case profileModule:
-        mapping.clear();
-        mapping.addAll(originalProfileMap);
-        return mapping;
-
-      /* case mPinModule:
-        mPinMap.clear();
-        mPinMap.addAll(originalMPinMap);
-        return mPinMap;*/
-
-      case seekerHomeModule:
-        mapping.clear();
-        mapping.addAll(originalSeekerHomeMap);
-        return mapping;
-
-      case networkErrorsModule:
-        mapping.clear();
-        mapping.addAll(originalNetworkErrorMaps);
-        return mapping;
-
-      default:
-        mapping.clear();
-        mapping.addAll(originalOnBoardingMap);
-        return mapping;
     }
   }
 }

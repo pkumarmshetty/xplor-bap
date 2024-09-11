@@ -4,9 +4,19 @@
 //Staging URl
 const String domain = "https://implementation-layer-stage.thewitslab.com/";
 
+//Staging URl
+//const String domain = "https://6h4kfp6q-8000.inc1.devtunnels.ms/";
+
 const String applyFormSubmit = "${domain}submitApplication";
 
 const String baseUrl = "${domain}api/v1/";
+
+///payment method navigation url
+
+const String successNavigation =
+    "${domain}api/v1/payment/verify-payment?razorpay_payment_id=";
+const String failedNavigation = "https://api.razorpay.com/v1/payments/";
+
 const String eAuthWebHook = "${domain}kycForm";
 const String eAuthDigilockerWebHook = "${domain}v1/e-auth/callback?code=";
 const String signInWebHook =
@@ -51,4 +61,6 @@ const String confirmRequestApi = "${baseUrl}stg/confirm";
 const String statusRequestApi = "${baseUrl}stg/status";
 const String selectRequestApi = "${baseUrl}stg/select";
 const String myOrdersApi = "${baseUrl}user/orders";
-const String getOrderDetails = "${baseUrl}item";
+const String getOrderDetailsApi = "${baseUrl}item";
+const String addCertificateToWalletApi = "${baseUrl}wallet/file/certificate";
+const String markAddToWalletApi = "${baseUrl}user/orders/mark-add-to-wallet";

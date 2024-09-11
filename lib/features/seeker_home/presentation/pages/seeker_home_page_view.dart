@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
@@ -10,13 +8,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:lottie/lottie.dart';
-import 'package:xplor/features/course_description/presentation/blocs/course_description_bloc.dart';
-import 'package:xplor/features/course_description/presentation/blocs/course_description_event.dart';
-import 'package:xplor/features/on_boarding/domain/entities/categories_entity.dart';
-import 'package:xplor/features/seeker_home/presentation/blocs/seeker_dashboard_bloc/seeker_home_bloc.dart';
-import 'package:xplor/features/seeker_home/presentation/blocs/seeker_dashboard_bloc/seeker_home_state.dart';
-import 'package:xplor/utils/app_utils/app_utils.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
+import '../../../course_description/presentation/blocs/course_description_bloc.dart';
+import '../../../course_description/presentation/blocs/course_description_event.dart';
+import '../../../on_boarding/domain/entities/categories_entity.dart';
+import '../blocs/seeker_dashboard_bloc/seeker_home_bloc.dart';
+import '../blocs/seeker_dashboard_bloc/seeker_home_state.dart';
+import '../../../../utils/app_utils/app_utils.dart';
+import '../../../../utils/extensions/font_style/font_styles.dart';
 import '../../../../config/routes/path_routing.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/dependency_injection.dart';
@@ -28,13 +26,13 @@ import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../utils/utils.dart';
 import '../../../../utils/widgets/search_text_field_widget.dart';
 import '../../../multi_lang/domain/mappers/seeker_home/seeker_home_keys.dart';
-
 import '../../domain/entities/get_response_entity/services_items.dart';
 import '../blocs/seeker_dashboard_bloc/seeker_home_event.dart';
 import '../../../../utils/widgets/courses_label.dart';
 import '../widgets/courses_preview_widget.dart';
 import '../widgets/seeker_app_bar_widget.dart';
 
+/// A widget that provides a home view for the seeker application.
 class SeekerHomePageView extends StatefulWidget {
   const SeekerHomePageView({super.key});
 
@@ -50,25 +48,29 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
   List<CategoryEntity> courseLabels = [];
   String address = "NA";
 
+  /// Initializes the search input text from shared preferences.
   @override
   void initState() {
-    if (kDebugMode) {
-      print("on init inside seeker home");
-    }
     courseLabels.clear();
     String categoriesJson =
         sl<SharedPreferencesHelper>().getString(PrefConstKeys.listOfCategory);
-    debugPrint('Category JSON.... $categoriesJson');
     List<dynamic> jsonList = jsonDecode(categoriesJson);
 
     String domains = sl<SharedPreferencesHelper>()
         .getString(PrefConstKeys.savedDomainsNames);
 
-    debugPrint("Domains...$domains");
+    AppUtils.printLogs("Domains...$domains");
 
     courseLabels =
         jsonList.map((json) => CategoryEntity.fromJson(json)).toList();
-    _determinePosition();
+    String savedAddress =
+        sl<SharedPreferencesHelper>().getString(PrefConstKeys.savedAddress);
+    if (savedAddress == "" || savedAddress == "NA") {
+      _determinePosition();
+    } else {
+      _addressController.text = savedAddress;
+      address = savedAddress;
+    }
     final searchInputText = sl<SharedPreferencesHelper>()
         .getString(PrefConstKeys.searchCategoryInput);
     _searchController.text = searchInputText == "NA" ? "" : searchInputText;
@@ -90,7 +92,7 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
     }
   }
 
-  // are denied the `Future` will return an error.
+  /// Determines the current position of the user.
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -98,25 +100,21 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
-      return Future.error('Location services are disabled.');
+      await Geolocator.openLocationSettings();
+      AppUtils.printLogs('Location services are disabled.');
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+        AppUtils.printLogs('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      await Geolocator.openLocationSettings();
-
-      // Permissions are denied forever, handle appropriately.
-      return Future.error(
+      await Geolocator.openAppSettings();
+      AppUtils.printLogs(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
@@ -132,7 +130,9 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
         await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark firstPlacemark = placemarks.first;
 
-    String city = firstPlacemark.locality ?? 'Unknown City';
+    String city = firstPlacemark.locality ?? '';
+
+    sl<SharedPreferencesHelper>().setString(PrefConstKeys.savedAddress, city);
 
     if (mounted) {
       _addressController.text = city;
@@ -146,9 +146,7 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
   @override
   void dispose() {
     super.dispose();
-    if (kDebugMode) {
-      print("dispose home");
-    }
+    AppUtils.printLogs("dispose home");
     _searchController.dispose();
     _addressController.dispose();
     scrollController.dispose();
@@ -159,9 +157,6 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
   Widget build(BuildContext context) {
     return BlocListener<SeekerHomeBloc, SeekerHomeState>(
       listener: (context, state) {
-        if (kDebugMode) {
-          print('current_bloc_state... $state');
-        }
         if (state is SeekerHomeUpdatedState &&
             state.state == DataState.error &&
             state.errorMessage ==
@@ -183,7 +178,7 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                 SliverToBoxAdapter(
                   child: _buildMainContent(state),
                 ),
-                SliverFillRemaining(child: _listViewData(state))
+                SliverToBoxAdapter(child: _listViewData(state))
               ]),
             ],
           );
@@ -193,10 +188,6 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
   }
 
   search(String input) {
-    if (kDebugMode) {
-      print(
-          "context.read<SeekerHomeBloc>().add(SeekerSSEvent(search: val));  $input");
-    }
     if (_searchController.text.isNotEmpty) {
       sl<SharedPreferencesHelper>()
           .setString(PrefConstKeys.searchHomeInput, _searchController.text);
@@ -205,22 +196,23 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
     }
   }
 
+  /// Builds the main content of the page.
   Widget _buildMainContent(SeekerHomeState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppDimensions.smallXL.vSpace(),
+        AppDimensions.smallXL.verticalSpace,
         SearchTextFieldWidget(
           controller: _searchController,
           onSearch: search,
         ),
-        AppDimensions.medium.vSpace(),
+        AppDimensions.medium.verticalSpace,
         AspectRatio(
           aspectRatio: 13,
           child: ListView.separated(
             controller: scrollController,
             separatorBuilder: (context, index) {
-              return 9.hSpace();
+              return 9.w.horizontalSpace;
             },
             scrollDirection: Axis.horizontal,
             itemCount: courseLabels.length,
@@ -240,12 +232,8 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                     } else {
                       _selectedLabel = selectedLabel;
                     }
-
                     String selectedValue =
                         _selectedLabel == selectedLabel ? value.toString() : "";
-
-                    debugPrint("Selected category... $selectedValue");
-
                     context
                         .read<SeekerHomeBloc>()
                         .add(SeekerSSEvent(search: selectedValue));
@@ -259,17 +247,18 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
           _providerData([], isProviderTitle: true),
         if (state is SeekerHomeUpdatedState && state.providerData!.isNotEmpty)
           _providerData(state.providerData!),
-        AppDimensions.extraSmall.vSpace(),
+        AppDimensions.extraSmall.verticalSpace,
         if (state is SeekerHomeUpdatedState && state.providerData!.isNotEmpty)
           _providerTrendingData([], isProviderTitle: true),
         if (state is SeekerHomeUpdatedState && state.providerData!.isNotEmpty)
           _providerTrendingData(state.providerData!.reversed.toList()),
-        AppDimensions.mediumXL.vSpace(),
+        AppDimensions.mediumXL.verticalSpace,
       ],
     ).symmetricPadding(horizontal: AppDimensions.medium.sp);
   }
 }
 
+/// Builds the list view data.
 _listViewData(SeekerHomeState state) {
   if (state is SeekerHomeUpdatedState) {
     if (state.state == DataState.loading && state.providerData!.isEmpty) {
@@ -282,14 +271,15 @@ _listViewData(SeekerHomeState state) {
       );
     } else if (state.state == DataState.success &&
         state.providerData!.isEmpty) {
-      return Center(
+      return SizedBox(
+        height: 800.w,
         child: ListView(children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(Assets.images.noDocumentsAdded),
-              AppDimensions.mediumXL.vSpace(),
+              AppDimensions.mediumXL.verticalSpace,
               SeekerHomeKeys.noDataFound.stringToString.titleExtraBold(
                 color: AppColors.black,
                 size: AppDimensions.mediumXL.sp,
@@ -304,15 +294,16 @@ _listViewData(SeekerHomeState state) {
   }
 }
 
+/// Provides the list view data based on the state of the search result.
 _providerData(List<SearchItemEntity> provider, {bool isProviderTitle = false}) {
   return isProviderTitle
       ? coursesHeader(title: SeekerHomeKeys.recommendedCourses.stringToString)
       : AspectRatio(
-          aspectRatio: 1.4,
+          aspectRatio: 1.3,
           child: ListView.separated(
             key: UniqueKey(),
             separatorBuilder: (context, index) {
-              return AppDimensions.smallXL.hSpace();
+              return AppDimensions.smallXL.w.horizontalSpace;
             },
             scrollDirection: Axis.horizontal,
             itemCount: provider.length,
@@ -323,16 +314,17 @@ _providerData(List<SearchItemEntity> provider, {bool isProviderTitle = false}) {
         );
 }
 
+/// Provides the list view data based on the state of the search result.
 _providerTrendingData(List<SearchItemEntity> provider,
     {bool isProviderTitle = false}) {
   return isProviderTitle
       ? coursesHeader(title: SeekerHomeKeys.trendingCourses.stringToString)
       : AspectRatio(
-          aspectRatio: 1.4,
+          aspectRatio: 1.3,
           child: ListView.separated(
             key: UniqueKey(),
             separatorBuilder: (context, index) {
-              return AppDimensions.smallXL.hSpace();
+              return AppDimensions.smallXL.w.horizontalSpace;
             },
             scrollDirection: Axis.horizontal,
             itemCount: provider.length,
@@ -363,7 +355,7 @@ _providerStreamBuilder(BuildContext context, {bool isProviderTitle = false}) {
                 child: ListView.separated(
                   key: UniqueKey(),
                   separatorBuilder: (context, index) {
-                    return AppDimensions.smallXL.hSpace();
+                    return AppDimensions.smallXL.w.horizontalSpace;
                   },
                   scrollDirection: Axis.horizontal,
                   itemCount: products.length,
@@ -394,7 +386,7 @@ _productStreamBuilder(BuildContext context, {bool isProductsTitle = false}) {
                 height: 87.w,
                 child: ListView.separated(
                   separatorBuilder: (context, index) {
-                    return AppDimensions.extraSmall.hSpace();
+                    return AppDimensions.extraSmall.w.horizontalSpace;
                   },
                   scrollDirection: Axis.horizontal,
                   itemCount: products.length,
@@ -408,22 +400,21 @@ _productStreamBuilder(BuildContext context, {bool isProductsTitle = false}) {
 }
 */
 
+/// Courses header
 Widget coursesHeader({required String title}) {
   return Column(
     children: [
-      AppDimensions.medium.vSpace(),
+      AppDimensions.medium.verticalSpace,
       title.titleBold(size: AppDimensions.medium.sp),
-      AppDimensions.small.vSpace(),
+      AppDimensions.small.verticalSpace,
     ],
   );
 }
 
+/// Builds course card
 Widget courseCardList(BuildContext context, SearchItemEntity data) {
   return GestureDetector(
       onTap: () {
-        if (kDebugMode) {
-          print("data adsadfa  ${data.domain}");
-        }
         context
             .read<CourseDescriptionBloc>()
             .add(CourseSelectedEvent(course: data));

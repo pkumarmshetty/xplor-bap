@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../domain/entities/update_consent_entity.dart';
 
+/// Base class for all events related to UpdateConsentDialogBloc.
 sealed class UpdateConsentDialogEvent extends Equatable {
   const UpdateConsentDialogEvent();
 
@@ -9,6 +10,7 @@ sealed class UpdateConsentDialogEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+/// Event for updating the consent.
 class ConsentUpdateDialogUpdatedEvent extends UpdateConsentDialogEvent {
   const ConsentUpdateDialogUpdatedEvent({this.selectedItem, this.remarks});
 
@@ -19,6 +21,7 @@ class ConsentUpdateDialogUpdatedEvent extends UpdateConsentDialogEvent {
   List<Object?> get props => [selectedItem, remarks];
 }
 
+/// Event for submitting the updated consent.
 class ConsentUpdateDialogSubmittedEvent extends UpdateConsentDialogEvent {
   const ConsentUpdateDialogSubmittedEvent({required this.updateConsent, required this.requestId});
 
@@ -30,6 +33,7 @@ class ConsentUpdateDialogSubmittedEvent extends UpdateConsentDialogEvent {
   List<Object?> get props => [requestId, updateConsent];
 }
 
+/// Event for adding remarks
 class RemarksAddedEvent extends UpdateConsentDialogEvent {
   const RemarksAddedEvent({required this.remarks});
 
@@ -39,6 +43,7 @@ class RemarksAddedEvent extends UpdateConsentDialogEvent {
   List<Object?> get props => [remarks];
 }
 
+/// Event for updating the consent.
 class ConsentUpdateEvent extends UpdateConsentDialogEvent {
   const ConsentUpdateEvent();
 

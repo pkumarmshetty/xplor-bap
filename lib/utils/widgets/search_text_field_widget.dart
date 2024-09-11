@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../features/multi_lang/domain/mappers/seeker_home/seeker_home_keys.dart';
-
 import '../extensions/string_to_string.dart';
-
 import '../app_colors.dart';
 import '../app_dimensions.dart';
 

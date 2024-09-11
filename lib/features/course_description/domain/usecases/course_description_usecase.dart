@@ -1,6 +1,7 @@
 import '../entity/get_details_entity.dart';
 import '../repository/course_details_repository.dart';
 
+/// Course Description Usecases
 class CourseDescriptionUsecase {
   CourseDetailsRepository repository;
 

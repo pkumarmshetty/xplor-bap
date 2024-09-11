@@ -1,12 +1,11 @@
-import 'package:flutter/foundation.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../core/connection/network_info.dart';
 import '../../../../core/exception_errors.dart';
 import '../../domain/entity/get_details_entity.dart';
 import '../../domain/repository/course_details_repository.dart';
 import '../data_sources/course_detail_service.dart';
 
+/// Implementation for [CourseDetailsRepository]
 class CourseDetailsRepositoryImpl implements CourseDetailsRepository {
   CourseDetailsRepositoryImpl({required this.apiService, required this.networkInfo});
 
@@ -15,9 +14,6 @@ class CourseDetailsRepositoryImpl implements CourseDetailsRepository {
 
   @override
   Future<CourseDetailsEntity> getCourseDetails(String body) async {
-    if (kDebugMode) {
-      print("await networkInfo.isConnected!  ${await networkInfo.isConnected!}");
-    }
     if (await networkInfo.isConnected!) {
       return apiService.getCourseDetails(body);
     } else {

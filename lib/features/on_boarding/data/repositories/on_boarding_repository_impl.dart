@@ -1,11 +1,10 @@
-import 'package:xplor/features/on_boarding/data/data_sources/on_boarding_remote.dart';
-import 'package:xplor/features/on_boarding/domain/entities/ob_boarding_verify_otp_entity.dart';
-import 'package:xplor/features/on_boarding/domain/entities/on_boarding_assign_role_entity.dart';
-import 'package:xplor/features/on_boarding/domain/entities/on_boarding_send_otp_entity.dart';
-import 'package:xplor/features/on_boarding/domain/entities/on_boarding_user_role_entity.dart';
-import 'package:xplor/features/on_boarding/domain/repository/on_boarding_repository.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../data_sources/on_boarding_remote.dart';
+import '../../domain/entities/ob_boarding_verify_otp_entity.dart';
+import '../../domain/entities/on_boarding_assign_role_entity.dart';
+import '../../domain/entities/on_boarding_send_otp_entity.dart';
+import '../../domain/entities/on_boarding_user_role_entity.dart';
+import '../../domain/repository/on_boarding_repository.dart';
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../core/connection/network_info.dart';
 import '../../../../core/exception_errors.dart';
 import '../../domain/entities/categories_entity.dart';

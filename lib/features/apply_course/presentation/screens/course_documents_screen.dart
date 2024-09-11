@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/wallet/wallet_keys.dart';
-import 'package:xplor/features/wallet/domain/entities/wallet_vc_list_entity.dart';
-import 'package:xplor/features/wallet/presentation/blocs/share_doc_vc_bloc/share_doc_vc_bloc.dart';
-import 'package:xplor/features/wallet/presentation/blocs/wallet_vc_bloc/wallet_vc_bloc.dart';
-import 'package:xplor/features/wallet/presentation/blocs/wallet_vc_bloc/wallet_vc_event.dart';
-import 'package:xplor/features/wallet/presentation/blocs/wallet_vc_bloc/wallet_vc_state.dart';
-import 'package:xplor/features/wallet/presentation/pages/wallet_no_doc_view.dart';
-import 'package:xplor/features/wallet/presentation/widgets/my_document_widget/my_document_widget.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/common_top_header.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/widgets/app_background_widget.dart';
-import 'package:xplor/utils/widgets/loading_animation.dart';
-
+import '../../../multi_lang/domain/mappers/wallet/wallet_keys.dart';
+import '../../../wallet/domain/entities/wallet_vc_list_entity.dart';
+import '../../../wallet/presentation/blocs/share_doc_vc_bloc/share_doc_vc_bloc.dart';
+import '../../../wallet/presentation/blocs/wallet_vc_bloc/wallet_vc_bloc.dart';
+import '../../../wallet/presentation/blocs/wallet_vc_bloc/wallet_vc_event.dart';
+import '../../../wallet/presentation/blocs/wallet_vc_bloc/wallet_vc_state.dart';
+import '../../../wallet/presentation/pages/wallet_no_doc_view.dart';
+import '../../../wallet/presentation/widgets/my_document_widget/my_document_widget.dart';
+import '../../../../utils/app_colors.dart';
+import '../../../../utils/common_top_header.dart';
+import '../../../../utils/extensions/string_to_string.dart';
+import '../../../../utils/widgets/app_background_widget.dart';
+import '../../../../utils/widgets/loading_animation.dart';
 import '../../../../config/routes/path_routing.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_dimensions.dart';
@@ -61,35 +60,14 @@ class _CourseDocumentScreenState extends State<CourseDocumentScreen> {
                                     },
                                     dividerColor: AppColors.hintColor,
                                   ),
-                                  AppDimensions.medium.sp.vSpace(),
+                                  AppDimensions.medium.verticalSpace,
                                   Expanded(
                                     child:
                                         const MyDocumentWidget().symmetricPadding(horizontal: AppDimensions.mediumXL.w),
                                   ),
                                   AppDimensions.medium.verticalSpace,
-                                  ButtonWidget(
-                                    onPressed: () async {
-                                      List<DocumentVcData> selectedDocs;
-                                      state is WalletDocumentSelectedState
-                                          ? selectedDocs = state.selectedDocs
-                                          : state is WalletDocumentsSearchedState
-                                              ? selectedDocs = state.selectedDocuments
-                                              : selectedDocs = [];
-                                      selectedDocs.length > 1
-                                          ? context
-                                              .read<SharedDocVcBloc>()
-                                              .add(ShareDocumentsEvent(selectedDocs: selectedDocs))
-                                          : context
-                                              .read<SharedDocVcBloc>()
-                                              .add(ShareDocumentsEvent(documentVcData: selectedDocs[0]));
-                                      Navigator.pushNamed(context, Routes.shareDocument);
-                                    },
-                                    title: WalletKeys.continueString.stringToString,
-                                    isValid: ((state is WalletDocumentSelectedState && state.selectedDocs.isNotEmpty) ||
-                                        (state is WalletDocumentsSearchedState && state.selectedDocuments.isNotEmpty)),
-                                  ).symmetricPadding(
-                                      horizontal: AppDimensions.mediumXL, vertical: AppDimensions.large.w),
-                                  AppDimensions.small.vSpace()
+                                  continueButton(state),
+                                  AppDimensions.small.verticalSpace
                                 ],
                               ),
                               Positioned(
@@ -110,5 +88,25 @@ class _CourseDocumentScreenState extends State<CourseDocumentScreen> {
                                   ? const Center(child: LoadingAnimation())
                                   : Container())));
         }));
+  }
+
+  Widget continueButton(WalletVcState state) {
+    return ButtonWidget(
+      onPressed: () async {
+        List<DocumentVcData> selectedDocs;
+        state is WalletDocumentSelectedState
+            ? selectedDocs = state.selectedDocs
+            : state is WalletDocumentsSearchedState
+                ? selectedDocs = state.selectedDocuments
+                : selectedDocs = [];
+        selectedDocs.length > 1
+            ? context.read<SharedDocVcBloc>().add(ShareDocumentsEvent(selectedDocs: selectedDocs))
+            : context.read<SharedDocVcBloc>().add(ShareDocumentsEvent(documentVcData: selectedDocs[0]));
+        Navigator.pushNamed(context, Routes.shareDocument);
+      },
+      title: WalletKeys.continueString.stringToString,
+      isValid: ((state is WalletDocumentSelectedState && state.selectedDocs.isNotEmpty) ||
+          (state is WalletDocumentsSearchedState && state.selectedDocuments.isNotEmpty)),
+    ).symmetricPadding(horizontal: AppDimensions.mediumXL, vertical: AppDimensions.large.w);
   }
 }

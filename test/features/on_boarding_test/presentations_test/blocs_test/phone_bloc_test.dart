@@ -58,7 +58,7 @@ void main() {
       build: () => phoneBloc,
       act: (bloc) {
         when(mockOnBoardingUseCase.call(params: phoneEntity)).thenThrow(Exception());
-        bloc.add(const PhoneSubmitEvent(phone: '+213 8234567890'));
+        bloc.add(const PhoneSubmitEvent(phone: '+213 8234567890', userCheck: false));
       },
       expect: () => [
         PhoneLoadingState(),
@@ -74,7 +74,7 @@ void main() {
         when(mockOnBoardingUseCase.call(params: anyNamed('params'))).thenAnswer((_) async => 'k9898988898989324');
         return phoneBloc;
       },
-      act: (bloc) => bloc.add(PhoneSubmitEvent(phone: phoneNumberData)),
+      act: (bloc) => bloc.add(PhoneSubmitEvent(phone: phoneNumberData, userCheck: false)),
       expect: () => [
         PhoneLoadingState(),
         SuccessPhoneState(phoneNumber: phoneNumberData, key: 'k9898988898989324'),

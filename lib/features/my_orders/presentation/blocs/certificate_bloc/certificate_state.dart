@@ -1,23 +1,40 @@
 // download_state.dart
 
-abstract class DownloadState {}
+/// Abstract class representing different states of a download operation.
+abstract class CertificateState {}
 
-class DownloadInitial extends DownloadState {}
+/// Initial state indicating the download has not started yet.
+class DownloadInitial extends CertificateState {}
 
-class DownloadInProgress extends DownloadState {
+class CertificateInitialState extends CertificateState {}
+
+/// State indicating that the download is in progress, with a specific progress value.
+class DownloadInProgress extends CertificateState {
   final double progress;
 
   DownloadInProgress(this.progress);
 }
 
-class DownloadSuccess extends DownloadState {
+/// State indicating that the download completed successfully, with the downloaded file path.
+class DownloadSuccess extends CertificateState {
   final String filePath;
 
   DownloadSuccess(this.filePath);
 }
 
-class DownloadFailure extends DownloadState {
+/// State indicating that the download failed, with an error message.
+class DownloadFailure extends CertificateState {
   final String error;
 
   DownloadFailure(this.error);
+}
+
+final class UploadDocumentLoadingState extends CertificateState {}
+
+final class DocumentUploadSuccessState extends CertificateState {}
+
+final class DocumentUploadFailureState extends CertificateState {
+  final String error;
+
+  DocumentUploadFailureState(this.error);
 }

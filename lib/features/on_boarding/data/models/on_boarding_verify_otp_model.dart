@@ -1,4 +1,4 @@
-import 'package:xplor/features/on_boarding/domain/entities/ob_boarding_verify_otp_entity.dart';
+import '../../domain/entities/ob_boarding_verify_otp_entity.dart';
 
 class OnBoardingVerifyOtpModel extends OnBoardingVerifyOtpEntity {
   OnBoardingVerifyOtpModel({

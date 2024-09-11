@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:xplor/utils/app_colors.dart';
+import 'app_colors.dart';
 
 class AppGradients {
   /// Gradient for button backgrounds

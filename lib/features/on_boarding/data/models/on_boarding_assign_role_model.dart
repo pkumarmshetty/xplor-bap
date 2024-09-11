@@ -1,4 +1,4 @@
-import 'package:xplor/features/on_boarding/domain/entities/on_boarding_assign_role_entity.dart';
+import '../../domain/entities/on_boarding_assign_role_entity.dart';
 
 class OnBoardingAssignRoleModel extends OnBoardingAssignRoleEntity {
   OnBoardingAssignRoleModel({

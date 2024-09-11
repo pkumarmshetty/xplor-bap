@@ -1,9 +1,9 @@
-import 'package:xplor/core/connection/network_info.dart';
-import 'package:xplor/core/exception_errors.dart';
-import 'package:xplor/features/mpin/data/data_sources/mpin_api_service.dart';
-import 'package:xplor/features/mpin/domain/entities/send_mpin_otp_entity.dart';
-import 'package:xplor/features/mpin/domain/repository/mpin_repository.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
+import '../../../../core/connection/network_info.dart';
+import '../../../../core/exception_errors.dart';
+import '../data_sources/mpin_api_service.dart';
+import '../../domain/entities/send_mpin_otp_entity.dart';
+import '../../domain/repository/mpin_repository.dart';
+import '../../../../utils/extensions/string_to_string.dart';
 
 class MpinRepositoryImplementation implements MpinRepository {
   MpinApiService apiService;

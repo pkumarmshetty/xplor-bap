@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/features/on_boarding/presentation/blocs/select_category/categories_bloc.dart';
-import 'package:xplor/features/on_boarding/presentation/widgets/category_widget.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/circluar_button.dart';
-import 'package:xplor/utils/common_top_header.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/utils.dart';
-import 'package:xplor/utils/widgets/app_background_widget.dart';
-import 'package:xplor/utils/widgets/loading_animation.dart';
-import 'package:xplor/utils/widgets/search_text_field_widget.dart';
-
+import '../../blocs/select_category/categories_bloc.dart';
+import '../../widgets/category_widget.dart';
+import '../../../../../utils/app_colors.dart';
+import '../../../../../utils/circluar_button.dart';
+import '../../../../../utils/common_top_header.dart';
+import '../../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../../utils/extensions/string_to_string.dart';
+import '../../../../../utils/utils.dart';
+import '../../../../../utils/widgets/app_background_widget.dart';
+import '../../../../../utils/widgets/loading_animation.dart';
+import '../../../../../utils/widgets/search_text_field_widget.dart';
 import '../../../../../config/routes/path_routing.dart';
 import '../../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../../core/dependency_injection.dart';
@@ -20,6 +19,8 @@ import '../../../../../utils/app_dimensions.dart';
 import '../../../../../utils/mapping_const.dart';
 import '../../../../multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
 import '../../../../multi_lang/presentation/blocs/bloc/translate_bloc.dart';
+
+part 'select_category_widget.dart';
 
 class SelectCategoryScreen extends StatefulWidget {
   const SelectCategoryScreen({super.key});
@@ -76,24 +77,11 @@ class _SelectCategoryScreenState extends State<SelectCategoryScreen> {
                                   onBackButtonPressed: () {
                                     Navigator.pop(context);
                                   }),
-                              OnBoardingKeys.lookingFor.stringToString
-                                  .titleBold(color: AppColors.black3939, size: 14.sp)
-                                  .singleSidePadding(
-                                      left: AppDimensions.medium,
-                                      right: AppDimensions.medium,
-                                      top: AppDimensions.medium),
-                              SearchTextFieldWidget(
-                                onChanged: (value) {
-                                  context.read<CategoriesBloc>().add(CategorySearchEvent(query: value));
-                                },
-                              ).symmetricPadding(horizontal: AppDimensions.medium, vertical: 10.w),
-                              OnBoardingKeys.recommendedCategories.stringToString
-                                  .titleBold(color: AppColors.black3939, size: 14.sp)
-                                  .symmetricPadding(horizontal: AppDimensions.medium, vertical: AppDimensions.smallXL),
+                              selectCategoryHeaderView(context),
                               Expanded(
                                 child: GridView.count(
-                                  crossAxisSpacing: 5.w,
-                                  mainAxisSpacing: 5.w,
+                                  crossAxisSpacing: AppDimensions.extraSmall.w,
+                                  mainAxisSpacing: AppDimensions.extraSmall.w,
                                   childAspectRatio: 3 / 1.8,
                                   crossAxisCount: 2,
                                   padding: const EdgeInsets.only(bottom: 3 * AppDimensions.xxlLarge),

@@ -1,35 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:xplor/features/apply_course/presentation/screens/apply_course_screen.dart';
-import 'package:xplor/features/apply_course/presentation/screens/course_documents_screen.dart';
-import 'package:xplor/features/apply_course/presentation/screens/thanks_for_applying_screen.dart';
-import 'package:xplor/features/my_orders/presentation/pages/my_orders_view.dart';
-import 'package:xplor/features/on_boarding/presentation/pages/choose_domain/choose_domain_screen.dart';
-import 'package:xplor/features/home/presentation/widgets/tab_bar_widget.dart';
-import 'package:xplor/features/mpin/presentation/pages/reset_mpin_screen.dart';
-import 'package:xplor/features/on_boarding/presentation/pages/complete_kyc/complete_profile_view_for_belem.dart';
-import 'package:xplor/features/on_boarding/presentation/pages/sign_in/phone_number_view.dart';
-import 'package:xplor/features/multi_lang/presentation/pages/select_lang_page.dart';
-import 'package:xplor/features/profile/presentation/pages/seeker_profile/seeker_edit_profile.dart';
-import 'package:xplor/features/seeker_home/presentation/pages/seeker_serach_result_view.dart';
-import 'package:xplor/features/walk_through/presentation/pages/splash_page.dart';
-import 'package:xplor/features/on_boarding/presentation/pages/choose_role/choose_role_view.dart';
-import 'package:xplor/features/on_boarding/presentation/pages/mpin/generate_mpin_screen.dart';
-import 'package:xplor/features/on_boarding/presentation/pages/otp/verify_otp_view.dart';
-import 'package:xplor/features/on_boarding/presentation/pages/select_category/select_category_screen.dart';
-import 'package:xplor/features/seeker_home/presentation/widgets/seeker_tab_bar_widget.dart';
-import 'package:xplor/features/wallet/presentation/pages/share_doc_screen.dart';
-import 'package:xplor/features/wallet/presentation/widgets/add_document_view.dart';
-
+import 'package:xplor/features/my_orders/domain/entities/certificate_view_arguments.dart';
+import '../../features/apply_course/presentation/screens/apply_course_screen.dart';
+import '../../features/apply_course/presentation/screens/course_documents_screen.dart';
+import '../../features/apply_course/presentation/screens/thanks_for_applying_screen.dart';
+import '../../features/my_orders/presentation/pages/my_orders_view.dart';
+import '../../features/on_boarding/presentation/pages/choose_domain/choose_domain_screen.dart';
+import '../../features/home/presentation/widgets/tab_bar_widget.dart';
+import '../../features/mpin/presentation/pages/reset_mpin_screen.dart';
+import '../../features/on_boarding/presentation/pages/complete_kyc/complete_profile_view_for_belem.dart';
+import '../../features/on_boarding/presentation/pages/sign_in/phone_number_view.dart';
+import '../../features/multi_lang/presentation/pages/select_lang_page.dart';
+import '../../features/profile/presentation/pages/seeker_profile/seeker_edit_profile.dart';
+import '../../features/seeker_home/presentation/pages/seeker_serach_result_view.dart';
+import '../../features/walk_through/presentation/pages/splash_page.dart';
+import '../../features/on_boarding/presentation/pages/choose_role/choose_role_view.dart';
+import '../../features/on_boarding/presentation/pages/mpin/generate_mpin_screen.dart';
+import '../../features/on_boarding/presentation/pages/otp/verify_otp_view.dart';
+import '../../features/on_boarding/presentation/pages/select_category/select_category_screen.dart';
+import '../../features/seeker_home/presentation/widgets/seeker_tab_bar_widget.dart';
+import '../../features/wallet/presentation/pages/share_doc_screen.dart';
+import '../../features/wallet/presentation/widgets/add_document_view.dart';
 import '../../const/local_storage/shared_preferences_helper.dart';
 import '../../core/dependency_injection.dart';
+import '../../features/apply_course/presentation/screens/payment_screen.dart';
 import '../../features/apply_course/presentation/screens/start_course_page.dart';
 import '../../features/multi_lang/presentation/pages/location_screen.dart';
 import '../../features/my_orders/presentation/pages/certificate_view.dart';
 import '../../features/on_boarding/domain/entities/user_data_entity.dart';
-import '../../features/on_boarding/presentation/pages/complete_kyc/complete_profile_view.dart';
+import '../../features/on_boarding/presentation/pages/complete_kyc/complete_profile_view/complete_profile_view.dart';
 import '../../features/seeker_dashboard/presentation/pages/seeker_dashboard_view.dart';
 import '../../features/seeker_dashboard/presentation/pages/seekers_list_view.dart';
-import '../../features/walk_through/presentation/pages/walk_through_pages.dart';
+import '../../features/walk_through/presentation/pages/walk_through_pages/walk_through_pages.dart';
 import '../../features/course_description/presentation/pages/course_description_view.dart';
 import '../../features/walk_through/presentation/pages/welcome_page.dart';
 import '../../features/wallet/presentation/pages/wallet_no_doc_view.dart';
@@ -72,8 +73,7 @@ class AppRoutes {
           const GenerateMpinScreen(),
         );
       case Routes.kyc:
-        return sl<SharedPreferencesHelper>()
-                .getBoolean(PrefConstKeys.appForBelem)
+        return sl<SharedPreferencesHelper>().getBoolean(PrefConstKeys.appForBelem)
             ? customPageRoute(const CompleteProfileViewBelem())
             : customPageRoute(const CompleteProfileView());
       case Routes.chooseRole:
@@ -86,8 +86,7 @@ class AppRoutes {
         // Return a material route for the main route, displaying HomeTabs widget.
         var transactionId = settings.arguments as String?;
         transactionId ??= "";
-        return customPageRoute(
-            CourseDescriptionView(transactionId: transactionId));
+        return customPageRoute(CourseDescriptionView(transactionId: transactionId));
       case Routes.startCoursePage:
         var courseUrl = settings.arguments as String?;
         courseUrl ??= "";
@@ -120,11 +119,14 @@ class AppRoutes {
         return customPageRoute(const MyOrdersView());
 
       case Routes.certificate:
-        final certificateUrl = settings.arguments as String;
-        return customPageRoute(CertificateView(certificateUrl: certificateUrl));
+        final arguments = settings.arguments as CertificateViewArguments;
+        return customPageRoute(CertificateView(arguments: arguments));
       case Routes.editProfile:
         final userData = settings.arguments as UserDataEntity?;
         return customPageRoute(SeekerEditProfile(userData: userData));
+      case Routes.payment:
+        final url = settings.arguments as String?;
+        return customPageRoute(PaymentScreen(paymentUrl: url!));
       default:
         // Return a default material route, displaying SplashView for unknown routes.
         return customPageRoute(const SplashPage());

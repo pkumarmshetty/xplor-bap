@@ -1,31 +1,29 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/config/routes/path_routing.dart';
-import 'package:xplor/config/services/app_services.dart';
-import 'package:xplor/features/mpin/presentation/blocs/reset_mpin_bloc.dart';
-import 'package:xplor/features/wallet/presentation/blocs/share_doc_vc_bloc/share_doc_vc_bloc.dart';
-import 'package:xplor/features/wallet/presentation/blocs/wallet_vc_bloc/wallet_vc_bloc.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../../../config/routes/path_routing.dart';
+import '../../../../config/services/app_services.dart';
+import '../../../mpin/presentation/blocs/reset_mpin_bloc.dart';
+import '../blocs/share_doc_vc_bloc/share_doc_vc_bloc.dart';
+import '../blocs/wallet_vc_bloc/wallet_vc_bloc.dart';
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
 import '../../../../utils/app_utils/app_utils.dart';
 import '../../../../utils/extensions/font_style/font_styles.dart';
 import '../../../../utils/extensions/padding.dart';
-import '../../../../utils/extensions/space.dart';
 import '../../../../utils/widgets/build_button.dart';
 import '../../../../utils/widgets/top_header_for_dialogs.dart';
 import '../../../multi_lang/domain/mappers/wallet/wallet_keys.dart';
 import '../../../on_boarding/presentation/widgets/common_pin_code_text_field_view.dart';
 import '../blocs/enter_mpin_bloc/enter_mpin_bloc.dart';
 
-/// Custom dialog for confirmation
+/// `EnterMPinDialog` is a custom dialog widget used for entering an MPIN (Mobile Personal Identification Number).
+/// It provides a user interface for entering the MPIN, handling validation, and initiating actions based on the entered MPIN.
+
 class EnterMPinDialog extends StatefulWidget {
-  /// Callback function for OK button press
-  final String title;
-  final bool isCrossIconVisible;
+  final String title; // Title displayed on the dialog header
+  final bool isCrossIconVisible; // Determines if a cross (close) icon is shown
 
   const EnterMPinDialog({
     super.key,
@@ -38,49 +36,62 @@ class EnterMPinDialog extends StatefulWidget {
 }
 
 class _EnterMPinDialogState extends State<EnterMPinDialog> {
+  // TextEditingController for the PIN input field
+  var textEditingController = TextEditingController();
+
   @override
   void initState() {
+    // Initialize MPIN state by dispatching an event
     context.read<EnterMPinBloc>().add(const MPinInitialEvent());
     super.initState();
   }
 
-  var textEditingController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.medium),
-        ),
-        backgroundColor: AppColors.white,
-        elevation: 0,
-        insetPadding: const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
-        child: BlocListener<EnterMPinBloc, EnterMPinState>(
-          listener: (context, state) {
-            if (state is SuccessMPinState) {
-              if (kDebugMode) {
-                print('MPIN Verify');
-              }
-              context.read<SharedDocVcBloc>().add(const PinVerifiedEvent());
-              if (context.read<WalletVcBloc>().flowType == FlowType.consent) {
-                AppUtils.shareFile('');
-                Navigator.pop(context);
-              }
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppDimensions.medium),
+      ),
+      backgroundColor: AppColors.white,
+      elevation: 0,
+      insetPadding: const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
+      child: BlocListener<EnterMPinBloc, EnterMPinState>(
+        listener: (context, state) {
+          if (state is SuccessMPinState) {
+            // Print a debug message when MPIN is successfully verified
+            AppUtils.printLogs('MPIN Verify');
+            // Trigger pin verification success event
+            context.read<SharedDocVcBloc>().add(const PinVerifiedEvent());
+            // Handle sharing the file if the flow type is consent
+            if (context.read<WalletVcBloc>().flowType == FlowType.consent) {
+              AppUtils.shareFile('');
+              Navigator.pop(context); // Close the dialog
             }
-          },
-          child: BlocBuilder<EnterMPinBloc, EnterMPinState>(builder: (context, state) {
+          }
+        },
+        child: BlocBuilder<EnterMPinBloc, EnterMPinState>(
+          builder: (context, state) {
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TopHeaderForDialogs(title: widget.title, isCrossIconVisible: widget.isCrossIconVisible),
+                // Top header of the dialog
+                TopHeaderForDialogs(
+                  title: widget.title,
+                  isCrossIconVisible: widget.isCrossIconVisible,
+                ),
+                // PIN code input field
                 CommonPinCodeTextField(
                   hidePin: true,
                   pinFilledColor: AppColors.primaryColor.withOpacity(0.05),
                   pinBorderColor: AppColors.primaryColor,
                   textEditingController: textEditingController,
-                  onChanged: (value) => context.read<EnterMPinBloc>().add(MPinValidatorEvent(mPIn: value)),
+                  onChanged: (value) {
+                    // Validate the entered MPIN
+                    context.read<EnterMPinBloc>().add(MPinValidatorEvent(mPIn: value));
+                  },
                 ).symmetricPadding(horizontal: AppDimensions.mediumXL),
+                // Display error message if MPIN validation fails
                 if (state is FailureMPinState && state.message!.isNotEmpty)
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -90,19 +101,23 @@ class _EnterMPinDialogState extends State<EnterMPinDialog> {
                           .titleSemiBold(
                               size: 12.sp, color: AppColors.errorColor, maxLine: 3, overflow: TextOverflow.visible)
                           .symmetricPadding(horizontal: AppDimensions.mediumXL),
-                      AppDimensions.smallXL.vSpace(),
+                      AppDimensions.smallXL.verticalSpace,
                     ],
                   ),
+                // Forgot MPIN link
                 Center(
                   child: InkWell(
-                      onTap: () {
-                        context.read<ResetMpinBloc>().add(ResetMpinOtpEvent());
-                        Navigator.pushNamed(AppServices.navState.currentContext!, Routes.resetMpin);
-                      },
-                      child: '${WalletKeys.forgotMPin.stringToString}?'
-                          .titleBold(color: AppColors.primaryColor, size: 12.sp)),
+                    onTap: () {
+                      // Navigate to reset MPIN screen
+                      context.read<ResetMpinBloc>().add(ResetMpinOtpEvent());
+                      Navigator.pushNamed(AppServices.navState.currentContext!, Routes.resetMpin);
+                    },
+                    child: '${WalletKeys.forgotMPin.stringToString}?'
+                        .titleBold(color: AppColors.primaryColor, size: 12.sp),
+                  ),
                 ),
-                AppDimensions.medium.vSpace(),
+                AppDimensions.medium.verticalSpace,
+                // Verify and share button
                 ButtonWidget(
                   title: state is MPinLoadingState
                       ? WalletKeys.pleaseWait.stringToString
@@ -112,13 +127,18 @@ class _EnterMPinDialogState extends State<EnterMPinDialog> {
                     if (state is MPinLoadingState) {
                       return;
                     }
-                    context.read<EnterMPinBloc>().add(MPinVerifyEvent(mPin: textEditingController.text));
+                    // Dispatch event to verify the entered MPIN
+                    context.read<EnterMPinBloc>().add(
+                          MPinVerifyEvent(mPin: textEditingController.text),
+                        );
                   },
                 ).symmetricPadding(horizontal: AppDimensions.mediumXL),
-                AppDimensions.large.vSpace(),
+                AppDimensions.large.verticalSpace,
               ],
             );
-          }),
-        ));
+          },
+        ),
+      ),
+    );
   }
 }

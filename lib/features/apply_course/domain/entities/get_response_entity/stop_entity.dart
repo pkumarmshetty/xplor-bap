@@ -1,13 +1,15 @@
 class StopsEntity {
   final String id;
   final InstructionDetail instructions;
+  final Authorization? authorization;
 
-  StopsEntity({required this.id, required this.instructions});
+  StopsEntity({required this.id, required this.instructions, required this.authorization});
 
   factory StopsEntity.fromJson(Map<String, dynamic> json) {
     return StopsEntity(
       id: json['id'],
       instructions: InstructionDetail.fromJson(json['instructions']),
+      authorization: json['authorization'] != null ? Authorization.fromJson(json['authorization']) : null,
     );
   }
 
@@ -15,16 +17,16 @@ class StopsEntity {
     return {
       'id': id,
       'instructions': instructions.toJson(),
+      'authorization': authorization?.toJson(),
     };
   }
 }
 
 class InstructionDetail {
   final String name;
-  final String longDesc;
   final List<Media> media;
 
-  InstructionDetail({required this.name, required this.longDesc, required this.media});
+  InstructionDetail({required this.name, required this.media});
 
   factory InstructionDetail.fromJson(Map<String, dynamic> json) {
     var mediaList = json['media'] as List;
@@ -32,7 +34,6 @@ class InstructionDetail {
 
     return InstructionDetail(
       name: json['name'],
-      longDesc: json['long_desc'],
       media: media,
     );
   }
@@ -40,8 +41,25 @@ class InstructionDetail {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
-      'long_desc': longDesc,
       'media': media.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class Authorization {
+  final String status;
+
+  Authorization({required this.status});
+
+  factory Authorization.fromJson(Map<String, dynamic> json) {
+    return Authorization(
+      status: json['status'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
     };
   }
 }

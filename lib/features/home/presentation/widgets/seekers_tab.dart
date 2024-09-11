@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/config/routes/path_routing.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/home/home_keys.dart';
-import 'package:xplor/utils/extensions/space.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../../../config/routes/path_routing.dart';
+import '../../../multi_lang/domain/mappers/home/home_keys.dart';
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
 import 'earning_skill_widget.dart';
 
+/// A tab widget displaying seeker-related information.
+///
+/// The [SeekersTab] widget consists of two sections.
 class SeekersTab extends StatelessWidget {
   const SeekersTab({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      // Adds padding around the container.
       padding: EdgeInsets.all(AppDimensions.medium.sp),
+      // Sets the background color, rounded corners, and shadow for the container.
       decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(AppDimensions.smallXL),
@@ -31,6 +34,7 @@ class SeekersTab extends StatelessWidget {
           ]),
       child: Row(
         children: [
+          // The first expanded section showing total seekers.
           Expanded(
               child: GestureDetector(
             onTap: () => Navigator.pushNamed(context, Routes.seekersList),
@@ -42,7 +46,8 @@ class SeekersTab extends StatelessWidget {
               color: AppColors.lightGreen.withOpacity(0.25),
             ),
           )),
-          AppDimensions.medium.hSpace(),
+          AppDimensions.medium.w.horizontalSpace,
+          // The second expanded section showing new seekers.
           Expanded(
               child: GestureDetector(
             onTap: () => Navigator.pushNamed(context, Routes.seekersList),

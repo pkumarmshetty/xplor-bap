@@ -4,19 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/wallet/wallet_keys.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/utils.dart';
-
+import '../../../multi_lang/domain/mappers/wallet/wallet_keys.dart';
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
 import '../../../../utils/extensions/font_style/font_styles.dart';
-import '../../../../utils/extensions/space.dart';
 import '../blocs/add_document_bloc/add_document_bloc.dart';
 import '../blocs/add_document_bloc/add_document_event.dart';
 import '../blocs/add_document_bloc/add_document_state.dart';
 
+/// Widget for displaying tags.
 class TagsWidget extends StatefulWidget {
   const TagsWidget({super.key});
 
@@ -29,6 +27,7 @@ class _TagsWidgetState extends State<TagsWidget> {
   List<String> selected = [];
   Set<String> uniqueTags = {};
 
+  /// Disposes the text editing controller when the widget is disposed.
   @override
   void dispose() {
     _textEditingController.dispose();
@@ -40,6 +39,7 @@ class _TagsWidgetState extends State<TagsWidget> {
     return tagsContent();
   }
 
+  /// Returns the content of the tags widget.
   Widget tagsContent() {
     return BlocListener<AddDocumentsBloc, AddDocumentsState>(
         listener: (context, state) {},
@@ -51,7 +51,7 @@ class _TagsWidgetState extends State<TagsWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   WalletKeys.enterTags.stringToString.titleBold(size: 14.sp, color: AppColors.grey64697a),
-                  AppDimensions.small.vSpace(),
+                  AppDimensions.small.verticalSpace,
                   Container(
                     padding: EdgeInsets.zero,
                     decoration: BoxDecoration(
@@ -71,6 +71,7 @@ class _TagsWidgetState extends State<TagsWidget> {
                     ),
                     child: Column(
                       children: [
+                        // Text field for entering tags
                         TextFormField(
                           controller: _textEditingController,
                           onChanged: (tags) {
@@ -102,13 +103,17 @@ class _TagsWidgetState extends State<TagsWidget> {
                             filled: true,
                             fillColor: AppColors.white,
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(vertical: 14.sp, horizontal: AppDimensions.smallXL.sp),
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: AppDimensions.smallXXL.sp, horizontal: AppDimensions.smallXL.sp),
                             hintText: WalletKeys.includeComma.stringToString,
                             hintStyle: GoogleFonts.manrope(
-                                fontWeight: FontWeight.w400, fontSize: 14.sp, color: AppColors.hintColor),
+                                fontWeight: FontWeight.w400,
+                                fontSize: AppDimensions.smallXXL.sp,
+                                color: AppColors.hintColor),
                           ),
                         ),
                         if (selected.isNotEmpty)
+                          // Display selected tags
                           Column(
                             children: [
                               SizedBox(
@@ -133,7 +138,7 @@ class _TagsWidgetState extends State<TagsWidget> {
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              AppDimensions.smallXL.hSpace(),
+                                              AppDimensions.smallXL.w.horizontalSpace,
                                               s.titleSemiBold(size: 10.sp),
                                               GestureDetector(
                                                   onTap: () => setState(() {
@@ -151,8 +156,10 @@ class _TagsWidgetState extends State<TagsWidget> {
                                                       vertical: AppDimensions.small,
                                                       horizontal: AppDimensions.smallXL,
                                                     ),
-                                                    child:
-                                                        SvgPicture.asset(height: 8.w, width: 8.w, Assets.images.cross),
+                                                    child: SvgPicture.asset(
+                                                        height: AppDimensions.small.w,
+                                                        width: AppDimensions.small.w,
+                                                        Assets.images.cross),
                                                   ))
                                             ],
                                           ),
@@ -162,38 +169,44 @@ class _TagsWidgetState extends State<TagsWidget> {
                                   ),
                                 ),
                               ),
-                              AppDimensions.small.vSpace()
+                              AppDimensions.small.verticalSpace
                             ],
                           )
                       ],
                     ),
                   ),
                   if (!(selected.length == uniqueTags.length) && state is! FileTagsErrorState)
+                    // Display error message
                     Column(
                       children: [
                         WalletKeys.eachTagMustBeDifferent.stringToString
-                            .titleSemiBold(size: 12.sp, color: AppColors.errorColor),
-                        AppDimensions.smallXL.vSpace(),
+                            .titleSemiBold(size: AppDimensions.smallXL.sp, color: AppColors.errorColor),
+                        AppDimensions.smallXL.verticalSpace,
                       ],
                     ),
                   if (state is FileTagsErrorState && state.message!.isNotEmpty)
+                    // Display error message
                     Column(
                       children: [
-                        state.message.toString().titleSemiBold(size: 12.sp, color: AppColors.errorColor),
-                        AppDimensions.smallXL.vSpace(),
+                        state.message
+                            .toString()
+                            .titleSemiBold(size: AppDimensions.smallXL.sp, color: AppColors.errorColor),
+                        AppDimensions.smallXL.verticalSpace,
                       ],
                     ),
                 ],
               ),
-              AppDimensions.smallXL.vSpace(),
+              AppDimensions.smallXL.verticalSpace,
+              // Display suggested tags
               Row(
                 children: [
-                  WalletKeys.suggestedTags.stringToString.titleRegular(size: 14.sp, color: AppColors.hintColor),
-                  AppDimensions.extraSmall.hSpace(),
+                  WalletKeys.suggestedTags.stringToString
+                      .titleRegular(size: AppDimensions.smallXXL.sp, color: AppColors.hintColor),
+                  AppDimensions.extraSmall.w.horizontalSpace,
                   tagsWidget(tag: WalletKeys.scholarship.stringToString),
-                  AppDimensions.extraSmall.hSpace(),
+                  AppDimensions.extraSmall.w.horizontalSpace,
                   tagsWidget(tag: WalletKeys.admission.stringToString),
-                  AppDimensions.extraSmall.hSpace(),
+                  AppDimensions.extraSmall.w.horizontalSpace,
                   tagsWidget(tag: WalletKeys.job.stringToString),
                 ],
               ),
@@ -202,6 +215,7 @@ class _TagsWidgetState extends State<TagsWidget> {
         }));
   }
 
+  /// Builds an individual tag chip with a given tag text.
   Widget tagsWidget({required String tag}) {
     return GestureDetector(
       onTap: () {

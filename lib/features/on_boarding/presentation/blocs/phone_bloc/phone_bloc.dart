@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import '../../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../../core/dependency_injection.dart';
 import '../../../../../utils/app_utils/app_utils.dart';
@@ -45,9 +44,7 @@ class PhoneBloc extends Bloc<PhoneEvent, PhoneState> {
       deviceId: sl<SharedPreferencesHelper>().getString(PrefConstKeys.deviceId),
       userCheck: event.userCheck,
     );
-    if (kDebugMode) {
-      print('$countryCode ${event.phone}'.trim());
-    }
+    AppUtils.printLogs('$countryCode ${event.phone}'.trim());
     try {
       String res = await useCase.call(params: entity);
       emit(SuccessPhoneState(phoneNumber: '$countryCode ${event.phone}', key: res));

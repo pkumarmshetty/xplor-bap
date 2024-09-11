@@ -1,5 +1,6 @@
 part of 'my_consent_list.dart';
 
+/// Build the expandable tile for a given [index] and [data]
 _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
   return Container(
     padding: EdgeInsets.zero,
@@ -17,7 +18,7 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
               height: 44.w,
               width: 44.w,
             ),
-            AppDimensions.smallXL.hSpace(),
+            AppDimensions.smallXL.w.horizontalSpace,
             Expanded(
               child: Align(
                 alignment: Alignment.centerLeft,
@@ -25,23 +26,25 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     data.sharedWithEntity.titleBold(
-                      size: 14.sp,
+                      size: AppDimensions.smallXXL.sp,
                       color: AppColors.countryCodeColor,
                     ),
                     Row(
                       children: [
-                        AppDimensions.extraSmall.vSpace(),
+                        AppDimensions.extraSmall.verticalSpace,
                         AppUtils.convertDateFormat(data.createdAt)
                             .titleSemiBold(
                                 size: 10.sp, color: AppColors.hintColor),
-                        AppDimensions.extraSmall.hSpace(),
+                        AppDimensions.extraSmall.w.horizontalSpace,
                         // Add space between the date/time and dot
                         '•'.titleSemiBold(
-                            size: 20.sp, color: AppColors.hintColor),
-                        AppDimensions.extraSmall.hSpace(),
+                            size: AppDimensions.mediumXL.sp,
+                            color: AppColors.hintColor),
+                        AppDimensions.extraSmall.w.horizontalSpace,
                         // Add space between the dot and the word "active"
                         data.status.titleSemiBold(
-                            size: 12.sp, color: AppColors.activeGreen),
+                            size: AppDimensions.smallXL.sp,
+                            color: AppColors.activeGreen),
                       ],
                     )
                   ],
@@ -68,19 +71,24 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        WalletKeys.sharedFile.stringToString.titleSemiBold(
-                          size: 10.sp,
-                          color: AppColors.countryCodeColor,
-                        ),
-                        AppDimensions.extraExtraSmall.vSpace(),
-                        data.vcDetails.name.titleRegular(
-                            size: 10.sp, color: AppColors.hintColor),
-                      ],
-                    ).singleSidePadding(
-                      top: AppDimensions.medium,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          WalletKeys.sharedFile.stringToString.titleSemiBold(
+                            size: 10.sp,
+                            color: AppColors.countryCodeColor,
+                          ),
+                          AppDimensions.extraExtraSmall.verticalSpace,
+                          data.vcDetails.name.titleRegular(
+                              size: 10.sp,
+                              color: AppColors.hintColor,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis),
+                        ],
+                      ).singleSidePadding(
+                        top: AppDimensions.medium,
+                      ),
                     ),
                     GestureDetector(
                         onTap: () {
@@ -95,28 +103,28 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                         },
                         child: Container(
                           color: Colors.transparent,
-                          padding: EdgeInsets.only(
-                            left: 80.sp,
+                          padding: const EdgeInsets.only(
+                            left: AppDimensions.medium,
                             top: AppDimensions.medium,
                             right: AppDimensions.medium,
                           ),
                           child: Icon(
                             Icons.share,
-                            size: 16.w,
+                            size: AppDimensions.medium.w,
                             color: AppColors.primaryColor,
                           ),
                         ))
                   ],
                 ),
-                AppDimensions.small.vSpace(),
+                AppDimensions.small.verticalSpace,
                 WalletKeys.consentGivenFor.stringToString.titleSemiBold(
                   size: 10.sp,
                   color: AppColors.countryCodeColor,
                 ),
-                AppDimensions.extraExtraSmall.vSpace(),
+                AppDimensions.extraExtraSmall.verticalSpace,
                 data.remarks
                     .titleRegular(size: 10.sp, color: AppColors.hintColor),
-                AppDimensions.smallXL.vSpace(),
+                AppDimensions.smallXL.verticalSpace,
                 Row(
                   children: [
                     Expanded(
@@ -127,12 +135,12 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                             size: 10.sp,
                             color: AppColors.countryCodeColor,
                           ),
-                          AppDimensions.extraExtraSmall.vSpace(),
+                          AppDimensions.extraExtraSmall.verticalSpace,
                           AppUtils.convertDateFormat(data.updatedAt)
                               .titleRegular(
                                   size: 10.sp, color: AppColors.hintColor),
                         ])),
-                    AppDimensions.large.hSpace(),
+                    AppDimensions.large.w.horizontalSpace,
                     Expanded(
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,7 +149,7 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                             size: 10.sp,
                             color: AppColors.countryCodeColor,
                           ),
-                          AppDimensions.extraExtraSmall.vSpace(),
+                          AppDimensions.extraExtraSmall.verticalSpace,
                           AppUtils.convertValidityToDays(
                                   data.vcShareDetails.restrictions.expiresIn)
                               .titleRegular(
@@ -149,7 +157,7 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                         ]))
                   ],
                 ),
-                AppDimensions.smallXL.vSpace(),
+                AppDimensions.smallXL.verticalSpace,
                 Row(
                   children: [
                     Expanded(
@@ -161,8 +169,8 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                             AppColors.redColor,
                             BlendMode.srcIn,
                           ),
-                          height: 16.w,
-                          width: 16.w,
+                          height: AppDimensions.medium.w,
+                          width: AppDimensions.medium.w,
                         ),
                         radius: 4,
                         onPressed: () {
@@ -182,7 +190,7 @@ _buildExpandableTile(int index, BuildContext context, SharedVcDataEntity data) {
                         },
                       ).singleSidePadding(right: AppDimensions.medium),
                     ),
-                    AppDimensions.smallXL.hSpace(),
+                    AppDimensions.smallXL.w.horizontalSpace,
                     Expanded(
                       child: UpdateButtonWidget(
                         text: WalletKeys.update.stringToString,

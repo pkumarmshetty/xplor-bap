@@ -1,7 +1,7 @@
 # Project Title : Xplor
 
 This Flutter mobile app is designed to provide a secure and convenient way for users to manage their documents digitally.
-It includes features for user authentication, role selection, KYC (Know Your Customer) verification, and document management.The app is currently in active development for the Android platform.
+It includes features for user authentication, role selection, KYC (Know Your Customer) verification, document management, course application, and seeker onboarding.The app is currently in active development for the Android platform.
 
 ## Table of Contents
 
@@ -16,7 +16,6 @@ It includes features for user authentication, role selection, KYC (Know Your Cus
 ## Features
 
 1. User Authentication:
-
 - Description: Users can authenticate using their phone number and verify their identity using OTP (One-Time Password).
 
 2. Role Selection:
@@ -31,7 +30,6 @@ It includes features for user authentication, role selection, KYC (Know Your Cus
     - MPIN creation: Users must first create a unique MPIN before document sharing.
     - MPIN verification: Before sharing sensitive documents, users are prompted to enter their MPIN to authenticate their identity.
     - Security enhancement: MPIN serves as an additional security measure, protecting documents from unauthorized access or sharing.
-
 
 5. Document Management
 - Description: Users can manage their documents digitally within the app.
@@ -48,6 +46,29 @@ It includes features for user authentication, role selection, KYC (Know Your Cus
 - Functionality:
     - Specify duration: When granting consent for document access or sharing, users can specify a duration for which the consent remains valid.
     - Automatic expiration: After the specified duration elapses, the consent for document access expires automatically, restricting further access unless renewed.
+
+7. Course Application and Purchase
+- Description: Users can apply for courses and make payments based on their preferences and choices.
+- Functionality:
+    - Course Selection: Users can browse and select courses that match their interests and educational needs.
+    - Application Process: Users can apply for selected courses directly through the app.
+    - Payment Integration: Users can complete their course enrollment by making secure payments using integrated payment gateways.
+    - Confirmation: Upon successful payment, users receive a confirmation for their course enrollment.
+
+8. Course Status and Details
+- Description: Users can check the status of their enrolled courses and view detailed information about each course.
+- Functionality:
+    - Status Tracking: Users can track the progress and status of their enrolled courses, including progress and completion status.
+    - Detailed Course Information: Users can access comprehensive details about each course, including syllabus.
+
+9. Agent Onboarding and Management
+- Description: Agents can onboard seekers and manage their applications and courses on their behalf.
+- Functionality:
+    - Seeker Onboarding: Agents can assist seekers by onboarding them into the app and setting up their profiles.
+    - Application Management: Agents can apply for courses on behalf of seekers, ensuring all necessary information is accurately provided.
+    - Payment Processing: Agents can manage the payment process for seekers, ensuring secure and successful transactions.
+    - Course Tracking: Agents can monitor the course status and progress for seekers, providing updates and support as needed.
+    - Document and Consent Management: Agents can also manage documents, KYC verification, and consent information for seekers, following the same security and privacy protocols as individual users.
 
 
 ## Branching Strategy

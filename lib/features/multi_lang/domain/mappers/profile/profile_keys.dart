@@ -59,4 +59,7 @@ class ProfileKeys {
   static const downloading = "Downloading";
   static const fileDownloadedSuccessfully = "File Downloaded Successfully";
   static const downloadFailed = "Download failed";
+  static const uploadFailed = "Upload failed";
+  static const checkProgress = "Check Progress";
+  static const unableToAdd = "Unable to add certificate in wallet";
 }

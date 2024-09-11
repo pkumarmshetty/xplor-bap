@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/widgets/blur_widget.dart';
-
+import 'extensions/string_to_string.dart';
+import 'widgets/blur_widget.dart';
 import '../features/multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
 import 'app_colors.dart';
 import 'app_dimensions.dart';
 import 'extensions/font_style/font_styles.dart';
 import 'extensions/padding.dart';
-import 'extensions/space.dart';
 
 /// Import color definitions and custom widget
 import 'widgets/build_button.dart';
@@ -53,7 +51,7 @@ class CustomDialogView extends StatelessWidget {
                 .titleRegular(color: AppColors.grey64697a, size: 14.sp)
                 .symmetricPadding(horizontal: AppDimensions.medium),
             // Vertical space below the message
-            AppDimensions.large.vSpace(),
+            AppDimensions.large.verticalSpace,
             // OK button
             ButtonWidget(
               title: OnBoardingKeys.okay.stringToString,
@@ -61,7 +59,7 @@ class CustomDialogView extends StatelessWidget {
               onPressed: onConfirmPressed,
             ).symmetricPadding(horizontal: AppDimensions.medium),
             // Vertical space below the OK button
-            AppDimensions.large.vSpace(),
+            AppDimensions.large.verticalSpace,
           ],
         )));
   }

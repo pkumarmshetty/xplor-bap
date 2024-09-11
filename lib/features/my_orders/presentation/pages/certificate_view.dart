@@ -2,25 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:xplor/utils/app_utils/app_utils.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/utils.dart';
-import 'package:xplor/utils/widgets/app_background_widget.dart';
-
+import 'package:xplor/features/my_orders/domain/entities/certificate_view_arguments.dart';
+import '../../../../utils/app_utils/app_utils.dart';
+import '../../../../utils/extensions/string_to_string.dart';
+import '../../../../utils/utils.dart';
+import '../../../../utils/widgets/app_background_widget.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
 import '../../../../utils/common_top_header.dart';
+import '../../../../utils/widgets/build_button.dart';
 import '../../../../utils/widgets/loading_animation.dart';
 import '../../../multi_lang/domain/mappers/profile/profile_keys.dart';
+import '../../../multi_lang/domain/mappers/wallet/wallet_keys.dart';
 import '../blocs/certificate_bloc/cerificate_bloc.dart';
+import '../blocs/certificate_bloc/certificate_event.dart';
 import '../blocs/certificate_bloc/certificate_state.dart';
 import '../blocs/my_orders_bloc/my_orders_bloc.dart';
 import '../blocs/my_orders_bloc/my_orders_event.dart';
 
+/// Certificate View.
 class CertificateView extends StatefulWidget {
-  const CertificateView({super.key, required this.certificateUrl});
-
-  final String certificateUrl;
+  const CertificateView({super.key, this.arguments});
+  final CertificateViewArguments? arguments;
 
   @override
   State<CertificateView> createState() => _CertificateViewState();
@@ -32,7 +35,7 @@ class _CertificateViewState extends State<CertificateView> {
 
   /*Future<void> _checkAndRequestPermissions() async {
     if (await _isStoragePermissionGranted()) {
-      debugPrint('Storage permission is already granted.');
+      AppUtils.printLogs('Storage permission is already granted.');
     } else {
       await _requestStoragePermissions();
     }
@@ -60,7 +63,7 @@ class _CertificateViewState extends State<CertificateView> {
     // Request the standard storage permission
     var storageStatus = await Permission.storage.request();
     if (storageStatus.isGranted) {
-      debugPrint('Standard storage permission granted.');
+      AppUtils.printLogs('Standard storage permission granted.');
       return;
     }
 
@@ -70,22 +73,26 @@ class _CertificateViewState extends State<CertificateView> {
     var audioStatus = await Permission.audio.request();
 
     if (photosStatus.isGranted || videosStatus.isGranted || audioStatus.isGranted) {
-      debugPrint('Media permissions granted.');
+      AppUtils.printLogs('Media permissions granted.');
       return;
     }
 
     // Request manage external storage permission as a fallback
     var manageStatus = await Permission.manageExternalStorage.request();
     if (manageStatus.isGranted) {
-      debugPrint('Manage external storage permission granted.');
+      AppUtils.printLogs('Manage external storage permission granted.');
     } else {
-      debugPrint('All requested permissions denied.');
+      AppUtils.printLogs('All requested permissions denied.');
     }
   }*/
 
+  /// Init State
   @override
   void initState() {
     // _checkAndRequestPermissions();
+    context.read<CertificateBloc>().add(CertificateInitial());
+    AppUtils.printLogs(
+        "Certificate URL...  ${widget.arguments?.certificateUrl}");
     webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
@@ -94,13 +101,13 @@ class _CertificateViewState extends State<CertificateView> {
             // Update loading bar.
           },
           onPageStarted: (String url) {
-            debugPrint("page started");
+            AppUtils.printLogs("page started");
             setState(() {
               isLoading = true;
             });
           },
           onPageFinished: (String url) {
-            debugPrint("page finished");
+            AppUtils.printLogs("page finished");
             setState(() {
               isLoading = false;
             });
@@ -115,31 +122,46 @@ class _CertificateViewState extends State<CertificateView> {
           },
         ),
       )
-      ..loadRequest(Uri.parse(widget.certificateUrl));
+      ..loadRequest(Uri.parse(widget.arguments!.certificateUrl));
     super.initState();
   }
 
+  /// Widget tree
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: true,
-      onPopInvoked: (val) {
-          _callOrderApi();
+      onPopInvokedWithResult: (val, result) {
+        _callOrderApi();
       },
       child: Scaffold(
         body: AppBackgroundDecoration(
-            child: BlocListener<DownloadBloc, DownloadState>(
+            child: BlocListener<CertificateBloc, CertificateState>(
           listener: (context, state) {
+            /// Download success and failure
             if (state is DownloadSuccess) {
-              AppUtils.showSnackBar(context, ProfileKeys.fileDownloadedSuccessfully.stringToString,
+              AppUtils.showSnackBar(context,
+                  ProfileKeys.fileDownloadedSuccessfully.stringToString,
                   bgColor: AppColors.primaryColor);
             }
             if (state is DownloadFailure) {
-              AppUtils.showSnackBar(context, '${ProfileKeys.downloadFailed.stringToString}: ${state.error}',
+              AppUtils.showSnackBar(context,
+                  '${ProfileKeys.downloadFailed.stringToString}: ${state.error}',
+                  bgColor: AppColors.errorColor);
+            }
+            if (state is DocumentUploadSuccessState) {
+              AppUtils.showSnackBar(
+                  context, WalletKeys.documentUploaded.stringToString,
                   bgColor: AppColors.primaryColor);
             }
+            if (state is DocumentUploadFailureState) {
+              AppUtils.showSnackBar(context,
+                  '${ProfileKeys.uploadFailed.stringToString}: ${state.error}',
+                  bgColor: AppColors.errorColor);
+            }
           },
-          child: BlocBuilder<DownloadBloc, DownloadState>(builder: (context, state) {
+          child: BlocBuilder<CertificateBloc, CertificateState>(
+              builder: (context, state) {
             return Stack(children: [
               Column(
                 children: [
@@ -147,25 +169,46 @@ class _CertificateViewState extends State<CertificateView> {
                     title: ProfileKeys.certificate.stringToString,
                     onBackButtonPressed: () => Navigator.pop(context),
                   ),
-                  AppDimensions.medium.vSpace(),
+                  AppDimensions.medium.verticalSpace,
                   Expanded(
                     child: Card(
                       elevation: AppDimensions.extraSmall.w,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.w),
+                        borderRadius:
+                            BorderRadius.circular(AppDimensions.medium.w),
                       ),
                       color: AppColors.white,
                       surfaceTintColor: AppColors.white,
                       child: WebViewWidget(controller: webViewController),
                     ).symmetricPadding(horizontal: AppDimensions.smallXL.w),
                   ),
-                  AppDimensions.medium.vSpace(),
+                  AppDimensions.medium.verticalSpace,
+                  (widget.arguments?.ordersEntity.isAddedToWallet == false &&
+                          state is! DocumentUploadSuccessState)
+                      ? Column(
+                          children: [
+                            ButtonWidget(
+                              title: ProfileKeys.addToWallet.stringToString,
+                              onPressed: () {
+                                context.read<CertificateBloc>().add(
+                                    AddCertificateToWallet(
+                                        widget.arguments?.certificateUrl,
+                                        widget.arguments?.ordersEntity));
+                              },
+                              isValid: true,
+                            ).symmetricPadding(
+                                horizontal: AppDimensions.smallXL.w),
+                            AppDimensions.small.verticalSpace,
+                          ],
+                        )
+                      : const SizedBox()
+
                   /*ButtonWidget(
                   title: ProfileKeys.addToWallet.stringToString,
                   onPressed: () {},
                   isValid: true,
                 ).symmetricPadding(horizontal: AppDimensions.smallXL.w),
-                AppDimensions.small.vSpace(),*/
+                AppDimensions.small.verticalSpace,*/
                   /* ButtonWidget(
                     onPressed: () {
                       context.read<DownloadBloc>().add(StartDownload(
@@ -185,10 +228,11 @@ class _CertificateViewState extends State<CertificateView> {
                             color: AppColors.primaryColor,
                           ),
                   ).symmetricPadding(horizontal: AppDimensions.smallXL.w),
-                  AppDimensions.medium.vSpace(),*/
+                  AppDimensions.medium.verticalSpace,*/
                 ],
               ),
-              if (isLoading) const LoadingAnimation()
+              if (isLoading || state is UploadDocumentLoadingState)
+                const LoadingAnimation()
             ]);
           }),
         )),
@@ -196,6 +240,7 @@ class _CertificateViewState extends State<CertificateView> {
     );
   }
 
+  /// Calls the order api.
   void _callOrderApi() {
     context
         .read<MyOrdersBloc>()

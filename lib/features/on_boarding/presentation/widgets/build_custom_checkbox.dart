@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/utils/app_colors.dart';
+import '../../../../utils/app_colors.dart';
+import '../../../../utils/app_dimensions.dart';
 
 class CustomCheckbox extends StatefulWidget {
   final Function(bool isChecked) onChanged;
@@ -27,8 +28,8 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
         });
       },
       child: Container(
-        width: 24.w,
-        height: 24.w,
+        width: AppDimensions.large.w,
+        height: AppDimensions.large.w,
         decoration: BoxDecoration(
           border: Border.all(
             color: isChecked ? AppColors.primaryColor : AppColors.checkBoxDisableColor,
@@ -45,7 +46,7 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
         child: isChecked
             ? Icon(
                 Icons.check,
-                size: 20.w,
+                size: AppDimensions.mediumXL.w,
 
                 /// Adjust check mark size as needed
                 color: AppColors.primaryColor,

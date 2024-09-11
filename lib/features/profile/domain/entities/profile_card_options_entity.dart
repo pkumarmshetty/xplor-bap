@@ -1,3 +1,4 @@
+/// Entity class for the profile card options.
 class ProfileCardOptionsEntity {
   String? title;
   String? subTitle;

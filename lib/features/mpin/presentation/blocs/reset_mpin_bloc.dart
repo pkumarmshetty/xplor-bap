@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:xplor/features/mpin/domain/entities/send_mpin_otp_entity.dart';
-import 'package:xplor/features/mpin/domain/usecase/mpin_usecase.dart';
-import 'package:xplor/utils/app_utils/app_utils.dart';
+import '../../../multi_lang/domain/mappers/mpin/generate_mpin_keys.dart';
+import '../../../../utils/extensions/string_to_string.dart';
+import '../../domain/entities/send_mpin_otp_entity.dart';
+import '../../domain/usecase/mpin_usecase.dart';
+import '../../../../utils/app_utils/app_utils.dart';
 
 part 'reset_mpin_event.dart';
 part 'reset_mpin_state.dart';
@@ -91,13 +93,11 @@ class ResetMpinBloc extends Bloc<ResetMpinEvent, ResetMpinState> {
             mpinState: MpinState.failure, isLoading: false, mpinErrorMessage: AppUtils.getErrorMessage(e.toString())));
       }
     } else if (state is ResetMpinUpdatedState && event.pin1 != event.pin2) {
-      emit((state as ResetMpinUpdatedState).copyWith(
-          mpinState: MpinState.failure,
-          mpinErrorMessage: "PINs don't match. Please enter identical PINs and try again."));
+      emit((state as ResetMpinUpdatedState)
+          .copyWith(mpinState: MpinState.failure, mpinErrorMessage: GenerateMpinKeys.pinDonMatch.stringToString));
     } else if (state is ResetMpinUpdatedState && event.pin1 != event.pin2) {
-      emit((state as ResetMpinUpdatedState).copyWith(
-          mpinState: MpinState.failure,
-          mpinErrorMessage: "PINs don't match. Please enter identical PINs and try again."));
+      emit((state as ResetMpinUpdatedState)
+          .copyWith(mpinState: MpinState.failure, mpinErrorMessage: GenerateMpinKeys.pinDonMatch.stringToString));
     }
   }
 

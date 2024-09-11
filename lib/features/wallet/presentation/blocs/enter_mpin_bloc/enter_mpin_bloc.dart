@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:xplor/features/wallet/domain/usecase/wallet_usecase.dart';
-
+import '../../../domain/usecase/wallet_usecase.dart';
 import '../../../../../utils/app_utils/app_utils.dart';
 
 part 'enter_mpin_event.dart';

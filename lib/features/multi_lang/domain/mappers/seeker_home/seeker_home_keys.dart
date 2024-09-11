@@ -41,8 +41,17 @@ class SeekerHomeKeys {
   static const String whatGet = "What you'll get:";
   static const String feedbacks = "Feedbacks";
   static const String noDataFound = "No Data Found";
-  static const String thanksForApplying = "Thanks For Applying!";
+  static const String thanksForApplying = "Thanks For Enrolling!";
   static const String startCourse = "Course";
+
   //static const String startCourse = "Start Course";
   static const String goToDashboard = "Go to Dashboard";
+
+  ///Payment page screen
+  static const payment = "Payment";
+  static const paymentSuccessful = "Payment Successful!";
+  static const paymentFullyVerified = "Your payment has been made successfully.";
+  static const paymentUnsuccessful = "Payment Unsuccessful!";
+  static const paymentFailedMessage = "We’re sorry your payment was unsuccessful!";
+  static const tryAgain = "Try Again";
 }

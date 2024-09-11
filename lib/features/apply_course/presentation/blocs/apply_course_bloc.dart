@@ -1,21 +1,18 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
-import 'package:xplor/features/apply_course/domain/entities/post_request_entity/init_post_entity.dart';
-import 'package:xplor/features/apply_course/domain/entities/post_request_entity/select_post_entity.dart';
-import 'package:xplor/features/wallet/domain/entities/wallet_vc_list_entity.dart';
-import 'package:xplor/utils/app_utils/app_utils.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../domain/entities/post_request_entity/init_post_entity.dart';
+import '../../domain/entities/post_request_entity/select_post_entity.dart';
+import '../../../wallet/domain/entities/wallet_vc_list_entity.dart';
+import '../../../../utils/app_utils/app_utils.dart';
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/dependency_injection.dart';
 import '../../../../core/exception_errors.dart';
 import '../../../course_description/domain/entity/services_items.dart';
 import '../../domain/entities/get_response_entity/sse_services_entity.dart';
 import '../../domain/entities/post_request_entity/confirm_post_entity.dart';
-
 import '../../domain/usecases/apply_form_usecases.dart';
 
 part 'apply_course_event.dart';
@@ -57,38 +54,46 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
     on<FormSubmitSuccessfully>(_onFormSubmitEvent);
     on<SuccessNavigatedEvent>(_onNavigatedConfirmEvent);
     on<SeekerFailureEvent>(_failureState);
+    on<PaymentEvent>(_paymentState);
   }
 
-  FutureOr<void> _onApplyCourse(ApplyCourseEvent event, Emitter<ApplyCourseState> emit) {}
+  FutureOr<void> _onApplyCourse(
+      ApplyCourseEvent event, Emitter<ApplyCourseState> emit) {}
 
-  FutureOr<void> _onDocumentSelected(CourseDocumentSelectedEvent event, Emitter<ApplyCourseState> emit) {
+  FutureOr<void> _onDocumentSelected(
+      CourseDocumentSelectedEvent event, Emitter<ApplyCourseState> emit) {
     linkCopied = true;
     emit(CourseDocumentState(docs: [event.selectedDoc], linkCopied: true));
   }
 
-  FutureOr<void> _onFormSubmitEvent(FormSubmitSuccessfully event, Emitter<ApplyCourseState> emit) {
+  FutureOr<void> _onFormSubmitEvent(
+      FormSubmitSuccessfully event, Emitter<ApplyCourseState> emit) {
     emit(FormSubmittedState());
   }
 
-  FutureOr<void> _onUpdateInitialStateEvent(UpdateInitStateEvent event, Emitter<ApplyCourseState> emit) {
+  FutureOr<void> _onUpdateInitialStateEvent(
+      UpdateInitStateEvent event, Emitter<ApplyCourseState> emit) {
     isEnabledOnSelect = false;
     linkCopied = false;
     deviceId = sl<SharedPreferencesHelper>().getString(PrefConstKeys.deviceId);
     emit(ApplyCourseInitial());
   }
 
-  FutureOr<void> _onSelectEvent(CourseSelectEvent courseSelectEvent, Emitter<ApplyCourseState> emit) {
+  FutureOr<void> _onSelectEvent(
+      CourseSelectEvent courseSelectEvent, Emitter<ApplyCourseState> emit) {
     course = courseSelectEvent.data;
     transactionId = courseSelectEvent.transactionId;
     emit(const ApplyFormLoaderState());
 
-    final sseStream = useCase.sseConnection(transactionId: transactionId, timeout: const Duration(minutes: 2));
+    final sseStream = useCase.sseConnection(
+        transactionId: transactionId, timeout: const Duration(minutes: 2));
 
     try {
       sseStream.listen(
         (event) {
           if (event.success) {
-            add(SelectSseResponseEvent(transactionId: courseSelectEvent.transactionId));
+            add(SelectSseResponseEvent(
+                transactionId: courseSelectEvent.transactionId));
           } else {
             order = event;
             if (order!.action == "on_select" && order != null) {
@@ -98,13 +103,13 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
         },
         onError: (error) {
           // Handle error
-          if (kDebugMode) {
-            print('Error occurred: $error');
-          }
+          AppUtils.printLogs('Error occurred: $error');
 
           var message = AppUtils.getErrorMessage(error.toString());
 
-          if (message.toString().startsWith('ClientException with SocketNetwork')) {
+          if (message
+              .toString()
+              .startsWith('ClientException with SocketNetwork')) {
             message = ExceptionErrors.checkInternetConnection.stringToString;
           }
 
@@ -116,7 +121,8 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
     }
   }
 
-  FutureOr<void> _onSelectSseResponse(SelectSseResponseEvent event, Emitter<ApplyCourseState> emit) {
+  FutureOr<void> _onSelectSseResponse(
+      SelectSseResponseEvent event, Emitter<ApplyCourseState> emit) {
     var body = SelectPostEntity(
       itemId: course!.itemId,
       providerId: course!.providerId,
@@ -128,49 +134,54 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
     try {
       useCase.select(body);
     } catch (e) {
-      if (kDebugMode) {
-        print("exception exception ${e.toString()}");
-      }
-      emit(CourseFailureState(errorMessage: AppUtils.getErrorMessage(e.toString())));
+      AppUtils.printLogs("exception exception ${e.toString()}");
+      emit(CourseFailureState(
+          errorMessage: AppUtils.getErrorMessage(e.toString())));
     }
   }
 
-  FutureOr<void> _onOnSelectResponseData(OnSelectResponseEvent event, Emitter<ApplyCourseState> emit) {
+  FutureOr<void> _onOnSelectResponseData(
+      OnSelectResponseEvent event, Emitter<ApplyCourseState> emit) {
     isEnabledOnSelect = true;
 
     transactionId = event.order.transactionId;
     emit(const SuccessOnSelectState());
   }
 
-  FutureOr<void> _onCourseInitEvent(CourseInitEvent event, Emitter<ApplyCourseState> emit) {
+  FutureOr<void> _onCourseInitEvent(
+      CourseInitEvent event, Emitter<ApplyCourseState> emit) {
     emit(const ApplyFormLoaderState());
-    final sseStream = useCase.sseConnection(transactionId: transactionId, timeout: const Duration(minutes: 2));
+    final sseStream = useCase.sseConnection(
+        transactionId: transactionId, timeout: const Duration(minutes: 2));
 
     try {
       sseStream.listen(
         (event) {
           if (event.success) {
-            add(InitSseResponseEvent(transactionId: course!.transactionId, domain: course!.domain));
+            add(InitSseResponseEvent(
+                transactionId: course!.transactionId, domain: course!.domain));
           } else {
             order = event;
             if (order!.action == "on_init") {
-              if (order!.formUrl.isNotEmpty) {
+              if (order!.paymentUrl!.isNotEmpty) {
+                add(PaymentEvent(url: order!.paymentUrl!));
+              } else if (order!.formUrl.isNotEmpty) {
                 add(CourseGetUrlEvent(url: order!.formUrl));
               } else {
-                add(const CourseConfirmEvent(data: ""));
+                add(const CourseConfirmEvent());
               }
             }
           }
         },
         onError: (error) {
           // Handle error
-          if (kDebugMode) {
-            print('Error occurred: $error');
-          }
+          AppUtils.printLogs('Error occurred: $error');
 
           var message = AppUtils.getErrorMessage(error.toString());
 
-          if (message.toString().startsWith('ClientException with SocketNetwork')) {
+          if (message
+              .toString()
+              .startsWith('ClientException with SocketNetwork')) {
             message = ExceptionErrors.checkInternetConnection.stringToString;
           }
 
@@ -182,12 +193,17 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
     }
   }
 
-  Future<void> _onInitSseResponse(InitSseResponseEvent event, Emitter<ApplyCourseState> emit) async {
+  Future<void> _onInitSseResponse(
+      InitSseResponseEvent event, Emitter<ApplyCourseState> emit) async {
     linkCopied = false;
     courseMediaUrl = "";
     var body = InitPostEntity(
             billingAddress: BillingAddress(
-                street: "123 Main St", city: "Any town", state: "CA", postalCode: "12345", country: "USA"),
+                street: "123 Main St",
+                city: "Any town",
+                state: "CA",
+                postalCode: "12345",
+                country: "USA"),
             providerId: course!.providerId,
             deviceId: deviceId,
             domain: order!.domain,
@@ -198,24 +214,34 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
     try {
       useCase.init(body);
     } catch (e) {
-      emit(CourseFailureState(errorMessage: AppUtils.getErrorMessage(e.toString())));
+      emit(CourseFailureState(
+          errorMessage: AppUtils.getErrorMessage(e.toString())));
     }
   }
 
-  FutureOr<void> _onDocumentLinkCopied(DocumentLinkCopiedEvent event, Emitter<ApplyCourseState> emit) {
+  FutureOr<void> _onDocumentLinkCopied(
+      DocumentLinkCopiedEvent event, Emitter<ApplyCourseState> emit) {
     linkCopied = true;
     emit(const CourseDocumentState(docs: [], linkCopied: true));
   }
 
-  FutureOr<void> _onDocumentRemoved(CourseDocumentRemovedEvent event, Emitter<ApplyCourseState> emit) {
+  FutureOr<void> _onDocumentRemoved(
+      CourseDocumentRemovedEvent event, Emitter<ApplyCourseState> emit) {
     emit(const CourseDocumentState(docs: [], linkCopied: false));
   }
 
-  Future<void> _failureState(SeekerFailureEvent event, Emitter<ApplyCourseState> emit) async {
+  Future<void> _failureState(
+      SeekerFailureEvent event, Emitter<ApplyCourseState> emit) async {
     emit(CourseFailureState(errorMessage: event.error));
   }
 
-  Future<void> _onUrlStreamData(CourseGetUrlEvent event, Emitter<ApplyCourseState> emit) async {
+  Future<void> _paymentState(
+      PaymentEvent event, Emitter<ApplyCourseState> emit) async {
+    emit(PaymentUrlState(url: event.url));
+  }
+
+  Future<void> _onUrlStreamData(
+      CourseGetUrlEvent event, Emitter<ApplyCourseState> emit) async {
     url = event.url;
     //if (!isLoadedUrl) {
     //isLoadedUrl = true;
@@ -226,9 +252,11 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
     // }
   }
 
-  FutureOr<void> _onCourseConfirmEvent(CourseConfirmEvent event, Emitter<ApplyCourseState> emit) {
+  FutureOr<void> _onCourseConfirmEvent(
+      CourseConfirmEvent event, Emitter<ApplyCourseState> emit) {
     emit(const ApplyFormLoaderState());
-    final sseStream = useCase.sseConnection(transactionId: transactionId, timeout: const Duration(minutes: 2));
+    final sseStream = useCase.sseConnection(
+        transactionId: transactionId, timeout: const Duration(minutes: 2));
 
     try {
       sseStream.listen(
@@ -239,7 +267,8 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
             order = event;
             if (order!.action == "on_confirm") {
               // if (!isConfirm) {
-              courseMediaUrl = order!.stops![0].instructions.media[0].url.toString();
+              courseMediaUrl =
+                  order!.stops![0].instructions.media[0].url.toString();
               add(const SuccessNavigatedEvent());
               //}
             }
@@ -247,13 +276,13 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
         },
         onError: (error) {
           // Handle error
-          if (kDebugMode) {
-            print('Error occurred: $error');
-          }
+          AppUtils.printLogs('Error occurred: $error');
 
           var message = AppUtils.getErrorMessage(error.toString());
 
-          if (message.toString().startsWith('ClientException with SocketNetwork')) {
+          if (message
+              .toString()
+              .startsWith('ClientException with SocketNetwork')) {
             message = ExceptionErrors.checkInternetConnection.stringToString;
           }
 
@@ -265,7 +294,8 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
     }
   }
 
-  FutureOr<void> _onConfirmSseResponse(ConfirmSseResponseEvent event, Emitter<ApplyCourseState> emit) {
+  FutureOr<void> _onConfirmSseResponse(
+      ConfirmSseResponseEvent event, Emitter<ApplyCourseState> emit) {
     String entity = ConfirmPostEntity(
             itemId: order!.itemId,
             transactionId: transactionId,
@@ -277,10 +307,9 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
     try {
       useCase.confirm(entity);
     } catch (e) {
-      if (kDebugMode) {
-        print("init data failed");
-      }
-      emit(CourseFailureState(errorMessage: AppUtils.getErrorMessage(e.toString())));
+      AppUtils.printLogs("init data failed");
+      emit(CourseFailureState(
+          errorMessage: AppUtils.getErrorMessage(e.toString())));
     }
   }
 
@@ -306,9 +335,7 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
         },
         onError: (error) {
           // Handle error
-          if (kDebugMode) {
-            print('Error occurred: $error');
-          }
+            AppUtils.printLogs('Error occurred: $error');
 
           var message = AppUtils.getErrorMessage(error.toString());
 
@@ -339,15 +366,14 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
     try {
       useCase.status(entity);
     } catch (e) {
-      if (kDebugMode) {
-        print("init data failed");
-      }
+        AppUtils.printLogs("init data failed");
       emit(CourseFailureState(
           errorMessage: AppUtils.getErrorMessage(e.toString())));
     }
   }*/
 
-  FutureOr<void> _onNavigatedConfirmEvent(SuccessNavigatedEvent event, Emitter<ApplyCourseState> emit) {
+  FutureOr<void> _onNavigatedConfirmEvent(
+      SuccessNavigatedEvent event, Emitter<ApplyCourseState> emit) {
     // isStatus = true;
     SSEClient.unsubscribeFromSSE();
     emit(const NavigationSuccessState());
@@ -386,9 +412,7 @@ class ApplyCourseBloc extends Bloc<ApplyCourseEvent, ApplyCourseState> {
       },
       onError: (error) {
         // Handle error
-        if (kDebugMode) {
-          print('Error occurred: $error');
-        }
+          AppUtils.printLogs('Error occurred: $error');
 
         var message = AppUtils.getErrorMessage(error.toString());
 

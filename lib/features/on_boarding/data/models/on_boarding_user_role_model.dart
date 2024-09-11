@@ -1,4 +1,4 @@
-import 'package:xplor/features/on_boarding/domain/entities/on_boarding_user_role_entity.dart';
+import '../../domain/entities/on_boarding_user_role_entity.dart';
 
 class OnBoardingUserRoleModel extends OnBoardingUserRoleEntity {
   OnBoardingUserRoleModel({

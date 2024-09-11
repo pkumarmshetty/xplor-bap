@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../../domain/usecase/on_boarding_usecase.dart';
+import '../../../../../utils/extensions/string_to_string.dart';
 import '../../../../../utils/app_utils/app_utils.dart';
 import '../../../../multi_lang/domain/mappers/mpin/generate_mpin_keys.dart';
 

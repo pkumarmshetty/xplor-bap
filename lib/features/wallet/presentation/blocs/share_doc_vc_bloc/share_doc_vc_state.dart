@@ -1,7 +1,9 @@
 part of 'share_doc_vc_bloc.dart';
 
+/// Enum for validity of the shared document
 enum ShareState { initial, loading, mPinSuccess, success, failure }
 
+/// Base class for all states related to ShareDocVcBloc.
 abstract class SharedDocVcState extends Equatable {
   const SharedDocVcState();
 }
@@ -11,6 +13,7 @@ class ShareDocVcInitial extends SharedDocVcState {
   List<Object> get props => [];
 }
 
+/// State for updating the validity of the shared document
 class ShareDocumentsUpdatedState extends SharedDocVcState {
   final Validity validity;
   final String inputText;
@@ -31,6 +34,7 @@ class ShareDocumentsUpdatedState extends SharedDocVcState {
   @override
   List<Object?> get props => [validity, inputText, selectedDocs, documentVcData, shareState, errorMessage];
 
+  /// Copy method for updating the validity of the shared document
   ShareDocumentsUpdatedState copyWith({
     Validity? validity,
     String? inputText,
@@ -49,12 +53,3 @@ class ShareDocumentsUpdatedState extends SharedDocVcState {
     );
   }
 }
-// class ShareDialogSubmittedState extends SharedDocVcState {
-//   final int selectedItem;
-//   final String inputText;
-//
-//   const ShareDialogSubmittedState({required this.selectedItem, required this.inputText});
-//
-//   @override
-//   List<Object?> get props => [];
-// }

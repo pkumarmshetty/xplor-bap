@@ -9,16 +9,25 @@ import 'package:dio/dio.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i7;
 import 'package:shared_preferences/shared_preferences.dart' as _i3;
-import 'package:xplor/const/local_storage/shared_preferences_helper.dart' as _i13;
+import 'package:xplor/const/local_storage/shared_preferences_helper.dart'
+    as _i13;
 import 'package:xplor/core/connection/network_info.dart' as _i15;
-import 'package:xplor/features/wallet/data/data_sources/wallet_data_sources.dart' as _i14;
-import 'package:xplor/features/wallet/domain/entities/previous_consent_entity.dart' as _i10;
-import 'package:xplor/features/wallet/domain/entities/shared_data_entity.dart' as _i9;
-import 'package:xplor/features/wallet/domain/entities/update_consent_entity.dart' as _i11;
-import 'package:xplor/features/wallet/domain/entities/wallet_add_document_entity.dart' as _i12;
-import 'package:xplor/features/wallet/domain/entities/wallet_vc_list_entity.dart' as _i8;
-import 'package:xplor/features/wallet/domain/repository/wallet_repository.dart' as _i2;
-import 'package:xplor/features/wallet/domain/usecase/wallet_usecase.dart' as _i5;
+import 'package:xplor/features/wallet/data/data_sources/wallet_data_sources.dart'
+    as _i14;
+import 'package:xplor/features/wallet/domain/entities/previous_consent_entity.dart'
+    as _i10;
+import 'package:xplor/features/wallet/domain/entities/shared_data_entity.dart'
+    as _i9;
+import 'package:xplor/features/wallet/domain/entities/update_consent_entity.dart'
+    as _i11;
+import 'package:xplor/features/wallet/domain/entities/wallet_add_document_entity.dart'
+    as _i12;
+import 'package:xplor/features/wallet/domain/entities/wallet_vc_list_entity.dart'
+    as _i8;
+import 'package:xplor/features/wallet/domain/repository/wallet_repository.dart'
+    as _i2;
+import 'package:xplor/features/wallet/domain/usecase/wallet_usecase.dart'
+    as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -33,7 +42,8 @@ import 'package:xplor/features/wallet/domain/usecase/wallet_usecase.dart' as _i5
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeWalletRepository_0 extends _i1.SmartFake implements _i2.WalletRepository {
+class _FakeWalletRepository_0 extends _i1.SmartFake
+    implements _i2.WalletRepository {
   _FakeWalletRepository_0(
     Object parent,
     Invocation parentInvocation,
@@ -43,7 +53,8 @@ class _FakeWalletRepository_0 extends _i1.SmartFake implements _i2.WalletReposit
         );
 }
 
-class _FakeSharedPreferences_1 extends _i1.SmartFake implements _i3.SharedPreferences {
+class _FakeSharedPreferences_1 extends _i1.SmartFake
+    implements _i3.SharedPreferences {
   _FakeSharedPreferences_1(
     Object parent,
     Invocation parentInvocation,
@@ -63,7 +74,8 @@ class _FakeBaseOptions_2 extends _i1.SmartFake implements _i4.BaseOptions {
         );
 }
 
-class _FakeHttpClientAdapter_3 extends _i1.SmartFake implements _i4.HttpClientAdapter {
+class _FakeHttpClientAdapter_3 extends _i1.SmartFake
+    implements _i4.HttpClientAdapter {
   _FakeHttpClientAdapter_3(
     Object parent,
     Invocation parentInvocation,
@@ -150,7 +162,8 @@ class MockWalletUseCase extends _i1.Mock implements _i5.WalletUseCase {
           #getWalletVcData,
           [],
         ),
-        returnValue: _i6.Future<List<_i8.DocumentVcData>>.value(<_i8.DocumentVcData>[]),
+        returnValue:
+            _i6.Future<List<_i8.DocumentVcData>>.value(<_i8.DocumentVcData>[]),
       ) as _i6.Future<List<_i8.DocumentVcData>>);
 
   @override
@@ -181,21 +194,25 @@ class MockWalletUseCase extends _i1.Mock implements _i5.WalletUseCase {
       ) as _i6.Future<void>);
 
   @override
-  _i6.Future<List<_i9.SharedVcDataEntity>> getMyConsents() => (super.noSuchMethod(
+  _i6.Future<List<_i9.SharedVcDataEntity>> getMyConsents() =>
+      (super.noSuchMethod(
         Invocation.method(
           #getMyConsents,
           [],
         ),
-        returnValue: _i6.Future<List<_i9.SharedVcDataEntity>>.value(<_i9.SharedVcDataEntity>[]),
+        returnValue: _i6.Future<List<_i9.SharedVcDataEntity>>.value(
+            <_i9.SharedVcDataEntity>[]),
       ) as _i6.Future<List<_i9.SharedVcDataEntity>>);
 
   @override
-  _i6.Future<List<_i10.PreviousConsentEntity>> getMyPrevConsents() => (super.noSuchMethod(
+  _i6.Future<List<_i10.PreviousConsentEntity>> getMyPrevConsents() =>
+      (super.noSuchMethod(
         Invocation.method(
           #getMyPrevConsents,
           [],
         ),
-        returnValue: _i6.Future<List<_i10.PreviousConsentEntity>>.value(<_i10.PreviousConsentEntity>[]),
+        returnValue: _i6.Future<List<_i10.PreviousConsentEntity>>.value(
+            <_i10.PreviousConsentEntity>[]),
       ) as _i6.Future<List<_i10.PreviousConsentEntity>>);
 
   @override
@@ -215,7 +232,8 @@ class MockWalletUseCase extends _i1.Mock implements _i5.WalletUseCase {
       ) as _i6.Future<bool>);
 
   @override
-  _i6.Future<bool> revokeConsent(_i9.SharedVcDataEntity? entity) => (super.noSuchMethod(
+  _i6.Future<bool> revokeConsent(_i9.SharedVcDataEntity? entity) =>
+      (super.noSuchMethod(
         Invocation.method(
           #revokeConsent,
           [entity],
@@ -233,7 +251,8 @@ class MockWalletUseCase extends _i1.Mock implements _i5.WalletUseCase {
       ) as _i6.Future<bool>);
 
   @override
-  _i6.Future<void> addDocumentWallet(_i12.WalletAddDocumentEntity? params) => (super.noSuchMethod(
+  _i6.Future<void> addDocumentWallet(_i12.WalletAddDocumentEntity? params) =>
+      (super.noSuchMethod(
         Invocation.method(
           #addDocumentWallet,
           [params],
@@ -246,7 +265,8 @@ class MockWalletUseCase extends _i1.Mock implements _i5.WalletUseCase {
 /// A class which mocks [SharedPreferencesHelper].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSharedPreferencesHelper extends _i1.Mock implements _i13.SharedPreferencesHelper {
+class MockSharedPreferencesHelper extends _i1.Mock
+    implements _i13.SharedPreferencesHelper {
   MockSharedPreferencesHelper() {
     _i1.throwOnMissingStub(this);
   }
@@ -261,7 +281,8 @@ class MockSharedPreferencesHelper extends _i1.Mock implements _i13.SharedPrefere
       ) as _i3.SharedPreferences);
 
   @override
-  set sharedPreferences(_i3.SharedPreferences? _sharedPreferences) => super.noSuchMethod(
+  set sharedPreferences(_i3.SharedPreferences? _sharedPreferences) =>
+      super.noSuchMethod(
         Invocation.setter(
           #sharedPreferences,
           _sharedPreferences,
@@ -270,7 +291,8 @@ class MockSharedPreferencesHelper extends _i1.Mock implements _i13.SharedPrefere
       );
 
   @override
-  _i6.Future<dynamic> init({_i3.SharedPreferences? preferences}) => (super.noSuchMethod(
+  _i6.Future<dynamic> init({_i3.SharedPreferences? preferences}) =>
+      (super.noSuchMethod(
         Invocation.method(
           #init,
           [],
@@ -426,7 +448,8 @@ class MockWalletRepository extends _i1.Mock implements _i2.WalletRepository {
       ) as _i6.Future<String>);
 
   @override
-  _i6.Future<void> addDocumentWallet(_i12.WalletAddDocumentEntity? entity) => (super.noSuchMethod(
+  _i6.Future<void> addDocumentWallet(_i12.WalletAddDocumentEntity? entity) =>
+      (super.noSuchMethod(
         Invocation.method(
           #addDocumentWallet,
           [entity],
@@ -441,7 +464,8 @@ class MockWalletRepository extends _i1.Mock implements _i2.WalletRepository {
           #getWalletVcList,
           [],
         ),
-        returnValue: _i6.Future<List<_i8.DocumentVcData>>.value(<_i8.DocumentVcData>[]),
+        returnValue:
+            _i6.Future<List<_i8.DocumentVcData>>.value(<_i8.DocumentVcData>[]),
       ) as _i6.Future<List<_i8.DocumentVcData>>);
 
   @override
@@ -472,21 +496,25 @@ class MockWalletRepository extends _i1.Mock implements _i2.WalletRepository {
       ) as _i6.Future<void>);
 
   @override
-  _i6.Future<List<_i9.SharedVcDataEntity>> getMyConsents() => (super.noSuchMethod(
+  _i6.Future<List<_i9.SharedVcDataEntity>> getMyConsents() =>
+      (super.noSuchMethod(
         Invocation.method(
           #getMyConsents,
           [],
         ),
-        returnValue: _i6.Future<List<_i9.SharedVcDataEntity>>.value(<_i9.SharedVcDataEntity>[]),
+        returnValue: _i6.Future<List<_i9.SharedVcDataEntity>>.value(
+            <_i9.SharedVcDataEntity>[]),
       ) as _i6.Future<List<_i9.SharedVcDataEntity>>);
 
   @override
-  _i6.Future<List<_i10.PreviousConsentEntity>> getMyPrevConsents() => (super.noSuchMethod(
+  _i6.Future<List<_i10.PreviousConsentEntity>> getMyPrevConsents() =>
+      (super.noSuchMethod(
         Invocation.method(
           #getMyPrevConsents,
           [],
         ),
-        returnValue: _i6.Future<List<_i10.PreviousConsentEntity>>.value(<_i10.PreviousConsentEntity>[]),
+        returnValue: _i6.Future<List<_i10.PreviousConsentEntity>>.value(
+            <_i10.PreviousConsentEntity>[]),
       ) as _i6.Future<List<_i10.PreviousConsentEntity>>);
 
   @override
@@ -506,7 +534,8 @@ class MockWalletRepository extends _i1.Mock implements _i2.WalletRepository {
       ) as _i6.Future<bool>);
 
   @override
-  _i6.Future<bool> revokeConsent(_i9.SharedVcDataEntity? entity) => (super.noSuchMethod(
+  _i6.Future<bool> revokeConsent(_i9.SharedVcDataEntity? entity) =>
+      (super.noSuchMethod(
         Invocation.method(
           #revokeConsent,
           [entity],
@@ -548,7 +577,8 @@ class MockWalletApiService extends _i1.Mock implements _i14.WalletApiService {
       ) as _i6.Future<String>);
 
   @override
-  _i6.Future<void> addDocumentWallet(_i12.WalletAddDocumentEntity? entity) => (super.noSuchMethod(
+  _i6.Future<void> addDocumentWallet(_i12.WalletAddDocumentEntity? entity) =>
+      (super.noSuchMethod(
         Invocation.method(
           #addDocumentWallet,
           [entity],
@@ -563,7 +593,8 @@ class MockWalletApiService extends _i1.Mock implements _i14.WalletApiService {
           #getWalletVcData,
           [],
         ),
-        returnValue: _i6.Future<List<_i8.DocumentVcData>>.value(<_i8.DocumentVcData>[]),
+        returnValue:
+            _i6.Future<List<_i8.DocumentVcData>>.value(<_i8.DocumentVcData>[]),
       ) as _i6.Future<List<_i8.DocumentVcData>>);
 
   @override
@@ -594,21 +625,25 @@ class MockWalletApiService extends _i1.Mock implements _i14.WalletApiService {
       ) as _i6.Future<void>);
 
   @override
-  _i6.Future<List<_i9.SharedVcDataEntity>> getMyConsents() => (super.noSuchMethod(
+  _i6.Future<List<_i9.SharedVcDataEntity>> getMyConsents() =>
+      (super.noSuchMethod(
         Invocation.method(
           #getMyConsents,
           [],
         ),
-        returnValue: _i6.Future<List<_i9.SharedVcDataEntity>>.value(<_i9.SharedVcDataEntity>[]),
+        returnValue: _i6.Future<List<_i9.SharedVcDataEntity>>.value(
+            <_i9.SharedVcDataEntity>[]),
       ) as _i6.Future<List<_i9.SharedVcDataEntity>>);
 
   @override
-  _i6.Future<List<_i10.PreviousConsentEntity>> getMyPrevConsents() => (super.noSuchMethod(
+  _i6.Future<List<_i10.PreviousConsentEntity>> getMyPrevConsents() =>
+      (super.noSuchMethod(
         Invocation.method(
           #getMyPrevConsents,
           [],
         ),
-        returnValue: _i6.Future<List<_i10.PreviousConsentEntity>>.value(<_i10.PreviousConsentEntity>[]),
+        returnValue: _i6.Future<List<_i10.PreviousConsentEntity>>.value(
+            <_i10.PreviousConsentEntity>[]),
       ) as _i6.Future<List<_i10.PreviousConsentEntity>>);
 
   @override
@@ -628,7 +663,8 @@ class MockWalletApiService extends _i1.Mock implements _i14.WalletApiService {
       ) as _i6.Future<bool>);
 
   @override
-  _i6.Future<bool> revokeConsent(_i9.SharedVcDataEntity? entity) => (super.noSuchMethod(
+  _i6.Future<bool> revokeConsent(_i9.SharedVcDataEntity? entity) =>
+      (super.noSuchMethod(
         Invocation.method(
           #revokeConsent,
           [entity],
@@ -691,7 +727,8 @@ class MockDio extends _i1.Mock implements _i4.Dio {
       ) as _i4.HttpClientAdapter);
 
   @override
-  set httpClientAdapter(_i4.HttpClientAdapter? _httpClientAdapter) => super.noSuchMethod(
+  set httpClientAdapter(_i4.HttpClientAdapter? _httpClientAdapter) =>
+      super.noSuchMethod(
         Invocation.setter(
           #httpClientAdapter,
           _httpClientAdapter,
@@ -1197,7 +1234,8 @@ class MockDio extends _i1.Mock implements _i4.Dio {
             #options: options,
           },
         ),
-        returnValue: _i6.Future<_i4.Response<dynamic>>.value(_FakeResponse_6<dynamic>(
+        returnValue:
+            _i6.Future<_i4.Response<dynamic>>.value(_FakeResponse_6<dynamic>(
           this,
           Invocation.method(
             #download,
@@ -1245,7 +1283,8 @@ class MockDio extends _i1.Mock implements _i4.Dio {
             #options: options,
           },
         ),
-        returnValue: _i6.Future<_i4.Response<dynamic>>.value(_FakeResponse_6<dynamic>(
+        returnValue:
+            _i6.Future<_i4.Response<dynamic>>.value(_FakeResponse_6<dynamic>(
           this,
           Invocation.method(
             #downloadUri,
@@ -1343,7 +1382,8 @@ class MockDio extends _i1.Mock implements _i4.Dio {
       ) as _i6.Future<_i4.Response<T>>);
 
   @override
-  _i6.Future<_i4.Response<T>> fetch<T>(_i4.RequestOptions? requestOptions) => (super.noSuchMethod(
+  _i6.Future<_i4.Response<T>> fetch<T>(_i4.RequestOptions? requestOptions) =>
+      (super.noSuchMethod(
         Invocation.method(
           #fetch,
           [requestOptions],

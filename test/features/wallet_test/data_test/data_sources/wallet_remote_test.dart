@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xplor/const/local_storage/shared_preferences_helper.dart';
+import 'package:xplor/core/connection/refresh_token_service.dart';
 import 'package:xplor/features/wallet/data/data_sources/wallet_data_sources.dart';
 import 'package:xplor/features/wallet/domain/entities/shared_data_entity.dart';
 import 'package:xplor/features/wallet/domain/entities/update_consent_entity.dart';
@@ -31,7 +32,43 @@ void main() {
     pref.setString(PrefConstKeys.walletId, "wallet_db9adfb2-a307-4cbb-807d-a43846018869");
     pref.setString(PrefConstKeys.userId, "user_146c352c-3b31-4cca-89f0-2eb38ae84db0");
     mockSharedPreferencesHelper = MockSharedPreferencesHelper();
-    walletApiService = WalletApiServiceImpl(dio: mockDio, preferencesHelper: mockSharedPreferencesHelper, helper: pref);
+    walletApiService = WalletApiServiceImpl(
+        dio: mockDio,
+        preferencesHelper: mockSharedPreferencesHelper,
+        helper: pref);
+
+    mockDio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        handler.next(options);
+      },
+      onError: (DioException dioException,
+          ErrorInterceptorHandler errorInterceptorHandler) async {
+        if (dioException.response?.statusCode == 511) {
+          await RefreshTokenService.refreshTokenAndRetry(
+            options: dioException.response!.requestOptions,
+            helper: pref,
+            dio: mockDio,
+            handler: errorInterceptorHandler,
+          );
+        } else {
+          errorInterceptorHandler.next(dioException);
+        }
+      },
+      onResponse: (response, handler) async {
+        // Handle response, check for token expiration
+        if (response.statusCode == 511) {
+          // Token expired, refresh token
+          await RefreshTokenService.refreshTokenAndRetry(
+            options: response.requestOptions,
+            helper: pref,
+            dio: mockDio,
+            handler: handler,
+          );
+        } else {
+          handler.next(response);
+        }
+      },
+    ));
   });
 
   group('getWalletId', () {
@@ -199,6 +236,7 @@ void main() {
 
   group('WalletApiService - revokeConsent', () {
     final entity = SharedVcDataEntity(
+        sharedWithEntity: 'Self Shared',
         id: 'id',
         vcId: 'vcId',
         status: 'status',
@@ -276,6 +314,7 @@ void main() {
 
   group('updateConsent', () {
     final entity = UpdateConsentEntity(
+      sharedWithEntity: 'Self Shared',
       remarks: 'Remarks',
       restrictions: ConsentRestrictions(expiresIn: 24, viewOnce: true),
     );

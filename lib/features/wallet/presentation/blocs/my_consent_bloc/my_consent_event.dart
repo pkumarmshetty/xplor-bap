@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:xplor/features/wallet/domain/entities/shared_data_entity.dart';
+import '../../../domain/entities/shared_data_entity.dart';
 
+/// Base class for all events related to MyConsentBloc.
 sealed class MyConsentEvent extends Equatable {
   const MyConsentEvent();
 
@@ -8,10 +9,12 @@ sealed class MyConsentEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+/// Event for fetching user consents.
 class GetUserConsentEvent extends MyConsentEvent {
   const GetUserConsentEvent();
 }
 
+/// Event for revoking user consent.
 class ConsentRevokeEvent extends MyConsentEvent {
   final SharedVcDataEntity entity;
 
@@ -20,10 +23,3 @@ class ConsentRevokeEvent extends MyConsentEvent {
   @override
   List<Object?> get props => [entity];
 }
-
-// class RemarksAddedEvent extends MyConsentEvent {
-//   const RemarksAddedEvent({required this.remarks});
-//   final String remarks;
-//   @override
-//   List<Object?> get props => [remarks];
-// }

@@ -47,6 +47,7 @@ class PrefConstKeys {
   static const String seekerProfileKey = "SEEKERPROFILE";
   static const String savedDomains = "savedDomains";
   static const String savedDomainsNames = "savedDomainsNames";
+  static const String savedAddress = "savedAddress";
 }
 
 const String agent = "Agent";

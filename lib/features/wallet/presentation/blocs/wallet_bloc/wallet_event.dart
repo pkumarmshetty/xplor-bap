@@ -8,26 +8,32 @@ sealed class WalletEvent extends Equatable {
   List<Object> get props => [];
 }
 
+/// Wallet Data Event
 class GetWalletDataEvent extends WalletEvent {
   const GetWalletDataEvent();
 }
 
+/// Add Document Dialog Event
 class AddDocumentDialogEvent extends WalletEvent {
   const AddDocumentDialogEvent();
 }
 
+/// Documents Uploaded Event
 class DocumentsUploadedEvent extends WalletEvent {
   const DocumentsUploadedEvent();
 }
 
+/// Documents Upload Failed
 class DocumentsUploadFailedEvent extends WalletEvent {
   const DocumentsUploadFailedEvent();
 }
 
+/// Wallet Initial Event
 class WalletInitialEvent extends WalletEvent {
   const WalletInitialEvent();
 }
 
+/// Wallet Tab Selected
 class WalletTabSelectedEvent extends WalletEvent {
   final int position;
 
@@ -37,6 +43,7 @@ class WalletTabSelectedEvent extends WalletEvent {
   List<Object> get props => [position];
 }
 
+/// Wallet Document Check
 class WalletDocumentCheckEvent extends WalletEvent {
   final int position;
   final bool isSelected;
@@ -47,6 +54,7 @@ class WalletDocumentCheckEvent extends WalletEvent {
   List<Object> get props => [position, isSelected];
 }
 
+/// Wallet Document Delete
 class DocumentDeleteEvent extends WalletEvent {
   const DocumentDeleteEvent();
 

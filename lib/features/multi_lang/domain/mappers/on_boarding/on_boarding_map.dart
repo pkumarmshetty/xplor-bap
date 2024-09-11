@@ -85,5 +85,7 @@ final Map<String, dynamic> originalOnBoardingMap = {
 
   ExceptionErrors.checkInternetConnection: "Check your internet connection.",
 
-  ExceptionErrors.checkTimeOut: "Connection timed out. Retry again"
+  ExceptionErrors.checkTimeOut: "Connection timed out. Retry again",
+
+  OnBoardingKeys.confirmation: "Confirmation",
 };

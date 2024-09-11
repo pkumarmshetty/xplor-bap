@@ -1,4 +1,4 @@
-import 'package:xplor/features/on_boarding/domain/entities/on_boarding_entity.dart';
+import '../../domain/entities/on_boarding_entity.dart';
 
 class OnBoardingModel extends OnBoardingEntity {
   OnBoardingModel({

@@ -1,12 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:xplor/features/wallet/domain/entities/wallet_vc_list_entity.dart';
-import 'package:xplor/utils/app_utils/app_utils.dart';
-
+import '../../../domain/entities/wallet_vc_list_entity.dart';
+import '../../../../../utils/app_utils/app_utils.dart';
 import '../../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../../core/dependency_injection.dart';
 import '../../../domain/usecase/wallet_usecase.dart';
@@ -15,6 +12,7 @@ part 'share_doc_vc_event.dart';
 
 part 'share_doc_vc_state.dart';
 
+/// BLoC for managing the state related to sharing documents to the wallet.
 class SharedDocVcBloc extends Bloc<SharedDocVcEvent, SharedDocVcState> {
   WalletUseCase walletUseCase;
   String validity = '1';
@@ -29,16 +27,18 @@ class SharedDocVcBloc extends Bloc<SharedDocVcEvent, SharedDocVcState> {
     on<PinVerifiedEvent>(_handlePinVerifiedEvent);
   }
 
+  /// Resets the state and emits [AddDocumentsInitialState].
   Future<void> _onAddDocumentInitial(SharedDocVcInitialEvent event, Emitter<SharedDocVcState> emit) async {
     emit(ShareDocVcInitial());
   }
 
+  /// Emits [ShareDocumentsUpdatedState] to indicate document sharing event.
   _handleSubmitEvent(ShareVcSubmittedEvent event, Emitter<SharedDocVcState> emit) async {
     try {
       if (state is ShareDocumentsUpdatedState) {
         emit((state as ShareDocumentsUpdatedState).copyWith(state: ShareState.loading));
       }
-      debugPrint('doc submit event ');
+      AppUtils.printLogs('doc submit event ');
       sl<SharedPreferencesHelper>().setBoolean(PrefConstKeys.isSharedByScholarship, false);
       await walletUseCase.sharedWalletVcData(event.vcIds, event.request);
 
@@ -49,6 +49,7 @@ class SharedDocVcBloc extends Bloc<SharedDocVcEvent, SharedDocVcState> {
     }
   }
 
+  /// Handles document sharing event and updates state accordingly.
   _handleUpdateEvent(ShareDocVcUpdatedEvent event, Emitter<SharedDocVcState> emit) async {
     switch (event.validity) {
       case Validity.oneDay:
@@ -80,6 +81,7 @@ class SharedDocVcBloc extends Bloc<SharedDocVcEvent, SharedDocVcState> {
     }
   }
 
+  /// Handles Share Documents event and updates state accordingly.
   FutureOr<void> _handleShowSharedDocumentsEvent(ShareDocumentsEvent event, Emitter<SharedDocVcState> emit) {
     emit(ShareDocumentsUpdatedState(
         validity: Validity.once,
@@ -89,14 +91,16 @@ class SharedDocVcBloc extends Bloc<SharedDocVcEvent, SharedDocVcState> {
         shareState: ShareState.initial));
   }
 
+  /// Handles Pin Verified event and updates state accordingly.
   FutureOr<void> _handlePinVerifiedEvent(PinVerifiedEvent event, Emitter<SharedDocVcState> emit) {
     if (state is ShareDocumentsUpdatedState) {
       List<String> vc = [];
       if ((state as ShareDocumentsUpdatedState).documentVcData != null) {
-        debugPrint('pin verified success data ${(state as ShareDocumentsUpdatedState).documentVcData!.name}');
+        AppUtils.printLogs('pin verified success data ${(state as ShareDocumentsUpdatedState).documentVcData!.name}');
         vc.add((state as ShareDocumentsUpdatedState).documentVcData!.id);
       } else {
-        debugPrint('pin verified success list data ${(state as ShareDocumentsUpdatedState).selectedDocs?[0].name}');
+        AppUtils.printLogs(
+            'pin verified success list data ${(state as ShareDocumentsUpdatedState).selectedDocs?[0].name}');
         for (DocumentVcData selectedDocs in (state as ShareDocumentsUpdatedState).selectedDocs!) {
           vc.add(selectedDocs.id);
         }
@@ -125,11 +129,12 @@ class SharedDocVcBloc extends Bloc<SharedDocVcEvent, SharedDocVcState> {
           "viewOnce": viewOnce
         }
       });
-      debugPrint(body);
+      AppUtils.printLogs(body);
       add(ShareVcSubmittedEvent(vcIds: vc, request: body));
     }
   }
 
+  /// Get hours according to day selection
   int getHoursAccordingToDaySelection(bool viewOnce) {
     int expiresIn = int.parse(validity);
     if (expiresIn == 1 && viewOnce) {

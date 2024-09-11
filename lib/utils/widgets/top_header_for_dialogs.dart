@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../app_colors.dart';
 import '../app_dimensions.dart';
 import '../extensions/font_style/font_styles.dart';
 import '../extensions/padding.dart';
-import '../extensions/space.dart';
 
 class TopHeaderForDialogs extends StatelessWidget {
   final String title;
@@ -20,7 +18,7 @@ class TopHeaderForDialogs extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         /// Vertical space above the title
-        AppDimensions.medium.vSpace(),
+        AppDimensions.medium.verticalSpace,
 
         /// Title with custom styling
         isCrossIconVisible
@@ -42,14 +40,14 @@ class TopHeaderForDialogs extends StatelessWidget {
             : title.titleExtraBold(size: 20.sp).symmetricPadding(horizontal: AppDimensions.mediumXL),
 
         /// Divider below the title
-        AppDimensions.small.vSpace(),
+        AppDimensions.small.verticalSpace,
         Divider(
           color: AppColors.cancelButtonBgColor,
           thickness: 0.5.w,
         ),
 
         /// Vertical space below the divider
-        AppDimensions.smallXL.vSpace(),
+        AppDimensions.smallXL.verticalSpace,
       ],
     );
   }

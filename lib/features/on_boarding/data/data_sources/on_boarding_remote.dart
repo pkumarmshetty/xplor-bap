@@ -3,14 +3,12 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xplor/core/exception_errors.dart';
-import 'package:xplor/features/on_boarding/domain/entities/user_data_entity.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../../../core/exception_errors.dart';
+import '../../domain/entities/user_data_entity.dart';
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/api_constants.dart';
 import '../../../../core/connection/refresh_token_service.dart';
@@ -104,10 +102,8 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
     try {
       var jsonData = json.encode(entity.toJson());
 
-      if (kDebugMode) {
-        print("OnBoarding Body Data ${entity.toJson()}");
-        print("OnBoarding Body Data $sendOtpApi");
-      }
+      AppUtils.printLogs("OnBoarding Body Data ${entity.toJson()}");
+      AppUtils.printLogs("OnBoarding Body Data $sendOtpApi");
 
       final response = await dio.post(
         sendOtpApi,
@@ -116,16 +112,13 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
           contentType: Headers.jsonContentType,
         ),
       );
-      if (kDebugMode) {
-        print("sendOtpOnBoarding---->Response of sendOtpOnBoarding  ${response.data}");
-      }
+
+      AppUtils.printLogs("sendOtpOnBoarding---->Response of sendOtpOnBoarding  ${response.data}");
 
       return response.data != null ? response.data["data"]["key"] : "";
     } catch (e) {
-      if (kDebugMode) {
-        print("sendOtpOnBoarding----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("sendOtpOnBoarding----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
@@ -134,9 +127,7 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
     try {
       var jsonData = json.encode(entity.toJson());
 
-      if (kDebugMode) {
-        print("verifyOtpOnBoarding Body Data $jsonData");
-      }
+      AppUtils.printLogs("verifyOtpOnBoarding Body Data $jsonData");
 
       final response = await dio.post(
         verifyOtpApi,
@@ -145,9 +136,7 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
           contentType: Headers.jsonContentType,
         ),
       );
-      if (kDebugMode) {
-        print("verifyOtpOnBoarding---->Response of sendOtpOnBoarding  ${response.data}");
-      }
+      AppUtils.printLogs("verifyOtpOnBoarding---->Response of sendOtpOnBoarding  ${response.data}");
 
       if (helper != null) {
         await helper!.setString(PrefConstKeys.accessToken, response.data["data"]["accessToken"]);
@@ -159,10 +148,8 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
         await preferencesHelper.setString(PrefConstKeys.userId, response.data["data"]["userId"]);
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("verifyOtpOnBoarding----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("verifyOtpOnBoarding----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
@@ -177,9 +164,7 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
         authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
       }
 
-      if (kDebugMode) {
-        print("Role Assigned User token==>$authToken");
-      }
+      AppUtils.printLogs("Role Assigned User token==>$authToken");
       final response = await dio.get(
         userDataApi,
         //queryParameters: {"translate": false},
@@ -193,10 +178,8 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
         await preferencesHelper.setString(PrefConstKeys.role, response.data["data"]["role"]["type"]);
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("Role Assigned User----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("Role Assigned User----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
@@ -205,9 +188,7 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
     final authToken = helper == null
         ? preferencesHelper.getString(PrefConstKeys.accessToken)
         : helper!.getString(PrefConstKeys.accessToken);
-    if (kDebugMode) {
-      print(authToken);
-    }
+    AppUtils.printLogs(authToken.toString());
     try {
       final response = await dio.get(
         getUserJourneyApi,
@@ -218,10 +199,7 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
         ),
       );
 
-      if (kDebugMode) {
-        print("getUserJourney---->Response of getUserJourney  ${response.data}");
-      }
-
+      AppUtils.printLogs("getUserJourney---->Response of getUserJourney  ${response.data}");
       if (helper != null) {
         await helper!.setBool(PrefConstKeys.kycVerified, response.data["data"]["kycVerified"]);
         await helper!.setBool(PrefConstKeys.roleAssigned, response.data["data"]["roleAssigned"]);
@@ -232,10 +210,8 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
         await preferencesHelper.setBoolean(PrefConstKeys.isMpinCreated, response.data["data"]["mPinCreated"]);
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("getUserJourney----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("getUserJourney----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
@@ -244,26 +220,20 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
     try {
       var jsonData = json.encode(entity.toJson());
 
-      if (kDebugMode) {
-        print("assignRoleOnBoarding Body Data $jsonData");
-      }
+      AppUtils.printLogs("assignRoleOnBoarding Body Data $jsonData");
 
       final response = await dio.patch(
         updateDevicePreferenceApi,
         data: jsonData,
       );
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print("assignRoleOnBoarding----> Success 200 ${response.data}");
-        }
+        AppUtils.printLogs("assignRoleOnBoarding----> Success 200 ${response.data}");
         return true;
       }
       return true;
     } catch (e) {
-      if (kDebugMode) {
-        print("assignRoleOnBoarding----> Catch ${AppUtils.handleError(e)}");
-        return false;
-      }
+      AppUtils.printLogs("assignRoleOnBoarding----> Catch ${AppUtils.handleError(e)}");
+      // return false;
       throw Exception(AppUtils.handleError(e));
     }
   }
@@ -280,9 +250,7 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
       authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
     }
 
-    if (kDebugMode) {
-      print("Kyc Api URL $sseKycApi");
-    }
+    AppUtils.printLogs("Kyc Api URL $sseKycApi");
 
     // Start a timer to enforce the timeout
     final timer = Timer(timeout, () {
@@ -300,19 +268,15 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
         "Cache-Control": "no-cache",
       }).listen(
         (event) {
-          debugPrint('Data: ${event.data!}');
+          AppUtils.printLogs('Data: ${event.data!}');
 
-          if (kDebugMode) {
-            print("Kyc Api Response ${event.data}");
-          }
+          AppUtils.printLogs("Kyc Api Response ${event.data}");
 
           try {
             // Parse JSON string into Map
             var response = json.decode(event.data!);
 
-            if (kDebugMode) {
-              print("Kyc Api Response Decode ${event.data}");
-            }
+            AppUtils.printLogs("Kyc Api Response Decode ${event.data}");
 
             if (response['success'] != null && response['success']) {
             } else {
@@ -328,9 +292,8 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
         },
         onError: (error) {
           // Ensure the stream is closed on error
-          if (kDebugMode) {
-            print('SSE Error: $error');
-          }
+          AppUtils.printLogs('SSE Error: $error');
+
           stringStream.addError(error);
           stringStream.close();
           //throw Exception("SSE Connection Closed");
@@ -339,7 +302,7 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
       );
     } on TimeoutException catch (e) {
       // Handle the timeout
-      debugPrint('TimeoutException: $e');
+      AppUtils.printLogs('TimeoutException: $e');
       stringStream.addError(ExceptionErrors.checkTimeOut.stringToString);
       stringStream.close();
     } catch (e) {
@@ -354,26 +317,20 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
   @override
   Future<bool> updateDevicePreference(Map<String, dynamic> data) async {
     try {
-      if (kDebugMode) {
-        print("updateDevicePreference Body Data $data");
-      }
+      AppUtils.printLogs("updateDevicePreference Body Data $data");
 
       final response = await dio.patch(
         updateDevicePreferenceApi,
         data: data,
       );
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print("updateDevicePreference----> Success 200 ${response.data}");
-        }
+        AppUtils.printLogs("updateDevicePreference----> Success 200 ${response.data}");
         return true;
       }
       return true;
     } catch (e) {
-      if (kDebugMode) {
-        print("updateDevicePreference----> Catch ${AppUtils.handleError(e)}");
-        return false;
-      }
+      AppUtils.printLogs("updateDevicePreference----> Catch ${AppUtils.handleError(e)}");
+      //return false;
       throw Exception(AppUtils.handleError(e));
     }
   }
@@ -395,10 +352,8 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
       List<OnBoardingUserRoleEntity> userRoles = data.map((json) => OnBoardingUserRoleEntity.fromJson(json)).toList();
       return userRoles;
     } catch (e) {
-      if (kDebugMode) {
-        print("getUserRolesOnBoarding----> Catch $e");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("getUserRolesOnBoarding----> Catch $e");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
@@ -424,9 +379,7 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
 
       return AuthProviderResponseModel.fromJson(response.data).providers;
     } catch (e) {
-      if (kDebugMode) {
-        print("getEAuthProviders----> Catch $e");
-      }
+      AppUtils.printLogs("getEAuthProviders----> Catch $e");
       return null; // Return false for any error
     }
   }
@@ -449,57 +402,8 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
 
       return true;
     } catch (e) {
-      if (kDebugMode) {
-        print("updateUserKycOnBoarding----> Catch $e");
-      }
+      AppUtils.printLogs("updateUserKycOnBoarding----> Catch $e");
       return false; // Return false for any error
-    }
-  }
-
-  String handleError(Object error) {
-    String errorDescription = "";
-
-    if (error is DioException) {
-      DioException dioError = error;
-      switch (dioError.type) {
-        case DioExceptionType.cancel:
-          errorDescription = ExceptionErrors.requestCancelError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.connectionTimeout:
-          errorDescription = ExceptionErrors.connectionTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.unknown:
-          errorDescription = ExceptionErrors.unknownConnectionError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.receiveTimeout:
-          errorDescription = ExceptionErrors.receiveTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.badResponse:
-          if (kDebugMode) {
-            print("${ExceptionErrors.badResponseError}  ${dioError.response!.data}");
-          }
-          return dioError.response!.data['message'];
-
-        case DioExceptionType.sendTimeout:
-          errorDescription = ExceptionErrors.sendTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.badCertificate:
-          errorDescription = ExceptionErrors.badCertificate.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.connectionError:
-          errorDescription = ExceptionErrors.checkInternetConnection.stringToString;
-
-          return errorDescription;
-      }
-    } else {
-      errorDescription = ExceptionErrors.unexpectedErrorOccurred.stringToString;
-      return errorDescription;
     }
   }
 
@@ -514,9 +418,7 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
       };
       String jsonData = json.encode(data);
 
-      if (kDebugMode) {
-        print("generate mpin: $pin");
-      }
+      AppUtils.printLogs("generate mpin: $pin");
 
       final response = await dio.post(
         generateMpinApi,
@@ -536,15 +438,11 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
         await preferencesHelper.setString(PrefConstKeys.userMpin, pin);
         await preferencesHelper.setBoolean(PrefConstKeys.isMpinCreated, true);
       }
-      if (kDebugMode) {
-        print("generate mpin----> Success 200");
-        print("generate mpin---->data  ${response.data}");
-      }
+      AppUtils.printLogs("generate mpin----> Success 200");
+      AppUtils.printLogs("generate mpin---->data  ${response.data}");
       return true;
     } catch (e) {
-      if (kDebugMode) {
-        print("generateMpin----> Catch $e");
-      }
+      AppUtils.printLogs("generateMpin----> Catch $e");
       return false;
     }
   }
@@ -566,16 +464,12 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
           contentType: Headers.jsonContentType,
         ),
       );
-      if (kDebugMode) {
-        print("Domains list Data----> Response ${response.data}");
-      }
+      AppUtils.printLogs("Domains list Data----> Response ${response.data}");
 
       List<dynamic> domains = response.data['data'];
       return domains.map((domain) => DomainData.fromJson(domain)).toList();
     } catch (e) {
-      if (kDebugMode) {
-        print("Domain----> Catch ${AppUtils.handleError(e)}");
-      }
+      AppUtils.printLogs("Domain----> Catch ${AppUtils.handleError(e)}");
       throw Exception(AppUtils.handleError(e));
     }
   }
@@ -583,15 +477,12 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
   @override
   Future<bool> getDeviceInfo(String deviceId) async {
     try {
-      if (kDebugMode) {
-        print("url  ${"$updateDevicePreferenceApi/$deviceId"}");
-      }
+      AppUtils.printLogs("url  ${"$updateDevicePreferenceApi/$deviceId"}");
+
       final response = await dio.get(
         "$updateDevicePreferenceApi/$deviceId",
       );
-      if (kDebugMode) {
-        print("Domains list Data----> Response ${response.data}");
-      }
+      AppUtils.printLogs("Domains list Data----> Response ${response.data}");
 
       //use patch api update
       if (response.data['data'] != null) {
@@ -604,9 +495,7 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
       //use post api
       return false;
     } catch (e) {
-      if (kDebugMode) {
-        print("Domain----> Catch ${AppUtils.handleError(e)}");
-      }
+      AppUtils.printLogs("Domain----> Catch ${AppUtils.handleError(e)}");
       throw Exception(AppUtils.handleError(e));
     }
   }
@@ -624,9 +513,7 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
       final response = await dio.get(
         '$getCategoriesApi?deviceId=$deviceId',
       );
-      if (kDebugMode) {
-        print("Get Categories Data----> Response ${response.data["data"]}");
-      }
+      AppUtils.printLogs("Get Categories Data----> Response ${response.data["data"]}");
       if (response.statusCode == 200) {
         final List<dynamic> responseData = response.data["data"];
 
@@ -643,9 +530,7 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
         throw Exception('Failed to fetch skills');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("Get Categories----> Catch ${AppUtils.handleError(e)}");
-      }
+      AppUtils.printLogs("Get Categories----> Catch ${AppUtils.handleError(e)}");
       throw Exception(AppUtils.handleError(e));
     }
   }
@@ -668,13 +553,9 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
           'categories': categories,
         },
       );
-      if (kDebugMode) {
-        print("on Categories save----> Response ${response.data}");
-      }
+      AppUtils.printLogs("on Categories save----> Response ${response.data}");
     } catch (e) {
-      if (kDebugMode) {
-        print("Categories----> Catch ${AppUtils.handleError(e)}");
-      }
+      AppUtils.printLogs("Categories----> Catch ${AppUtils.handleError(e)}");
       throw Exception(AppUtils.handleError(e));
     }
   }
@@ -690,9 +571,8 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
         authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
       }
 
-      if (kDebugMode) {
-        print("Role Assigned User token==>$authToken");
-      }
+      AppUtils.printLogs("Role Assigned User token==>$authToken");
+
       final response = await dio.get(
         userDataApi,
         // queryParameters: {"translate": false},
@@ -700,17 +580,13 @@ class OnBoardingApiServiceImpl implements OnBoardingApiService {
           "Authorization": authToken,
         }),
       );
-      if (kDebugMode) {
-        print("User Data----> Response ${response.data}");
-      }
+      AppUtils.printLogs("User Data----> Response ${response.data}");
 
       UserDataEntity userDataEntity = UserDataEntity.fromJson(response.data["data"]);
       return userDataEntity;
     } catch (e) {
-      if (kDebugMode) {
-        print("User Data----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("User Data----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 }

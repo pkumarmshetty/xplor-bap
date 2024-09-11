@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:xplor/utils/extensions/padding.dart';
-
+import '../extensions/padding.dart';
 import '../../gen/assets.gen.dart';
 import '../app_colors.dart';
 import '../app_dimensions.dart';
@@ -29,7 +28,7 @@ class CommonBackButton extends StatelessWidget {
           color: AppColors.blueWith10Opacity, // Set your desired background color
           borderRadius: BorderRadius.circular(9), // Set your desired border radius
         ),
-        child: SvgPicture.asset(height: 16.w, width: 16.w, Assets.images.icBack)
+        child: SvgPicture.asset(height: AppDimensions.medium.w, width: AppDimensions.medium.w, Assets.images.icBack)
             .paddingAll(padding: AppDimensions.smallXL),
       ),
     );

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:xplor/utils/app_dimensions.dart';
-
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/extensions/padding.dart';
 
+/// Products label
 class ProductsLabel extends StatelessWidget {
   const ProductsLabel({
     super.key,

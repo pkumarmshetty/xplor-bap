@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/app_dimensions.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/padding.dart';
+import 'app_colors.dart';
+import 'app_dimensions.dart';
+import 'extensions/font_style/font_styles.dart';
+import 'extensions/padding.dart';
 
 class CircularButton extends StatelessWidget {
   final VoidCallback onPressed;

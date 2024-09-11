@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
-import 'package:xplor/features/wallet/presentation/blocs/update_consent_dialog_bloc/update_consent_dialog_event.dart';
-import 'package:xplor/features/wallet/presentation/blocs/update_consent_dialog_bloc/update_consent_dialog_state.dart';
+import 'update_consent_dialog_event.dart';
+import 'update_consent_dialog_state.dart';
 import '../../../../../utils/app_utils/app_utils.dart';
 import '../../../domain/usecase/wallet_usecase.dart';
 
+/// Bloc responsible for managing user consents.
 class UpdateConsentDialogBloc extends Bloc<UpdateConsentDialogEvent, UpdateConsentDialogState> {
   WalletUseCase useCase;
 
@@ -13,24 +13,18 @@ class UpdateConsentDialogBloc extends Bloc<UpdateConsentDialogEvent, UpdateConse
     on<ConsentUpdateDialogSubmittedEvent>(_handleSubmitEvent);
   }
 
+  /// Event handler for updating user consents.
   _handleUpdateEvent(ConsentUpdateDialogUpdatedEvent event, Emitter<UpdateConsentDialogState> emit) async {
     if (state is UpdateConsentDialogInitial) {
       emit(ConsentUpdateDialogUpdatedState(selectedItem: event.selectedItem ?? 1, inputText: event.remarks ?? ''));
     } else {
-      if (kDebugMode) {
-        print('abccc');
-      }
+      AppUtils.printLogs('abccc');
       emit((state as ConsentUpdateDialogUpdatedState).copyWith(selectedItem: event.selectedItem, text: event.remarks));
-      /*emit(ConsentUpdateDialogUpdatedState(
-          selectedItem: event.selectedItem ?? 1,
-          inputText: event.remarks ?? ''));*/
     }
   }
 
+  /// Event handler for submitting user consents.
   _handleSubmitEvent(ConsentUpdateDialogSubmittedEvent event, Emitter<UpdateConsentDialogState> emit) async {
-    /*emit(ConsentUpdateDialogUpdatedState(
-        selectedItem: event.selectedItem, inputText: event.remarks));*/
-    //emit(const MyConsentLoadingState());
     try {
       emit(MyConsentLoaderState());
       final success = await useCase.updateConsent(event.updateConsent, event.requestId);

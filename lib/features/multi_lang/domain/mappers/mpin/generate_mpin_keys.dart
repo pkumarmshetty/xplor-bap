@@ -22,4 +22,5 @@ class GenerateMpinKeys {
   static const enterSixDigitsOtp = "Enter the 6 digit OTP that we have sent to";
   static const enterOtp = "Enter OTP";
   static const exceeded = "exceeded";
+  static const pinDonMatch = "PINs don't match. Please enter identical PINs and try again.";
 }

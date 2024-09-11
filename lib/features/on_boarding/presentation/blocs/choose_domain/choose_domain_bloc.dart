@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:xplor/const/local_storage/shared_preferences_helper.dart';
-import 'package:xplor/core/dependency_injection.dart';
-import 'package:xplor/features/on_boarding/domain/entities/domains_entity.dart';
-import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.dart';
-import 'package:xplor/utils/app_utils/app_utils.dart';
+import '../../../../../const/local_storage/shared_preferences_helper.dart';
+import '../../../../../core/dependency_injection.dart';
+import '../../../domain/entities/domains_entity.dart';
+import '../../../domain/usecase/on_boarding_usecase.dart';
+import '../../../../../utils/app_utils/app_utils.dart';
 
 part 'choose_domain_event.dart';
 

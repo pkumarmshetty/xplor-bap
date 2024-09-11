@@ -38,37 +38,14 @@ class $AssetsImagesGen {
   String get agriculture => 'assets/images/agriculture.svg';
 
   /// File path: assets/images/app_background.png
-  AssetGenImage get appBackground => const AssetGenImage('assets/images/app_background.png');
-
-  /// File path: assets/images/app_bg.png
-  AssetGenImage get appBg => const AssetGenImage('assets/images/app_bg.png');
+  AssetGenImage get appBackground =>
+      const AssetGenImage('assets/images/app_background.png');
 
   /// File path: assets/images/app_logo.svg
   String get appLogo => 'assets/images/app_logo.svg';
 
   /// File path: assets/images/app_logo_splash.svg
   String get appLogoSplash => 'assets/images/app_logo_splash.svg';
-
-  /// File path: assets/images/arrow_down_grey.svg
-  String get arrowDownGrey => 'assets/images/arrow_down_grey.svg';
-
-  /// File path: assets/images/art.svg
-  String get art => 'assets/images/art.svg';
-
-  /// File path: assets/images/audio_book.svg
-  String get audioBook => 'assets/images/audio_book.svg';
-
-  /// File path: assets/images/beginner_level.svg
-  String get beginnerLevel => 'assets/images/beginner_level.svg';
-
-  /// File path: assets/images/cable.svg
-  String get cable => 'assets/images/cable.svg';
-
-  /// File path: assets/images/center_tab.svg
-  String get centerTab => 'assets/images/center_tab.svg';
-
-  /// File path: assets/images/certificate_of_completion.svg
-  String get certificateOfCompletion => 'assets/images/certificate_of_completion.svg';
 
   /// File path: assets/images/claimed_amount.svg
   String get claimedAmount => 'assets/images/claimed_amount.svg';
@@ -92,7 +69,8 @@ class $AssetsImagesGen {
   String get deleteIcon => 'assets/images/delete_icon.svg';
 
   /// File path: assets/images/digilocker.png
-  AssetGenImage get digilocker => const AssetGenImage('assets/images/digilocker.png');
+  AssetGenImage get digilocker =>
+      const AssetGenImage('assets/images/digilocker.png');
 
   /// File path: assets/images/document_upload.svg
   String get documentUpload => 'assets/images/document_upload.svg';
@@ -100,14 +78,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/down_arrow.svg
   String get downArrow => 'assets/images/down_arrow.svg';
 
-  /// File path: assets/images/drop_down.svg
-  String get dropDown => 'assets/images/drop_down.svg';
-
   /// File path: assets/images/dummy_course_image.png
-  AssetGenImage get dummyCourseImagePng => const AssetGenImage('assets/images/dummy_course_image.png');
-
-  /// File path: assets/images/dummy_course_image.svg
-  String get dummyCourseImageSvg => 'assets/images/dummy_course_image.svg';
+  AssetGenImage get dummyCourseImage =>
+      const AssetGenImage('assets/images/dummy_course_image.png');
 
   /// File path: assets/images/edit_icon.svg
   String get editIcon => 'assets/images/edit_icon.svg';
@@ -118,32 +91,8 @@ class $AssetsImagesGen {
   /// File path: assets/images/edit_profile.svg
   String get editProfile => 'assets/images/edit_profile.svg';
 
-  /// File path: assets/images/engineering.svg
-  String get engineering => 'assets/images/engineering.svg';
-
-  /// File path: assets/images/filter_grey.svg
-  String get filterGrey => 'assets/images/filter_grey.svg';
-
-  /// File path: assets/images/finance.svg
-  String get finance => 'assets/images/finance.svg';
-
   /// File path: assets/images/generate_mpin.svg
   String get generateMpin => 'assets/images/generate_mpin.svg';
-
-  /// File path: assets/images/graph.svg
-  String get graph => 'assets/images/graph.svg';
-
-  /// File path: assets/images/graph_selected.svg
-  String get graphSelected => 'assets/images/graph_selected.svg';
-
-  /// File path: assets/images/graph_unselected.svg
-  String get graphUnselected => 'assets/images/graph_unselected.svg';
-
-  /// File path: assets/images/hat.svg
-  String get hat => 'assets/images/hat.svg';
-
-  /// File path: assets/images/headphones.svg
-  String get headphones => 'assets/images/headphones.svg';
 
   /// File path: assets/images/home_selected.svg
   String get homeSelected => 'assets/images/home_selected.svg';
@@ -153,12 +102,6 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/home_unselected.svg
   String get homeUnselected => 'assets/images/home_unselected.svg';
-
-  /// File path: assets/images/i_am_agent.svg
-  String get iAmAgent => 'assets/images/i_am_agent.svg';
-
-  /// File path: assets/images/i_am_seeker.svg
-  String get iAmSeeker => 'assets/images/i_am_seeker.svg';
 
   /// File path: assets/images/ic_add_doc.svg
   String get icAddDoc => 'assets/images/ic_add_doc.svg';
@@ -172,29 +115,11 @@ class $AssetsImagesGen {
   /// File path: assets/images/ic_back.svg
   String get icBack => 'assets/images/ic_back.svg';
 
-  /// File path: assets/images/ic_back_button.svg
-  String get icBackButton => 'assets/images/ic_back_button.svg';
-
   /// File path: assets/images/ic_check_selection.svg
   String get icCheckSelection => 'assets/images/ic_check_selection.svg';
 
-  /// File path: assets/images/ic_delete.svg
-  String get icDelete => 'assets/images/ic_delete.svg';
-
-  /// File path: assets/images/ic_dob.svg
-  String get icDob => 'assets/images/ic_dob.svg';
-
   /// File path: assets/images/ic_document.svg
   String get icDocument => 'assets/images/ic_document.svg';
-
-  /// File path: assets/images/ic_edit.svg
-  String get icEdit => 'assets/images/ic_edit.svg';
-
-  /// File path: assets/images/ic_email.svg
-  String get icEmail => 'assets/images/ic_email.svg';
-
-  /// File path: assets/images/ic_gender.svg
-  String get icGender => 'assets/images/ic_gender.svg';
 
   /// File path: assets/images/ic_image_jpg_icon.svg
   String get icImageJpgIcon => 'assets/images/ic_image_jpg_icon.svg';
@@ -208,17 +133,8 @@ class $AssetsImagesGen {
   /// File path: assets/images/ic_kyc_success.svg
   String get icKycSuccess => 'assets/images/ic_kyc_success.svg';
 
-  /// File path: assets/images/ic_location.svg
-  String get icLocation => 'assets/images/ic_location.svg';
-
-  /// File path: assets/images/ic_logout.svg
-  String get icLogout => 'assets/images/ic_logout.svg';
-
   /// File path: assets/images/ic_mic.svg
   String get icMic => 'assets/images/ic_mic.svg';
-
-  /// File path: assets/images/ic_phone.svg
-  String get icPhone => 'assets/images/ic_phone.svg';
 
   /// File path: assets/images/ic_radio_selected.svg
   String get icRadioSelected => 'assets/images/ic_radio_selected.svg';
@@ -231,9 +147,6 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/ic_share.svg
   String get icShare => 'assets/images/ic_share.svg';
-
-  /// File path: assets/images/ic_skill_certificate.svg
-  String get icSkillCertificate => 'assets/images/ic_skill_certificate.svg';
 
   /// File path: assets/images/ic_star_pin.svg
   String get icStarPin => 'assets/images/ic_star_pin.svg';
@@ -259,20 +172,8 @@ class $AssetsImagesGen {
   /// File path: assets/images/job.svg
   String get job => 'assets/images/job.svg';
 
-  /// File path: assets/images/kyc_fail_icon.svg
-  String get kycFailIcon => 'assets/images/kyc_fail_icon.svg';
-
-  /// File path: assets/images/laptop.svg
-  String get laptop => 'assets/images/laptop.svg';
-
-  /// File path: assets/images/left_arrow.svg
-  String get leftArrow => 'assets/images/left_arrow.svg';
-
   /// File path: assets/images/left_white_arrow.svg
   String get leftWhiteArrow => 'assets/images/left_white_arrow.svg';
-
-  /// File path: assets/images/lessons.svg
-  String get lessons => 'assets/images/lessons.svg';
 
   /// File path: assets/images/level.svg
   String get level => 'assets/images/level.svg';
@@ -285,9 +186,6 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/map_marker.svg
   String get mapMarker => 'assets/images/map_marker.svg';
-
-  /// File path: assets/images/mouse.png
-  AssetGenImage get mouse => const AssetGenImage('assets/images/mouse.png');
 
   /// File path: assets/images/my_consent.svg
   String get myConsent => 'assets/images/my_consent.svg';
@@ -307,11 +205,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/pdf.svg
   String get pdf => 'assets/images/pdf.svg';
 
-  /// File path: assets/images/person_icon.svg
-  String get personIcon => 'assets/images/person_icon.svg';
-
   /// File path: assets/images/phone_number_screen_logo.svg
-  String get phoneNumberScreenLogo => 'assets/images/phone_number_screen_logo.svg';
+  String get phoneNumberScreenLogo =>
+      'assets/images/phone_number_screen_logo.svg';
 
   /// File path: assets/images/play.svg
   String get play => 'assets/images/play.svg';
@@ -331,9 +227,6 @@ class $AssetsImagesGen {
   /// File path: assets/images/profile_unselected.svg
   String get profileUnselected => 'assets/images/profile_unselected.svg';
 
-  /// File path: assets/images/providers_thumnail.svg
-  String get providersThumnail => 'assets/images/providers_thumnail.svg';
-
   /// File path: assets/images/rating.svg
   String get rating => 'assets/images/rating.svg';
 
@@ -344,22 +237,17 @@ class $AssetsImagesGen {
   String get ratingHollow => 'assets/images/rating_hollow.svg';
 
   /// File path: assets/images/recent_application_dummy.png
-  AssetGenImage get recentApplicationDummy => const AssetGenImage('assets/images/recent_application_dummy.png');
+  AssetGenImage get recentApplicationDummy =>
+      const AssetGenImage('assets/images/recent_application_dummy.png');
 
   /// File path: assets/images/retail.svg
   String get retail => 'assets/images/retail.svg';
-
-  /// File path: assets/images/right_arrow.svg
-  String get rightArrow => 'assets/images/right_arrow.svg';
 
   /// File path: assets/images/right_arrow_profile.svg
   String get rightArrowProfile => 'assets/images/right_arrow_profile.svg';
 
   /// File path: assets/images/right_blue_arrow.svg
   String get rightBlueArrow => 'assets/images/right_blue_arrow.svg';
-
-  /// File path: assets/images/science.svg
-  String get science => 'assets/images/science.svg';
 
   /// File path: assets/images/search.svg
   String get search => 'assets/images/search.svg';
@@ -369,9 +257,6 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/splash.svg
   String get splash => 'assets/images/splash.svg';
-
-  /// File path: assets/images/success_icon.svg
-  String get successIcon => 'assets/images/success_icon.svg';
 
   /// File path: assets/images/timer.svg
   String get timer => 'assets/images/timer.svg';
@@ -400,9 +285,6 @@ class $AssetsImagesGen {
   /// File path: assets/images/verify_otp_screen_logo.svg
   String get verifyOtpScreenLogo => 'assets/images/verify_otp_screen_logo.svg';
 
-  /// File path: assets/images/video_camera.svg
-  String get videoCamera => 'assets/images/video_camera.svg';
-
   /// File path: assets/images/wallet_selected.svg
   String get walletSelected => 'assets/images/wallet_selected.svg';
 
@@ -422,16 +304,8 @@ class $AssetsImagesGen {
         add,
         agriculture,
         appBackground,
-        appBg,
         appLogo,
         appLogoSplash,
-        arrowDownGrey,
-        art,
-        audioBook,
-        beginnerLevel,
-        cable,
-        centerTab,
-        certificateOfCompletion,
         claimedAmount,
         coins,
         consent,
@@ -442,51 +316,29 @@ class $AssetsImagesGen {
         digilocker,
         documentUpload,
         downArrow,
-        dropDown,
-        dummyCourseImagePng,
-        dummyCourseImageSvg,
+        dummyCourseImage,
         editIcon,
         editLarge,
         editProfile,
-        engineering,
-        filterGrey,
-        finance,
         generateMpin,
-        graph,
-        graphSelected,
-        graphUnselected,
-        hat,
-        headphones,
         homeSelected,
         homeSelectedSeeker,
         homeUnselected,
-        iAmAgent,
-        iAmSeeker,
         icAddDoc,
         icAvtarFemale,
         icAvtarMale,
         icBack,
-        icBackButton,
         icCheckSelection,
-        icDelete,
-        icDob,
         icDocument,
-        icEdit,
-        icEmail,
-        icGender,
         icImageJpgIcon,
         icImagePngIcon,
         icKycFail,
         icKycSuccess,
-        icLocation,
-        icLogout,
         icMic,
-        icPhone,
         icRadioSelected,
         icSearch,
         icSelected,
         icShare,
-        icSkillCertificate,
         icStarPin,
         icVerified,
         icVerifiedGreen,
@@ -495,23 +347,17 @@ class $AssetsImagesGen {
         infoSecond,
         infoThird,
         job,
-        kycFailIcon,
-        laptop,
-        leftArrow,
         leftWhiteArrow,
-        lessons,
         level,
         location,
         logoutIcon,
         mapMarker,
-        mouse,
         myConsent,
         noDocumentsAdded,
         notification,
         obscuringIcon,
         ordersEmpty,
         pdf,
-        personIcon,
         phoneNumberScreenLogo,
         play,
         poweredByXplor,
@@ -519,20 +365,16 @@ class $AssetsImagesGen {
         profileSelected,
         profileSetting,
         profileUnselected,
-        providersThumnail,
         rating,
         ratingHalf,
         ratingHollow,
         recentApplicationDummy,
         retail,
-        rightArrow,
         rightArrowProfile,
         rightBlueArrow,
-        science,
         search,
         skilling,
         splash,
-        successIcon,
         timer,
         totalAmount,
         totalScholarships,
@@ -542,7 +384,6 @@ class $AssetsImagesGen {
         updateIcon,
         user,
         verifyOtpScreenLogo,
-        videoCamera,
         walletSelected,
         walletUnselected,
         welcomePage,

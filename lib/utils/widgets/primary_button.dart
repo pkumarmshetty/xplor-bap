@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-
+import '../extensions/font_style/font_styles.dart';
+import '../utils.dart';
 import '../app_colors.dart';
 import '../app_dimensions.dart';
 
@@ -25,7 +25,7 @@ class PrimaryButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: buttonWidth,
-        height: 32,
+        height: AppDimensions.xxl.w,
         decoration: BoxDecoration(
           color: disabled ? AppColors.hintColor : AppColors.primaryColor,
           // Set the background color to white or Colors.transparent for transparency
@@ -38,10 +38,12 @@ class PrimaryButton extends StatelessWidget {
           ),
         ),
         child: Center(
-          child: title.titleBold(
-            color: AppColors.white,
-            size: AppDimensions.smallXL.sp,
-          ),
+          child: title
+              .titleBold(
+                color: AppColors.white,
+                size: AppDimensions.smallXL.sp,
+              )
+              .symmetricPadding(horizontal: AppDimensions.medium),
         ),
       ),
     );

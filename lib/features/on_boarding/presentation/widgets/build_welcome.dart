@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/space.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../../../utils/app_colors.dart';
+import '../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../utils/app_dimensions.dart';
 import '../../../multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
 
@@ -27,7 +25,7 @@ class WelcomeContentWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        AppDimensions.smallXL.vSpace(),
+        AppDimensions.smallXL.verticalSpace,
 
         /// Display the title using [titleBold] extension method.
         (title ?? OnBoardingKeys.welcome.stringToString).titleExtraBold(color: color ?? AppColors.countryCodeColor),

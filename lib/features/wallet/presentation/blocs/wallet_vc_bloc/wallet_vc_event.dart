@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:xplor/features/wallet/domain/entities/wallet_vc_list_entity.dart';
+import '../../../domain/entities/wallet_vc_list_entity.dart';
 
+/// Base class for all events related to WalletVcBloc.
 sealed class WalletVcEvent extends Equatable {
   const WalletVcEvent();
 

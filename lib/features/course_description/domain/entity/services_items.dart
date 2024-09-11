@@ -46,20 +46,14 @@ class CourseDetailsDataEntity {
       rateable: json['rateable'] ?? false,
       enrolled: json['enrolled'] ?? false,
       status: json['status'] ?? "",
-      tagData: json['itemTag'] == null
-          ? null
-          : ItemTagData.fromJson(json['itemTag']),
+      tagData: json['itemTag'] == null ? null : ItemTagData.fromJson(json['itemTag']),
       descriptor: json['descriptor'] == null
-          ? ItemDescriptor(
-              itemId: "", name: "", shortDesc: "", longDesc: "", images: [])
+          ? ItemDescriptor(itemId: "", name: "", shortDesc: "", longDesc: "", images: [])
           : ItemDescriptor.fromJson(json['descriptor']),
-      price: json['price'] == null
-          ? PriceEntity(currency: "INR", value: "NA")
-          : PriceEntity.fromJson(json['price']),
+      price: json['price'] == null ? PriceEntity(currency: "INR", value: "NA") : PriceEntity.fromJson(json['price']),
       providerId: json['provider_id'] ?? "",
       provider: json['provider'] == null
-          ? ProviderInfoEntity(
-              id: "", name: "", shortDesc: "", longDesc: "", images: [])
+          ? ProviderInfoEntity(id: "", name: "", shortDesc: "", longDesc: "", images: [])
           : ProviderInfoEntity.fromJson(json['provider']),
     );
   }

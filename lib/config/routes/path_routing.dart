@@ -69,4 +69,6 @@ class Routes {
   static const String myOrders = "/myOrders";
 
   static const String certificate = "/certificate";
+
+  static const String payment = "/payment";
 }

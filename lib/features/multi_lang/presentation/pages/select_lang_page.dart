@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/features/multi_lang/data/models/lang_translation_model.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/space.dart';
-
+import '../../data/models/lang_translation_model.dart';
+import '../../../../utils/app_colors.dart';
+import '../../../../utils/extensions/font_style/font_styles.dart';
 import '../../../../../features/multi_lang/presentation/blocs/bloc/translate_bloc.dart';
 import '../../../../../utils/extensions/padding.dart';
 import '../../../../config/routes/path_routing.dart';
-import '../../../../config/theme/theme_cubit.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/dependency_injection.dart';
 import '../../../../utils/app_dimensions.dart';
 import '../../../../utils/app_utils/app_utils.dart';
 import '../../../../utils/circluar_button.dart';
-import '../../../../utils/mapping_const.dart';
 import '../../../../utils/widgets/app_background_widget.dart';
 import '../../../../utils/widgets/list_view_card.dart';
 import '../../../../utils/widgets/loading_animation.dart';
@@ -33,9 +29,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
   @override
   void initState() {
     super.initState();
-    sl<SharedPreferencesHelper>().setString(onBoardingModule, "");
     context.read<TranslationBloc>().add(const GetLanguageListEvent());
-
     context.read<ChooseDomainBloc>().add(GetDeviceApiEvent());
   }
 
@@ -44,14 +38,15 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
     return Scaffold(
         body: PopScope(
             canPop: false,
-            onPopInvoked: (bool val) {
+            onPopInvokedWithResult: (val, result) {
               AppUtils.showAlertDialog(context, false);
             },
             child: Scaffold(
-                backgroundColor: appTheme().colors.white,
+                backgroundColor: AppColors.white,
                 body: AppBackgroundDecoration(
                     child: SafeArea(
-                        child: BlocListener<TranslationBloc, TranslateState>(listener: (context, state) {
+                        child: BlocListener<TranslationBloc, TranslateState>(
+                            listener: (context, state) {
                   if (state is TranslationLoaded && state.isNavigation) {
                     //Navigator.pushNamed(context, Routes.walkThrough);
                     Navigator.pushNamedAndRemoveUntil(
@@ -75,27 +70,34 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                             const WelcomeContentWidget(
                               title: 'Choose Language',
                               color: AppColors.textColor,
-                              subTitle: 'Select your preferred language for the interface.',
+                              subTitle:
+                                  'Select your preferred language for the interface.',
                             ),
-                            AppDimensions.small.vSpace(),
+                            AppDimensions.small.verticalSpace,
                             _bodyItem(state)
                           ],
                         ),
                         Wrap(
                           children: [
-                            BlocBuilder<ChooseDomainBloc, ChooseDomainState>(builder: (context, state) {
+                            BlocBuilder<ChooseDomainBloc, ChooseDomainState>(
+                                builder: (context, state) {
                               return CircularButton(
                                 isValid: state is RegisterDeviceIdState,
                                 title: 'Next',
                                 onPressed: () {
-                                  context.read<TranslationBloc>().add(ChooseLangCodeEvent(
-                                      hasRegisterId: context.read<ChooseDomainBloc>().isRegisterDeviceId));
+                                  context.read<TranslationBloc>().add(
+                                      ChooseLangCodeEvent(
+                                          hasRegisterId: context
+                                              .read<ChooseDomainBloc>()
+                                              .isRegisterDeviceId));
                                 },
-                              ).singleSidePadding(bottom: kFloatingActionButtonMargin.w);
+                              ).singleSidePadding(
+                                  bottom: kFloatingActionButtonMargin.w);
                             }),
                           ],
                         ),
-                        if (state is TranslationLoading) const LoadingAnimation()
+                        if (state is TranslationLoading)
+                          const LoadingAnimation()
                       ],
                     ).singleSidePadding(
                       top: kFloatingActionButtonMargin,
@@ -114,38 +116,45 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
         if (context.read<TranslationBloc>().recommendedLangModel != null)
           Row(
             children: [
-              "Recommended Language".titleExtraBold(size: 14.sp, color: AppColors.navyBlue),
-              " (Based on your location)".titleRegular(size: 12.sp, color: AppColors.grey6a6a6a),
+              "Recommended Language"
+                  .titleExtraBold(size: 14.sp, color: AppColors.navyBlue),
+              " (Based on your location)"
+                  .titleRegular(size: 12.sp, color: AppColors.grey6a6a6a),
             ],
           ),
-        AppDimensions.small.vSpace(),
+        AppDimensions.small.verticalSpace,
         if (context.read<TranslationBloc>().recommendedLangModel != null)
           _itemView(
               context.read<TranslationBloc>().recommendedLangModel!,
-              context.read<TranslationBloc>().recommendedLangModel == context.read<TranslationBloc>().selectedModel,
+              context.read<TranslationBloc>().recommendedLangModel ==
+                  context.read<TranslationBloc>().selectedModel,
               0,
               false),
-        AppDimensions.mediumXL.vSpace(),
+        AppDimensions.mediumXL.verticalSpace,
         if (context.read<TranslationBloc>().langModel.isNotEmpty)
-          "Other Language".titleExtraBold(size: 14.sp, color: AppColors.navyBlue),
-        AppDimensions.small.vSpace(),
+          "Other Language"
+              .titleExtraBold(size: 14.sp, color: AppColors.navyBlue),
+        AppDimensions.small.verticalSpace,
         _languageSelectionListView(context.read<TranslationBloc>().langModel,
             selected: context.read<TranslationBloc>().selectedModel),
       ],
     ));
   }
 
-  _languageSelectionListView(List<LanguageTranslationModel> langList, {LanguageTranslationModel? selected}) {
+  _languageSelectionListView(List<LanguageTranslationModel> langList,
+      {LanguageTranslationModel? selected}) {
     return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: langList.length,
         itemBuilder: (context, index) {
-          return _itemView(langList[index], selected == langList[index], index, langList.length == index + 1);
+          return _itemView(langList[index], selected == langList[index], index,
+              langList.length == index + 1);
         });
   }
 
-  _itemView(LanguageTranslationModel langList, bool isSelected, int index, bool isLastIndex) {
+  _itemView(LanguageTranslationModel langList, bool isSelected, int index,
+      bool isLastIndex) {
     return CardItemView(
       title: langList.symbol,
       description: langList.language,
@@ -154,8 +163,11 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
       isLastIndex: isLastIndex,
       callback: () {
         if (!isSelected) {
-          sl<SharedPreferencesHelper>().setString(PrefConstKeys.selectedLanguageCode, langList.languageCode);
-          context.read<TranslationBloc>().add(SelectLanguageEvent(selected: langList));
+          sl<SharedPreferencesHelper>().setString(
+              PrefConstKeys.selectedLanguageCode, langList.languageCode);
+          context
+              .read<TranslationBloc>()
+              .add(SelectLanguageEvent(selected: langList));
         }
       },
     );

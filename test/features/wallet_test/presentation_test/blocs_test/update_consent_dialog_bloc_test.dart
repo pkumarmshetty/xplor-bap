@@ -17,7 +17,8 @@ void main() {
   String requestId = "requestId_7267236182368123";
   UpdateConsentEntity entity = UpdateConsentEntity(
       remarks: remarks,
-      restrictions: ConsentRestrictions(expiresIn: AppUtils.getHoursAccordingToDaySelection(2), viewOnce: false));
+      restrictions: ConsentRestrictions(expiresIn: AppUtils.getHoursAccordingToDaySelection(2), viewOnce: false),
+      sharedWithEntity: 'Self Shared');
 
   setUp(() {
     mockWalletUseCase = MockWalletUseCase();

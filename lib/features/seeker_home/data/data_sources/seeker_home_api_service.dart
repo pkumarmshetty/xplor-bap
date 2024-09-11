@@ -1,22 +1,22 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xplor/core/api_constants.dart';
-
+import '../../../../core/api_constants.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/connection/refresh_token_service.dart';
-import '../../../../core/exception_errors.dart';
-import '../../../../utils/extensions/string_to_string.dart';
+import '../../../../utils/app_utils/app_utils.dart';
 import '../../domain/entities/get_response_entity/services_entity.dart';
 import '../../domain/entities/post_request_entity/search_post_entity.dart';
 
+/// Seeker home api service
 abstract class SeekerHomeApiService {
   Future<ServicesSearchEntity> search(SearchPostEntity body);
 }
 
+/// Seeker home api service implementation
 class SeekerHomeApiServiceImpl implements SeekerHomeApiService {
   SeekerHomeApiServiceImpl({required this.dio, required this.preferencesHelper, this.helper}) {
+    // Add refresh token interceptor
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
         handler.next(options);
@@ -56,15 +56,14 @@ class SeekerHomeApiServiceImpl implements SeekerHomeApiService {
   SharedPreferencesHelper preferencesHelper;
   SharedPreferences? helper;
 
+  /// Search api call
   @override
   Future<ServicesSearchEntity> search(SearchPostEntity entity, {int initialIndex = 0, int lastIndex = 10}) async {
     try {
-      if (kDebugMode) {
-        print("Seeker search entity ${entity.toJson()}");
-        print("Seeker search entity $seekerSearchApi");
-        print("Seeker search initialIndex ${entity.initialIndex}");
-        print("Seeker search lastIndex ${entity.lastIndex}");
-      }
+      AppUtils.printLogs("Seeker search entity ${entity.toJson()}");
+      AppUtils.printLogs("Seeker search entity $seekerSearchApi");
+      AppUtils.printLogs("Seeker search initialIndex ${entity.initialIndex}");
+      AppUtils.printLogs("Seeker search lastIndex ${entity.lastIndex}");
 
       String? authToken;
 
@@ -74,7 +73,7 @@ class SeekerHomeApiServiceImpl implements SeekerHomeApiService {
         authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
       }
 
-      debugPrint("Search call token.... $authToken");
+      AppUtils.printLogs("Search call token.... $authToken");
       final response = await dio.post(
         seekerSearchApi,
         data: entity.toJson(),
@@ -90,27 +89,22 @@ class SeekerHomeApiServiceImpl implements SeekerHomeApiService {
           },
         ),
       );
-      if (kDebugMode) {
-        print("Seeker Search---->Response of seeker search  ${response.data}");
-      }
+      AppUtils.printLogs("Seeker Search---->Response of seeker search  ${response.data}");
 
       return ServicesSearchEntity.fromJson(response.data);
     } catch (e) {
-      if (kDebugMode) {
-        print("Seeker search----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("Seeker search----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
   /* Future<SeekerSearchEntity> searchResponse(String transactionId) async {
-    if (kDebugMode) {
-      print("Seeker sse api call ---->");
-    }
+      AppUtils.printLogs("Seeker sse api call ---->");
+
     */ /* SSEService(
         url: seekerSearchSSEApi,
-        onDataReceived: (data) => debugPrint('SSE data: ${data.toString()}'),
-        onError: (error) => debugPrint('SSE Error: ${error.toString()}'));
+        onDataReceived: (data) => AppUtils.printLogs('SSE data: ${data.toString()}'),
+        onError: (error) => AppUtils.printLogs('SSE Error: ${error.toString()}'));
 */ /*
     try {
       Response response = await dio.get(
@@ -124,74 +118,26 @@ class SeekerHomeApiServiceImpl implements SeekerHomeApiService {
           .transform(json.decoder)
           .listen((event) {
         // Handle event data
-        print("saffasfas ${event}");
+        AppUtils.printLogs("saffasfas ${event}");
         return event;
       }, onError: (error) {
         // Handle connection error
-        throw Exception(handleError(error));
+        throw Exception(AppUtils.handleError(error));
       });
     } catch (e) {
       // Handle Dio error
-      throw Exception(handleError(e));
+      throw Exception(AppUtils.handleError(e));
     }
   }*/
-
-  String handleError(Object error) {
-    String errorDescription = "";
-
-    if (error is DioException) {
-      DioException dioError = error;
-      switch (dioError.type) {
-        case DioExceptionType.cancel:
-          errorDescription = ExceptionErrors.requestCancelError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.connectionTimeout:
-          errorDescription = ExceptionErrors.connectionTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.unknown:
-          errorDescription = ExceptionErrors.unknownConnectionError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.receiveTimeout:
-          errorDescription = ExceptionErrors.receiveTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.badResponse:
-          if (kDebugMode) {
-            print("${ExceptionErrors.badResponseError}  ${dioError.response!.data}");
-          }
-          return dioError.response!.data['message'];
-
-        case DioExceptionType.sendTimeout:
-          errorDescription = ExceptionErrors.sendTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.badCertificate:
-          errorDescription = ExceptionErrors.badCertificate.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.connectionError:
-          errorDescription = ExceptionErrors.checkInternetConnection.stringToString;
-
-          return errorDescription;
-      }
-    } else {
-      errorDescription = ExceptionErrors.unexpectedErrorOccurred.stringToString;
-      return errorDescription;
-    }
-  }
 
 /* @override
   Stream<CatalogDataEntity> searchResponse(String transactionId) {
     final StreamController<CatalogDataEntity> stringStream =
         StreamController.broadcast();
 
-    if (kDebugMode) {
-      print(
+      AppUtils.printLogs(
           "OnBoarding Body Datta $seekerSearchSSEApi/transaction_id=$transactionId");
-    }
+
     try {
       //GET REQUEST
       SSEClient.subscribeToSSE(
@@ -202,7 +148,7 @@ class SeekerHomeApiServiceImpl implements SeekerHomeApiService {
             "Cache-Control": "no-cache",
           }).listen(
         (event) {
-          debugPrint('Data: ${event.data!}');
+          AppUtils.printLogs('Data: ${event.data!}');
 
           // Parse JSON string into Map
           var response = json.decode(event.data!);
@@ -216,9 +162,8 @@ class SeekerHomeApiServiceImpl implements SeekerHomeApiService {
         },
         onError: (error) {
           // Ensure the stream is closed on error
-          if (kDebugMode) {
-            print('SSE Error: $error');
-          }
+            AppUtils.printLogs('SSE Error: $error');
+
           stringStream.addError(error);
           stringStream.close();
           //throw Exception("SSE Connection Closed");
@@ -249,17 +194,17 @@ class SeekerHomeApiServiceImpl implements SeekerHomeApiService {
       )
           .then(
         (value) async {
-          print("value   4{value fsdsf ${value}");
+          AppUtils.printLogs("value   4{value fsdsf ${value}");
 
           await for (var dat in value.data.stream) {
 
             Uint8List uint8List = Uint8List.fromList(dat);
             String result = utf8.decode(uint8List);
 
-            print("\n");
+            AppUtils.printLogs("\n");
             //log("value   4{value fsdsf ${result}");
-            debugPrint("value   4{value fsdsf ${result}");
-            print("\n");
+            AppUtils.printLogs("value   4{value fsdsf ${result}");
+            AppUtils.printLogs("\n");
 
             // Parse JSON string into Map
             Map<String, dynamic> jsonMap =
@@ -267,7 +212,7 @@ class SeekerHomeApiServiceImpl implements SeekerHomeApiService {
 
             if (jsonMap['success']!=null&&jsonMap['success']) {
             } else {
-              print("value   4{value SeekerSearchEntity ${result}");
+              AppUtils.printLogs("value   4{value SeekerSearchEntity ${result}");
               CatalogDataEntity model;
               model=CatalogDataEntity.fromJson(jsonMap);
 

@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
-import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../../domain/usecase/on_boarding_usecase.dart';
+import '../../../../../utils/extensions/string_to_string.dart';
 import '../../../../../core/exception_errors.dart';
 import '../../../../../utils/app_utils/app_utils.dart';
 import '../../../domain/entities/e_auth_providers_entity.dart';
@@ -97,9 +95,7 @@ class KycBlocBelem extends Bloc<KycEventBelem, KycStateBelem> {
       }
     }, onError: (error) {
       // Handle error
-      if (kDebugMode) {
-        print('Error occurred: $error');
-      }
+      AppUtils.printLogs('Error occurred: $error');
 
       var message = AppUtils.getErrorMessage(error.toString());
 

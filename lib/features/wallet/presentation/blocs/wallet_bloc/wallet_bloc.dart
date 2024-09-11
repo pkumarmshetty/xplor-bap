@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:xplor/features/wallet/domain/usecase/wallet_usecase.dart';
+import '../../../domain/usecase/wallet_usecase.dart';
 
 import 'wallet_state.dart';
 
@@ -12,10 +12,12 @@ class WalletDataBloc extends Cubit<WalletState> {
     required this.useCase,
   }) : super(const WalletState(tabIndex: 0));
 
+  /// Method to get the wallet id.
   Future getWalletData() async {
     await useCase.getWalletId();
   }
 
+  /// Method to update the wallet tab index.
   void updateWalletTabIndex({required int index}) {
     emit(state.copyWith(tabIndex: index));
   }

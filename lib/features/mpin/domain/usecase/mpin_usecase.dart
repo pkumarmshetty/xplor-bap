@@ -1,5 +1,5 @@
-import 'package:xplor/features/mpin/domain/entities/send_mpin_otp_entity.dart';
-import 'package:xplor/features/mpin/domain/repository/mpin_repository.dart';
+import '../entities/send_mpin_otp_entity.dart';
+import '../repository/mpin_repository.dart';
 
 class MpinUseCase {
   MpinRepository repository;

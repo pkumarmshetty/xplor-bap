@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:xplor/gen/assets.gen.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/padding.dart';
-import 'package:xplor/utils/extensions/space.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/extensions/widget_animations.dart';
-
+import '../../../../gen/assets.gen.dart';
+import '../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../utils/extensions/padding.dart';
+import '../../../../utils/extensions/string_to_string.dart';
+import '../../../../utils/extensions/widget_animations.dart';
 import '../../../../config/routes/path_routing.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
@@ -23,9 +21,8 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (bool val) {
-        AppUtils.showAlertDialog(context, false);
-      },
+      onPopInvokedWithResult: (val, result) =>
+          AppUtils.showAlertDialog(context, false),
       child: Scaffold(
         body: AppBackgroundDecoration(
             child: SafeArea(
@@ -47,18 +44,22 @@ class WelcomePage extends StatelessWidget {
             Assets.images.welcomePage,
             width: MediaQuery.of(context).size.width,
             fit: BoxFit.cover, // Set the width of the SVG
-          ).singleSidePadding(top: AppDimensions.xxl, bottom: AppDimensions.small),
+          ).singleSidePadding(
+              top: AppDimensions.xxl, bottom: AppDimensions.small),
         ),
         OnBoardingKeys.discover.stringToString
             .titleBlack(align: TextAlign.center)
             .fadeAnimation()
             .symmetricPadding(horizontal: AppDimensions.xxl),
-        AppDimensions.small.vSpace(),
+        AppDimensions.small.verticalSpace,
         OnBoardingKeys.discoverDescription.stringToString
-            .titleRegular(color: AppColors.grey64697a, size: 14.sp, align: TextAlign.center)
+            .titleRegular(
+                color: AppColors.grey64697a,
+                size: AppDimensions.smallXXL.sp,
+                align: TextAlign.center)
             .fadeAnimation()
             .symmetricPadding(horizontal: AppDimensions.large),
-        AppDimensions.smallXL.vSpace(),
+        AppDimensions.smallXL.verticalSpace,
         ButtonWidget(
           customText: SizedBox(
             width: double.infinity,
@@ -66,7 +67,10 @@ class WelcomePage extends StatelessWidget {
               alignment: Alignment.centerRight,
               children: [
                 Center(
-                  child: OnBoardingKeys.getStarted.stringToString.buttonTextBold(size: 14.sp, color: Colors.white),
+                  child: OnBoardingKeys.getStarted.stringToString
+                      .buttonTextBold(
+                          size: AppDimensions.smallXXL.sp,
+                          color: AppColors.white),
                 ),
                 const Icon(
                   Icons.arrow_forward_ios_sharp,
@@ -77,30 +81,25 @@ class WelcomePage extends StatelessWidget {
             ),
           ),
           isValid: true,
-          onPressed: () {
-            Navigator.pushNamed(context, Routes.walkThrough);
-          },
-        ).symmetricPadding(
-          horizontal: AppDimensions.medium,
-        ),
-        AppDimensions.small.vSpace(),
+          onPressed: () => Navigator.pushNamed(context, Routes.walkThrough),
+        ).symmetricPadding(horizontal: AppDimensions.medium),
+        AppDimensions.small.verticalSpace,
         GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, Routes.login, arguments: true);
-          },
+          onTap: () =>
+              Navigator.pushNamed(context, Routes.login, arguments: true),
           child: Center(
             child: OnBoardingKeys.alreadyAccount.stringToString
-                .titleSemiBold(color: AppColors.primaryLightColor, size: 14.sp)
+                .titleSemiBold(
+                    color: AppColors.primaryLightColor,
+                    size: AppDimensions.smallXXL.sp)
                 .fadeInAnimated(),
           ).singleSidePadding(
             left: AppDimensions.medium,
             right: AppDimensions.medium,
             bottom: AppDimensions.medium,
           ),
-        ).symmetricPadding(
-          horizontal: AppDimensions.medium,
-        ),
-        AppDimensions.smallXL.vSpace(),
+        ).symmetricPadding(horizontal: AppDimensions.medium),
+        AppDimensions.smallXL.verticalSpace,
       ],
     );
   }

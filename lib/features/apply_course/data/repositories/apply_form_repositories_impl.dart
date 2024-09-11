@@ -1,10 +1,8 @@
-import 'package:flutter/foundation.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../../../utils/app_utils/app_utils.dart';
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../core/connection/network_info.dart';
 import '../../../../core/exception_errors.dart';
 import '../../domain/entities/get_response_entity/sse_services_entity.dart';
-
 import '../../domain/repository/apply_form_repository.dart';
 import '../data_sources/apply_form_service.dart';
 
@@ -16,9 +14,7 @@ class ApplyFormRepositoryImpl implements ApplyFormRepository {
 
   @override
   Future<void> selectRequest(String body) async {
-    if (kDebugMode) {
-      print("await networkInfo.isConnected!  ${await networkInfo.isConnected!}");
-    }
+    AppUtils.printLogs("await networkInfo.isConnected!  ${await networkInfo.isConnected!}");
     if (await networkInfo.isConnected!) {
       return apiService.selectRequest(body);
     } else {

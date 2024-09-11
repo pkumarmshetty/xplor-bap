@@ -81,4 +81,7 @@ class OnBoardingKeys {
   static const discover = "Discover Your Journey to Success";
   static const discoverDescription = "Navigate, Achieve, and Thrive with our comprehensive platform.";
   static const alreadyAccount = "Already Registered?";
+
+  static const confirmation = "Confirmation";
+  static const confirm = "Confirm";
 }

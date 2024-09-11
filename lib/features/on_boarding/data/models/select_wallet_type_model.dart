@@ -1,4 +1,4 @@
-import 'package:xplor/features/on_boarding/domain/entities/select_wallet_type_entity.dart';
+import '../../domain/entities/select_wallet_type_entity.dart';
 
 class WalletSelectionModel extends WalletSelectionEntity {
   WalletSelectionModel({

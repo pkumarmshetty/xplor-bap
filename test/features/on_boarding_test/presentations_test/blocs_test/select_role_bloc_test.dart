@@ -61,7 +61,7 @@ void main() {
       },
       act: (bloc) => bloc.add(const GetUserRolesEvent()),
       expect: () => [
-        const SelectRoleFetchedState(status: AppPageStatus.loading),
+        const SelectRoleFetchedState(status: RoleState.loading),
         SelectRoleLoadedState(userRoles: userRoles, status: AppPageStatus.success),
       ],
     );
@@ -76,7 +76,7 @@ void main() {
         bloc.add(const GetUserRolesEvent());
       },
       expect: () => [
-        const SelectRoleFetchedState(status: AppPageStatus.loading),
+        const SelectRoleFetchedState(status: RoleState.loading),
         const SelectRoleErrorState(
           status: AppPageStatus.finish,
           errorMessage: 'Exception', // Update with the expected error message

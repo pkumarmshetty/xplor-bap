@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
-import 'package:xplor/utils/app_dimensions.dart';
-import 'package:xplor/utils/circluar_button.dart';
-import 'package:xplor/utils/common_top_header.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/utils.dart';
-import 'package:xplor/utils/widgets/app_background_widget.dart';
-
+import '../../../../multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
+import '../../../../../utils/app_dimensions.dart';
+import '../../../../../utils/circluar_button.dart';
+import '../../../../../utils/common_top_header.dart';
+import '../../../../../utils/extensions/string_to_string.dart';
+import '../../../../../utils/utils.dart';
+import '../../../../../utils/widgets/app_background_widget.dart';
 import '../../../../../config/routes/path_routing.dart';
 import '../../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../../core/dependency_injection.dart';
@@ -80,7 +79,7 @@ class _ChooseRoleViewState extends State<ChooseRoleView> {
                               title: OnBoardingKeys.chooseRole.stringToString,
                               onBackButtonPressed: () => Navigator.of(context).pop(),
                             ),
-                            AppDimensions.large.vSpace(),
+                            AppDimensions.large.verticalSpace,
                             Expanded(
                               child: SingleSelectionChooseRole(
                                 selectedIndex: selectedIndex,

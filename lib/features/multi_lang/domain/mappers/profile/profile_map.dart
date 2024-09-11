@@ -58,5 +58,8 @@ final Map<String, dynamic> originalProfileMap = {
   ProfileKeys.downloading: "Downloading",
   ProfileKeys.fileDownloadedSuccessfully: "File Downloaded Successfully",
   ProfileKeys.downloadFailed: "Download failed",
-  ProfileKeys.notComp: "The course is not completed yet."
+  ProfileKeys.uploadFailed: "Upload failed",
+  ProfileKeys.notComp: "The course is not completed yet.",
+  ProfileKeys.checkProgress: "Check Progress",
+  ProfileKeys.unableToAdd: "Unable to add certificate in wallet"
 };

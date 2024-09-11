@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../app_colors.dart';
+import '../app_dimensions.dart';
 import '../extensions/font_style/font_styles.dart';
 
 class CoursesLabel extends StatefulWidget {
@@ -31,10 +32,10 @@ class _CoursesLabelState extends State<CoursesLabel> {
         }
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.sp, vertical: 4.sp),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppDimensions.extraSmall),
         decoration: BoxDecoration(
           color: widget.isSelected ? AppColors.lightBlueProfileTiles : Colors.transparent,
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppDimensions.mediumXL)),
         ),
         child: widget.label
             .titleMedium(size: 12.sp, color: widget.isSelected ? AppColors.black : AppColors.tabsUnselectedTextColor),

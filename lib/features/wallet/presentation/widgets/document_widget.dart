@@ -21,9 +21,10 @@ import '../../domain/entities/wallet_vc_list_entity.dart';
 import '../blocs/share_doc_vc_bloc/share_doc_vc_bloc.dart';
 import '../blocs/wallet_vc_bloc/wallet_vc_event.dart';
 
+/// Document Widget
 class DocumentWidget extends StatelessWidget {
-  final Function(bool?) onSelect;
-  final DocumentVcData doc;
+  final Function(bool?) onSelect; // Callback for selection changes
+  final DocumentVcData doc; // Document data to display
 
   const DocumentWidget({super.key, required this.doc, required this.onSelect});
 
@@ -36,60 +37,66 @@ class DocumentWidget extends StatelessWidget {
         surfaceTintColor: AppColors.white,
         child: Stack(
           children: [
-            // Your grid item content
+            // Column for laying out document details
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Row containing the selection icon and PDF thumbnail
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    // Selection icon (radio button or custom SVG)
                     InkWell(
-                      onTap: () {
-                        onSelect(!(doc.isSelected ?? false));
-                      },
+                      onTap: () => onSelect(!(doc.isSelected ?? false)),
                       splashColor: Colors.transparent,
                       child: doc.isSelected ?? false
-                          ? SvgPicture.asset(
-                              Assets.images.icSelected,
-                              height: 20.w,
-                              width: 20.w,
-                            )
+                          ? SvgPicture.asset(Assets.images.icSelected,
+                              height: AppDimensions.mediumXL.w, width: AppDimensions.mediumXL.w)
                           : Icon(
                               Icons.radio_button_off_outlined,
                               size: AppDimensions.mediumXL.w,
                               color: AppColors.greyBorderC1,
                             ),
                     ),
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PDFViewWidget(doc: doc),
-                            ),
-                          );
-                        },
-                        child: SvgPicture.asset(
-                          AppUtils.loadThumbnailBasedOnMimeTime(doc.fileType!),
-                          height: 60.w,
-                          width: 44.w,
-                        )).singleSidePadding(right: 50.w, top: AppDimensions.small.w),
+                    Expanded(
+                      child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PDFViewWidget(doc: doc),
+                                  ),
+                                );
+                              },
+                              child: doc.fileType == "text/html"
+                                  ? AppUtils.loadText(
+                                      doc.tags,
+                                    )
+                                  : SvgPicture.asset(
+                                      AppUtils.loadThumbnailBasedOnMimeTime(doc.fileType!),
+                                      height: 60.w,
+                                      width: 44.w,
+                                    ))
+                          .singleSidePadding(right: 20.w, top: AppDimensions.small.w),
+                    )
                   ],
                 ),
-                AppDimensions.mediumXL.verticalSpace,
-                SvgPicture.asset(
-                  Assets.images.icVerified,
-                  height: 16.w,
-                  width: 56.w,
-                ),
-                AppDimensions.extraSmall.vSpace(),
-                doc.name.titleBoldWithDots(size: 14.sp, maxLine: 1),
-                AppDimensions.small.vSpace(),
+                doc.fileType == "text/html"
+                    ? AppDimensions.extraSmall.verticalSpace
+                    : AppDimensions.mediumXL.verticalSpace,
+                // Verified icon
+                SvgPicture.asset(Assets.images.icVerified, height: AppDimensions.medium.w, width: 56.w),
+                AppDimensions.extraSmall.verticalSpace,
+                // Document title
+                doc.name.titleBoldWithDots(size: AppDimensions.smallXXL.sp, maxLine: 1),
+                AppDimensions.small.verticalSpace,
+                // List of tags
                 TagListWidgets(tags: doc.tags),
               ],
             ).paddingAll(padding: AppDimensions.smallXL.w),
-            // Popup menu
+
+            // Conditional Popup menu for sharing or deleting document
             context.read<WalletVcBloc>().flowType == FlowType.document ||
                     context.read<WalletVcBloc>().flowType == FlowType.consent
                 ? Builder(
@@ -99,70 +106,73 @@ class DocumentWidget extends StatelessWidget {
                         right: 10.0,
                         child: GestureDetector(
                           onTap: () {
+                            // Get the render box position for positioning the popup menu
                             RenderBox renderBox = ctx.findRenderObject() as RenderBox;
                             Offset offset = renderBox.localToGlobal(Offset.zero);
+                            // Show the menu with options to share or delete
                             showMenu(
-                                    context: ctx,
-                                    position: RelativeRect.fromLTRB(
-                                      offset.dx,
-                                      offset.dy + renderBox.size.height,
-                                      offset.dx + renderBox.size.width,
-                                      offset.dy + renderBox.size.height + 10, // Adjust the vertical spacing as needed
-                                    ),
-                                    items: [
-                                      PopupMenuItem(
-                                        value: 'share',
-                                        child: Row(
-                                          children: [
-                                            const Icon(Icons.share_outlined, color: Colors.black),
-                                            const SizedBox(width: 8),
-                                            Text(WalletKeys.share.stringToString),
-                                          ],
-                                        ),
-                                        onTap: () {
-                                          context.read<WalletVcBloc>().flowType = FlowType.document;
-                                          context.read<SharedDocVcBloc>().add(ShareDocumentsEvent(documentVcData: doc));
-                                          Navigator.pushNamed(context, Routes.shareDocument);
-                                        },
-                                      ),
-                                      PopupMenuItem(
-                                        value: 'delete',
-                                        child: Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                              Assets.images.deleteIcon,
-                                              colorFilter: const ColorFilter.mode(
-                                                Colors.black,
-                                                BlendMode.srcIn,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Text(WalletKeys.delete.stringToString),
-                                          ],
-                                        ),
-                                        onTap: () {
-                                          AppUtils.showAlertDialogForConfirmation(
-                                              ctx,
-                                              WalletKeys.delete.stringToString,
-                                              '${WalletKeys.deleteMessage.stringToString}?',
-                                              WalletKeys.cancel.stringToString,
-                                              WalletKeys.delete.stringToString, onConfirm: () {
-                                            List<String> vc = [];
-
-                                            vc.add(doc.id);
-
-                                            context.read<WalletVcBloc>().add(WalletDelVcEvent(
-                                                  vcIds: vc,
-                                                ));
-
-                                            Navigator.pop(ctx);
-                                          });
-                                        },
-                                      ),
+                              context: ctx,
+                              position: RelativeRect.fromLTRB(
+                                offset.dx,
+                                offset.dy + renderBox.size.height,
+                                offset.dx + renderBox.size.width,
+                                offset.dy + renderBox.size.height + 10, // Adjust the vertical spacing as needed
+                              ),
+                              items: [
+                                // Share option
+                                PopupMenuItem(
+                                  value: 'share',
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.share_outlined, color: Colors.black),
+                                      const SizedBox(width: AppDimensions.small),
+                                      Text(WalletKeys.share.stringToString),
                                     ],
-                                    color: Colors.white,
-                                    surfaceTintColor: Colors.white)
-                                .then((value) {
+                                  ),
+                                  onTap: () {
+                                    context.read<WalletVcBloc>().flowType = FlowType.document;
+                                    context.read<SharedDocVcBloc>().add(ShareDocumentsEvent(documentVcData: doc));
+                                    Navigator.pushNamed(context, Routes.shareDocument);
+                                  },
+                                ),
+                                // Delete option
+                                PopupMenuItem(
+                                  value: 'delete',
+                                  child: Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        Assets.images.deleteIcon,
+                                        colorFilter: const ColorFilter.mode(
+                                          Colors.black,
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(WalletKeys.delete.stringToString),
+                                    ],
+                                  ),
+                                  onTap: () {
+                                    AppUtils.showAlertDialogForConfirmation(
+                                      ctx,
+                                      WalletKeys.delete.stringToString,
+                                      '${WalletKeys.deleteMessage.stringToString}?',
+                                      WalletKeys.cancel.stringToString,
+                                      WalletKeys.delete.stringToString,
+                                      onConfirm: () {
+                                        List<String> vc = [];
+                                        vc.add(doc.id);
+                                        context.read<WalletVcBloc>().add(
+                                              WalletDelVcEvent(vcIds: vc),
+                                            );
+                                        Navigator.pop(ctx);
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                              color: Colors.white,
+                              surfaceTintColor: Colors.white,
+                            ).then((value) {
                               // Handle the selected action here
                               if (value == 'share') {
                                 // Perform share action
@@ -172,10 +182,7 @@ class DocumentWidget extends StatelessWidget {
                             });
                           },
                           child: const Icon(
-                            size: 20,
-                            Icons.more_vert,
-                            color: AppColors.primaryLightColor,
-                          ),
+                              size: AppDimensions.mediumXL, Icons.more_vert, color: AppColors.primaryLightColor),
                         ),
                       ),
                     ),

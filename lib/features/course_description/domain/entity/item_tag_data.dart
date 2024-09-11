@@ -11,11 +11,16 @@ class ItemTagData {
 
   factory ItemTagData.fromJson(Map<String, dynamic> json) {
     return ItemTagData(
-        level: json['level'] == null ? Level(name: "", value: "Beginner") : Level.fromJson(json['level']),
+        level: json['level'] == null
+            ? Level(name: "", value: "Beginner")
+            : Level.fromJson(json['level']),
         duration: json['duration'] == null
             ? CourseDuration(name: '', value: '0.0')
             : CourseDuration.fromJson(json['duration']),
-        list: json['list'] == null ? [] : List<ItemTagList>.from(json["list"]!.map((x) => ItemTagList.fromJson(x))));
+        list: json['list'] == null
+            ? []
+            : List<ItemTagList>.from(
+                json["list"]!.map((x) => ItemTagList.fromJson(x))));
   }
 
   Map<String, dynamic> toJson() {
@@ -78,16 +83,21 @@ class CourseDuration {
 class ItemTagList {
   final Descriptor? descriptor;
   final String value;
+  final String name;
 
   ItemTagList({
     required this.descriptor,
     required this.value,
+    required this.name,
   });
 
   factory ItemTagList.fromJson(Map<String, dynamic> json) {
     return ItemTagList(
-      descriptor: json['descriptor'] == null ? null : Descriptor.fromJson(json['descriptor']),
+      descriptor: json['descriptor'] == null
+          ? null
+          : Descriptor.fromJson(json['descriptor']),
       value: json['value'] ?? "",
+      name: json['name'] ?? "",
     );
   }
 
@@ -95,6 +105,7 @@ class ItemTagList {
     return {
       'descriptor': descriptor!.toJson(),
       'value': value,
+      'name': name,
     };
   }
 }

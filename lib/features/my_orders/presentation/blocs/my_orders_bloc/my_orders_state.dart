@@ -1,8 +1,17 @@
 import 'package:equatable/equatable.dart';
 import 'package:xplor/features/my_orders/domain/entities/my_orders_entity.dart';
 
-enum OrderState { loading, initial, loaded, translationLoading, failure, empty }
+/// Represents the different states of the My Orders feature.
+enum OrderState {
+  loading, // Data is being loaded.
+  initial, // Initial state before any data is fetched.
+  loaded, // Data has been successfully loaded.
+  translationLoading, // Translation of data is in progress.
+  failure, // An error occurred while fetching or processing data.
+  empty // No orders were found.
+}
 
+/// Base class for all My Orders states.
 abstract class MyOrdersState extends Equatable {
   const MyOrdersState();
 
@@ -10,6 +19,7 @@ abstract class MyOrdersState extends Equatable {
   List<Object> get props => [];
 }
 
+/// State representing fetched My Orders data.
 class MyOrdersFetchedState extends MyOrdersState {
   final OrderState orderState;
   final String? errorMessage;
@@ -18,6 +28,7 @@ class MyOrdersFetchedState extends MyOrdersState {
   final List<MyOrdersEntity> ongoingOrdersEntity;
   final List<MyOrdersEntity> completedOrdersEntity;
 
+  /// Constructor for MyOrdersFetchedState.
   const MyOrdersFetchedState({
     required this.orderState,
     this.errorMessage,
@@ -27,6 +38,7 @@ class MyOrdersFetchedState extends MyOrdersState {
     required this.completedOrdersEntity,
   });
 
+  /// Creates a copy of the current state with optional modifications.
   MyOrdersFetchedState copyWith({
     String? errorMessage,
     OrderState? ordersState,
@@ -34,7 +46,7 @@ class MyOrdersFetchedState extends MyOrdersState {
     int? onCompletedCount = 0,
     List<MyOrdersEntity>? myOrdersEntity,
     List<MyOrdersEntity>? completedOrdersEntity,
-    String? message,
+    String? message, // Unused parameter, consider removing.
   }) {
     return MyOrdersFetchedState(
       errorMessage: errorMessage ?? this.errorMessage,
@@ -42,16 +54,15 @@ class MyOrdersFetchedState extends MyOrdersState {
       onCompletedCount: onCompletedCount ?? this.onCompletedCount,
       orderState: ordersState ?? orderState,
       ongoingOrdersEntity: myOrdersEntity ?? ongoingOrdersEntity,
-      completedOrdersEntity:
-          completedOrdersEntity ?? this.completedOrdersEntity,
+      completedOrdersEntity: completedOrdersEntity ?? this.completedOrdersEntity,
     );
   }
 
   @override
-  List<Object> get props =>
-      [orderState, ongoingOrdersEntity, completedOrdersEntity];
+  List<Object> get props => [orderState, ongoingOrdersEntity, completedOrdersEntity];
 }
 
+/// Initial state of the My Orders feature.
 class MyOrdersInitialState extends MyOrdersState {
   const MyOrdersInitialState();
 }
@@ -67,13 +78,17 @@ class MyOrdersInitialState extends MyOrdersState {
   });
 }*/
 
+/// State indicating successful retrieval of a status with a base URL.
 class OnStatusSuccessState extends MyOrdersState {
   final String baseUrl;
+  final MyOrdersEntity orderData;
 
   @override
-  List<Object> get props => [baseUrl];
+  List<Object> get props => [baseUrl, orderData];
 
+  /// Constructor for OnStatusSuccessState.
   const OnStatusSuccessState({
     required this.baseUrl,
+    required this.orderData,
   });
 }

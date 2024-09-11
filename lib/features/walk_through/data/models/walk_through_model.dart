@@ -1,12 +1,16 @@
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
 
+/// Model for Walk Through Screens
 class WalkThroughModel {
   final String image, title, subTitle;
 
-  WalkThroughModel({required this.image, required this.title, required this.subTitle});
+  WalkThroughModel({
+    required this.image,
+    required this.title,
+    required this.subTitle,
+  });
 }
 
 List<WalkThroughModel> walkThroughModel = [
@@ -21,5 +25,5 @@ List<WalkThroughModel> walkThroughModel = [
   WalkThroughModel(
       image: Assets.images.infoFirst,
       title: OnBoardingKeys.titleStep3.stringToString,
-      subTitle: OnBoardingKeys.titleDesStep3.stringToString)
+      subTitle: OnBoardingKeys.titleDesStep3.stringToString),
 ];

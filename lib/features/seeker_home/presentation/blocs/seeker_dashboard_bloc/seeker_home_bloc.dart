@@ -1,18 +1,16 @@
 import 'dart:async';
 import 'dart:collection';
-
 import 'package:bloc/bloc.dart';
-import 'package:xplor/const/local_storage/shared_preferences_helper.dart';
-import 'package:xplor/core/dependency_injection.dart';
-import 'package:xplor/features/seeker_home/domain/entities/post_request_entity/search_post_entity.dart';
-
-import 'package:xplor/features/seeker_home/presentation/blocs/seeker_dashboard_bloc/seeker_home_event.dart';
-import 'package:xplor/utils/app_utils/app_utils.dart';
-
+import '../../../../../const/local_storage/shared_preferences_helper.dart';
+import '../../../../../core/dependency_injection.dart';
+import '../../../domain/entities/post_request_entity/search_post_entity.dart';
+import 'seeker_home_event.dart';
+import '../../../../../utils/app_utils/app_utils.dart';
 import '../../../domain/entities/get_response_entity/services_items.dart';
 import '../../../domain/usecases/seeker_home_usecases.dart';
 import 'seeker_home_state.dart';
 
+/// Seeker home bloc
 class SeekerHomeBloc extends Bloc<SeekerHomeEvent, SeekerHomeState> {
   SeekerHomeUseCase seekerHomeUseCase;
 
@@ -21,11 +19,14 @@ class SeekerHomeBloc extends Bloc<SeekerHomeEvent, SeekerHomeState> {
   List<SearchItemEntity> providers = [];
   String transactionId = "";
 
-  SeekerHomeBloc({required this.seekerHomeUseCase}) : super(SeekerHomeInitialState()) {
+  SeekerHomeBloc({required this.seekerHomeUseCase})
+      : super(SeekerHomeInitialState()) {
     on<SeekerSSEvent>(_onSeekerSSEConnectionEvent);
   }
 
-  FutureOr<void> _onSeekerSSEConnectionEvent(SeekerSSEvent event, Emitter<SeekerHomeState> emit) async {
+  /// Seeker home event handler
+  FutureOr<void> _onSeekerSSEConnectionEvent(
+      SeekerSSEvent event, Emitter<SeekerHomeState> emit) async {
     /*if (event.isFromInit) {
       products.clear();
       providers.clear();
@@ -45,10 +46,12 @@ class SeekerHomeBloc extends Bloc<SeekerHomeEvent, SeekerHomeState> {
         providers = [];
         initialIndex = 1;
       }
-      emit(SeekerHomeUpdatedState(state: DataState.loading, providerData: providers));
+      emit(SeekerHomeUpdatedState(
+          state: DataState.loading, providerData: providers));
 
       SearchPostEntity entity = SearchPostEntity(
-          deviceId: sl<SharedPreferencesHelper>().getString(PrefConstKeys.deviceId),
+          deviceId:
+              sl<SharedPreferencesHelper>().getString(PrefConstKeys.deviceId),
           searchText: event.search,
           initialIndex: initialIndex.toString(),
           lastIndex: lastIndex);
@@ -62,7 +65,8 @@ class SeekerHomeBloc extends Bloc<SeekerHomeEvent, SeekerHomeState> {
 
       initialIndex = initialIndex++;
 
-      emit(SeekerHomeUpdatedState(state: DataState.success, providerData: List.from(providers)));
+      emit(SeekerHomeUpdatedState(
+          state: DataState.success, providerData: List.from(providers)));
     } catch (e) {
       emit(SeekerHomeUpdatedState(
           state: DataState.error,

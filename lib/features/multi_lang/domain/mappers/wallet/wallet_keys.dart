@@ -62,11 +62,9 @@ class WalletKeys {
 
   /// Add Document Keys
   static const documentUploaded = "Document Uploaded Successfully";
-  static const documentUploadedMessage =
-      "Your document has been successfully uploaded.";
+  static const documentUploadedMessage = "Your document has been successfully uploaded.";
   static const documentUploadFailed = "Document Upload Failed!";
-  static const documentUploadFailedMessage =
-      "An error occurred while uploading the file. Please try again later.";
+  static const documentUploadFailedMessage = "An error occurred while uploading the file. Please try again later.";
   static const forAssistance = "For assistance,";
   static const contactSupport = "contact support.";
   static const retry = "Retry";
@@ -84,8 +82,7 @@ class WalletKeys {
   static const revoke = "Revoke";
   static const revokeMessage = "Are you sure, you want to revoke access";
   static const noConsentSharedYet = "No Consent Shared Yet!";
-  static const thereAreCurrentlyNoConsent =
-      "There are currently no consent records shared.";
+  static const thereAreCurrentlyNoConsent = "There are currently no consent records shared.";
 
   /// Bloc messages
   static const fileNameCannotBeEmpty = "Filename cannot be empty";
@@ -99,8 +96,7 @@ class WalletKeys {
 
   static const tryAgain = "Try Again";
 
-  static const walletIdEmptyError =
-      "Wallet Id is empty from backend so you are not able to upload any document";
+  static const walletIdEmptyError = "Wallet Id is empty from backend so you are not able to upload any document";
 
   //Wallet Shared Doc
 

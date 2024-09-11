@@ -20,6 +20,8 @@ import '../../../../utils/utils.dart';
 import '../../../multi_lang/presentation/blocs/bloc/translate_bloc.dart';
 import '../../../wallet/presentation/pages/wallet_tab_view.dart';
 
+/// A widget that provides a tab bar for the seeker application,
+/// allowing navigation between different sections such as Wallet, Home, and Profile.
 class SeekerTabBarWidget extends StatefulWidget {
   const SeekerTabBarWidget({super.key});
 
@@ -28,9 +30,11 @@ class SeekerTabBarWidget extends StatefulWidget {
 }
 
 class _SeekerTabBarWidgetState extends State<SeekerTabBarWidget> {
+  /// The current index of the selected tab.
   int? _currentIndex;
 
-  final loginFrom = sl<SharedPreferencesHelper>().getString(PrefConstKeys.loginFrom);
+  final loginFrom =
+      sl<SharedPreferencesHelper>().getString(PrefConstKeys.loginFrom);
 
   final List<Widget> _screens = [
     const MyWalletTab(),
@@ -41,42 +45,48 @@ class _SeekerTabBarWidgetState extends State<SeekerTabBarWidget> {
   @override
   void initState() {
     super.initState();
-    if (sl<SharedPreferencesHelper>().getBoolean(PrefConstKeys.isDirectFromSplash)) {
-      sl<SharedPreferencesHelper>().setString(PrefConstKeys.searchCategoryInput, "");
+    // Checks if the user has navigated directly from the splash screen.
+    if (sl<SharedPreferencesHelper>()
+        .getBoolean(PrefConstKeys.isDirectFromSplash)) {
+      sl<SharedPreferencesHelper>()
+          .setString(PrefConstKeys.searchCategoryInput, "");
+      // Initiates dynamic text translation based on the selected language.
       context.read<TranslationBloc>().add(TranslateDynamicTextEvent(
-          langCode: sl<SharedPreferencesHelper>().getString(PrefConstKeys.selectedLanguageCode),
+          langCode: sl<SharedPreferencesHelper>()
+              .getString(PrefConstKeys.selectedLanguageCode),
           moduleTypes: onBoardingModule,
           isNavigation: false));
     }
+    sl<SharedPreferencesHelper>().setString(PrefConstKeys.savedAddress, "NA");
+
+    // Determines the initial tab based on the `loginFrom` value.
     if (loginFrom == PrefConstKeys.seekerWalletKey) {
       _currentIndex = 0;
-      sl<SharedPreferencesHelper>().setString(PrefConstKeys.loginFrom, PrefConstKeys.seekerHomeKey);
+      sl<SharedPreferencesHelper>()
+          .setString(PrefConstKeys.loginFrom, PrefConstKeys.seekerHomeKey);
     } else if (loginFrom == PrefConstKeys.seekerProfileKey) {
       _currentIndex = 2;
-      sl<SharedPreferencesHelper>().setString(PrefConstKeys.loginFrom, PrefConstKeys.seekerHomeKey);
+      sl<SharedPreferencesHelper>()
+          .setString(PrefConstKeys.loginFrom, PrefConstKeys.seekerHomeKey);
     } else {
       _currentIndex = 1;
     }
-
-    /*context.read<TranslationBloc>().add(const TranslateDynamicTextEvent(langCode: 'en', moduleTypes: seekerHomeModule));
-
-    context.read<TranslationBloc>().add(const TranslateDynamicTextEvent(langCode: 'en', moduleTypes: walletModule));
-
-    context.read<TranslationBloc>().add(const TranslateDynamicTextEvent(langCode: 'en', moduleTypes: profileModule));
-
-    context.read<TranslationBloc>().add(const TranslateDynamicTextEvent(langCode: 'en', moduleTypes: mPinModule));*/
   }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
+      // Prevents the user from navigating back.
       canPop: false,
-      onPopInvoked: (bool val) {
+      onPopInvokedWithResult: (val, result) {
+        // Shows an alert dialog when back button is pressed.
         AppUtils.showAlertDialog(context, false);
       },
       child: Scaffold(
         backgroundColor: AppColors.white,
-        body: SafeArea(child: AppBackgroundDecoration(child: _screens[_currentIndex ?? 1])),
+        body: SafeArea(
+            child:
+                AppBackgroundDecoration(child: _screens[_currentIndex ?? 1])),
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(color: AppColors.cancelButtonBgColor),
           child: Row(
@@ -84,8 +94,11 @@ class _SeekerTabBarWidgetState extends State<SeekerTabBarWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Builds the Wallet tab.
               _buildTabItem(0, SeekerHomeKeys.wallet.stringToString),
+              // Builds the Home tab.
               _homeTabItem(1),
+              // Builds the Profile tab.
               _buildTabItem(2, SeekerHomeKeys.profile.stringToString),
             ],
           ).singleSidePadding(
@@ -126,6 +139,7 @@ class _SeekerTabBarWidgetState extends State<SeekerTabBarWidget> {
     }
   }
 
+  /// Builds the Home tab with a circular button.
   Widget _homeTabItem(int index) {
     return GestureDetector(
       onTap: () {
@@ -146,15 +160,20 @@ class _SeekerTabBarWidgetState extends State<SeekerTabBarWidget> {
             height: 60.sp,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: _currentIndex == index ? AppColors.primaryColor : AppColors.tabsHomeUnSelectedColor,
+              color: _currentIndex == index
+                  ? AppColors.primaryColor
+                  : AppColors.tabsHomeUnSelectedColor,
             ),
-            child: SvgPicture.asset(Assets.images.homeSelectedSeeker).paddingAll(padding: 20.sp),
+            // Displays the selected home icon with padding.
+            child: SvgPicture.asset(Assets.images.homeSelectedSeeker)
+                .paddingAll(padding: AppDimensions.mediumXL),
           ),
         ),
       ),
     );
   }
 
+  /// Builds a tab item for the given index and label.
   Widget _buildTabItem(int index, String label) {
     return GestureDetector(
         onTap: () async {
@@ -162,12 +181,14 @@ class _SeekerTabBarWidgetState extends State<SeekerTabBarWidget> {
           if (!isLoggedIn && index == 0) {
             //SSEClient.unsubscribeFromSSE();
             // Navigate to login screen
-            sl<SharedPreferencesHelper>().setString(PrefConstKeys.loginFrom, PrefConstKeys.seekerWalletKey);
+            sl<SharedPreferencesHelper>().setString(
+                PrefConstKeys.loginFrom, PrefConstKeys.seekerWalletKey);
             if (mounted) {
               Navigator.pushNamed(context, Routes.login);
             }
           } else if (!isLoggedIn && index == 2) {
-            sl<SharedPreferencesHelper>().setString(PrefConstKeys.loginFrom, PrefConstKeys.seekerProfileKey);
+            sl<SharedPreferencesHelper>().setString(
+                PrefConstKeys.loginFrom, PrefConstKeys.seekerProfileKey);
             if (mounted) {
               Navigator.pushNamed(context, Routes.login);
             }
@@ -185,21 +206,21 @@ class _SeekerTabBarWidgetState extends State<SeekerTabBarWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(
-                _currentIndex == index ? getSelectedIcon(index) : getUnSelectedIcon(index),
+                _currentIndex == index
+                    ? getSelectedIcon(index)
+                    : getUnSelectedIcon(index),
               ),
-              AppDimensions.extraExtraSmall.vSpace(),
+              AppDimensions.extraExtraSmall.verticalSpace,
               _currentIndex == index
-                  ? label.titleBold(size: AppDimensions.smallXL.sp, color: AppColors.primaryColor)
+                  ? label.titleBold(
+                      size: AppDimensions.smallXL.sp,
+                      color: AppColors.primaryColor)
                   : label.titleBold(
-                      size: AppDimensions.smallXL.sp, color: AppColors.tabsUnselectedTextColor.withOpacity(0.58)),
+                      size: AppDimensions.smallXL.sp,
+                      color:
+                          AppColors.tabsUnselectedTextColor.withOpacity(0.58)),
             ],
           ),
         ));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    // SSEClient.unsubscribeFromSSE();
   }
 }

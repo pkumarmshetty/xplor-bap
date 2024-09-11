@@ -1,0 +1,331 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - lcov.info - features/on_boarding/presentation/blocs/select_category/categories_bloc.dart</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory features/on_boarding/presentation/blocs/select_category">features/on_boarding/presentation/blocs/select_category</a> - categories_bloc.dart<span style="font-size: 80%;"> (source / <a href="categories_bloc.dart.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">lcov.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">93.1&nbsp;%</td>
+            <td class="headerCovTableEntry">58</td>
+            <td class="headerCovTableEntry">54</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2024-07-12 16:55:55</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : import 'dart:async';</span>
+<span id="L2"><span class="lineNum">       2</span>              : import 'dart:convert';</span>
+<span id="L3"><span class="lineNum">       3</span>              : import 'package:bloc/bloc.dart';</span>
+<span id="L4"><span class="lineNum">       4</span>              : import 'package:equatable/equatable.dart';</span>
+<span id="L5"><span class="lineNum">       5</span>              : import 'package:shared_preferences/shared_preferences.dart';</span>
+<span id="L6"><span class="lineNum">       6</span>              : import '../../../../../const/app_state.dart';</span>
+<span id="L7"><span class="lineNum">       7</span>              : import '../../../domain/entities/categories_entity.dart';</span>
+<span id="L8"><span class="lineNum">       8</span>              : import '../../../domain/usecase/on_boarding_usecase.dart';</span>
+<span id="L9"><span class="lineNum">       9</span>              : import '../../../../../const/local_storage/shared_preferences_helper.dart';</span>
+<span id="L10"><span class="lineNum">      10</span>              : import '../../../../../utils/app_utils/app_utils.dart';</span>
+<span id="L11"><span class="lineNum">      11</span>              : </span>
+<span id="L12"><span class="lineNum">      12</span>              : part 'categories_event.dart';</span>
+<span id="L13"><span class="lineNum">      13</span>              : </span>
+<span id="L14"><span class="lineNum">      14</span>              : part 'categories_state.dart';</span>
+<span id="L15"><span class="lineNum">      15</span>              : </span>
+<span id="L16"><span class="lineNum">      16</span>              : /*class CategoriesBloc extends Bloc&lt;CategoriesEvent, CategoriesState&gt; {</span>
+<span id="L17"><span class="lineNum">      17</span>              :   OnBoardingUseCase useCase;</span>
+<span id="L18"><span class="lineNum">      18</span>              :   SharedPreferencesHelper preferencesHelper;</span>
+<span id="L19"><span class="lineNum">      19</span>              :   SharedPreferences? helper;</span>
+<span id="L20"><span class="lineNum">      20</span>              :   String? deviceId = &quot;&quot;;</span>
+<span id="L21"><span class="lineNum">      21</span>              : </span>
+<span id="L22"><span class="lineNum">      22</span>              :   late SharedPreferences prefs;</span>
+<span id="L23"><span class="lineNum">      23</span>              : </span>
+<span id="L24"><span class="lineNum">      24</span>              :   CategoriesBloc({</span>
+<span id="L25"><span class="lineNum">      25</span>              :     required this.useCase,</span>
+<span id="L26"><span class="lineNum">      26</span>              :     required this.preferencesHelper,</span>
+<span id="L27"><span class="lineNum">      27</span>              :     this.helper,</span>
+<span id="L28"><span class="lineNum">      28</span>              :   }) : super(CategoriesInitial()) {</span>
+<span id="L29"><span class="lineNum">      29</span>              :     on&lt;FetchCategoriesEvent&gt;(_onFetchCategoriesEvent);</span>
+<span id="L30"><span class="lineNum">      30</span>              :     on&lt;CategorySelectedEvent&gt;(_onCategorySelectedEvent);</span>
+<span id="L31"><span class="lineNum">      31</span>              :     on&lt;CategorySearchEvent&gt;(_onCategorySearchEvent);</span>
+<span id="L32"><span class="lineNum">      32</span>              :     on&lt;CategoriesSaveEvent&gt;(_onCategoriesSaveEvent);</span>
+<span id="L33"><span class="lineNum">      33</span>              : </span>
+<span id="L34"><span class="lineNum">      34</span>              :     prefs = helper ?? preferencesHelper.sharedPreferences;</span>
+<span id="L35"><span class="lineNum">      35</span>              :     prefs.getString(PrefConstKeys.deviceId);</span>
+<span id="L36"><span class="lineNum">      36</span>              :   }</span>
+<span id="L37"><span class="lineNum">      37</span>              : </span>
+<span id="L38"><span class="lineNum">      38</span>              :   List&lt;CategoryEntity&gt; selectedCategories = [];</span>
+<span id="L39"><span class="lineNum">      39</span>              :   List&lt;CategoryEntity&gt; categories = [];</span>
+<span id="L40"><span class="lineNum">      40</span>              : </span>
+<span id="L41"><span class="lineNum">      41</span>              :   FutureOr&lt;void&gt; _onCategorySelectedEvent(</span>
+<span id="L42"><span class="lineNum">      42</span>              :       CategorySelectedEvent event, Emitter&lt;CategoriesState&gt; emit) {</span>
+<span id="L43"><span class="lineNum">      43</span>              :     categories = List.from(categories);</span>
+<span id="L44"><span class="lineNum">      44</span>              :     CategoryEntity updatedCategory =</span>
+<span id="L45"><span class="lineNum">      45</span>              :         categories[event.position].copyWith(isSelected: event.isSelected);</span>
+<span id="L46"><span class="lineNum">      46</span>              :     categories[event.position] = updatedCategory;</span>
+<span id="L47"><span class="lineNum">      47</span>              :     selectedCategories = List.from(selectedCategories);</span>
+<span id="L48"><span class="lineNum">      48</span>              :     if (event.isSelected) {</span>
+<span id="L49"><span class="lineNum">      49</span>              :       // Check if the category already exists in selectedCategories</span>
+<span id="L50"><span class="lineNum">      50</span>              :       if (!selectedCategories</span>
+<span id="L51"><span class="lineNum">      51</span>              :           .any((category) =&gt; category.id == updatedCategory.id)) {</span>
+<span id="L52"><span class="lineNum">      52</span>              :         selectedCategories.add(updatedCategory);</span>
+<span id="L53"><span class="lineNum">      53</span>              :       }</span>
+<span id="L54"><span class="lineNum">      54</span>              :     } else {</span>
+<span id="L55"><span class="lineNum">      55</span>              :       // Remove the category from selectedCategories based on its category property</span>
+<span id="L56"><span class="lineNum">      56</span>              :       selectedCategories</span>
+<span id="L57"><span class="lineNum">      57</span>              :           .removeWhere((category) =&gt; category.id == updatedCategory.id);</span>
+<span id="L58"><span class="lineNum">      58</span>              :     }</span>
+<span id="L59"><span class="lineNum">      59</span>              : </span>
+<span id="L60"><span class="lineNum">      60</span>              :     emit(CategoriesFetchedState(</span>
+<span id="L61"><span class="lineNum">      61</span>              :       categories: categories,</span>
+<span id="L62"><span class="lineNum">      62</span>              :       selectedCategories: selectedCategories,</span>
+<span id="L63"><span class="lineNum">      63</span>              :       selectCategoryState: SelectCategoryState.loaded,</span>
+<span id="L64"><span class="lineNum">      64</span>              :     ));</span>
+<span id="L65"><span class="lineNum">      65</span>              :   }</span>
+<span id="L66"><span class="lineNum">      66</span>              : </span>
+<span id="L67"><span class="lineNum">      67</span>              :   FutureOr&lt;void&gt; _onFetchCategoriesEvent(</span>
+<span id="L68"><span class="lineNum">      68</span>              :       FetchCategoriesEvent event, Emitter&lt;CategoriesState&gt; emit) async {</span>
+<span id="L69"><span class="lineNum">      69</span>              :     categories.clear();</span>
+<span id="L70"><span class="lineNum">      70</span>              :     emit(CategoriesFetchedState(</span>
+<span id="L71"><span class="lineNum">      71</span>              :       categories: categories,</span>
+<span id="L72"><span class="lineNum">      72</span>              :       selectedCategories: selectedCategories,</span>
+<span id="L73"><span class="lineNum">      73</span>              :       selectCategoryState: SelectCategoryState.loading,</span>
+<span id="L74"><span class="lineNum">      74</span>              :     ));</span>
+<span id="L75"><span class="lineNum">      75</span>              :     try {</span>
+<span id="L76"><span class="lineNum">      76</span>              :       categories = await useCase.getCategories();</span>
+<span id="L77"><span class="lineNum">      77</span>              :       */ /*categories = response</span>
+<span id="L78"><span class="lineNum">      78</span>              :           .map((e) =&gt; CategoryEntity(</span>
+<span id="L79"><span class="lineNum">      79</span>              :               id: e.id ?? &quot;&quot;,</span>
+<span id="L80"><span class="lineNum">      80</span>              :               value: e.value ?? &quot;&quot;,</span>
+<span id="L81"><span class="lineNum">      81</span>              :               category: e.category ?? &quot;&quot;,</span>
+<span id="L82"><span class="lineNum">      82</span>              :               isSelected: e.isSelected ?? false))</span>
+<span id="L83"><span class="lineNum">      83</span>              :           .toList();*/ /*</span>
+<span id="L84"><span class="lineNum">      84</span>              :       emit(CategoriesFetchedState(</span>
+<span id="L85"><span class="lineNum">      85</span>              :         categories: categories,</span>
+<span id="L86"><span class="lineNum">      86</span>              :         selectedCategories: const [],</span>
+<span id="L87"><span class="lineNum">      87</span>              :         selectCategoryState: SelectCategoryState.loaded,</span>
+<span id="L88"><span class="lineNum">      88</span>              :       ));</span>
+<span id="L89"><span class="lineNum">      89</span>              :     } catch (e) {</span>
+<span id="L90"><span class="lineNum">      90</span>              :       emit(CategoriesFailureState(</span>
+<span id="L91"><span class="lineNum">      91</span>              :           errorMessage: AppUtils.getErrorMessage(e.toString())));</span>
+<span id="L92"><span class="lineNum">      92</span>              :     }</span>
+<span id="L93"><span class="lineNum">      93</span>              :   }</span>
+<span id="L94"><span class="lineNum">      94</span>              : </span>
+<span id="L95"><span class="lineNum">      95</span>              :   FutureOr&lt;void&gt; _onCategorySearchEvent(</span>
+<span id="L96"><span class="lineNum">      96</span>              :       CategorySearchEvent event, Emitter&lt;CategoriesState&gt; emit) async {</span>
+<span id="L97"><span class="lineNum">      97</span>              :     final query = event.query.toLowerCase();</span>
+<span id="L98"><span class="lineNum">      98</span>              :     await prefs.setString(</span>
+<span id="L99"><span class="lineNum">      99</span>              :           PrefConstKeys.searchCategoryInput, query);</span>
+<span id="L100"><span class="lineNum">     100</span>              :   }</span>
+<span id="L101"><span class="lineNum">     101</span>              : </span>
+<span id="L102"><span class="lineNum">     102</span>              :   FutureOr&lt;void&gt; _onCategoriesSaveEvent(</span>
+<span id="L103"><span class="lineNum">     103</span>              :       CategoriesSaveEvent event, Emitter&lt;CategoriesState&gt; emit) async {</span>
+<span id="L104"><span class="lineNum">     104</span>              :     emit(CategoriesFetchedState(</span>
+<span id="L105"><span class="lineNum">     105</span>              :       categories: List.from(categories),</span>
+<span id="L106"><span class="lineNum">     106</span>              :       selectedCategories: List.from(selectedCategories),</span>
+<span id="L107"><span class="lineNum">     107</span>              :       selectCategoryState: SelectCategoryState.loading,</span>
+<span id="L108"><span class="lineNum">     108</span>              :     ));</span>
+<span id="L109"><span class="lineNum">     109</span>              :     try {</span>
+<span id="L110"><span class="lineNum">     110</span>              :       // Extract category names from selectedCategories and filter out null values</span>
+<span id="L111"><span class="lineNum">     111</span>              :       final selectedCategoryNames = selectedCategories</span>
+<span id="L112"><span class="lineNum">     112</span>              :           .where((category) =&gt; category.id != null)</span>
+<span id="L113"><span class="lineNum">     113</span>              :           .map((category) =&gt; category.id!) // Use ! to assert non-nullability</span>
+<span id="L114"><span class="lineNum">     114</span>              :           .toList();</span>
+<span id="L115"><span class="lineNum">     115</span>              :       Map&lt;String, dynamic&gt; dataMap = &lt;String, dynamic&gt;{};</span>
+<span id="L116"><span class="lineNum">     116</span>              :       dataMap['deviceId'] = deviceId.toString();</span>
+<span id="L117"><span class="lineNum">     117</span>              :       dataMap['categories'] = selectedCategoryNames;</span>
+<span id="L118"><span class="lineNum">     118</span>              :       final success = await useCase.updateDevicePreference(dataMap);</span>
+<span id="L119"><span class="lineNum">     119</span>              :       if (success) {</span>
+<span id="L120"><span class="lineNum">     120</span>              :         String categoriesJson =</span>
+<span id="L121"><span class="lineNum">     121</span>              :             jsonEncode(selectedCategories.map((e) =&gt; e.toJson()).toList());</span>
+<span id="L122"><span class="lineNum">     122</span>              :         AppUtils.printLogs(</span>
+<span id="L123"><span class="lineNum">     123</span>              :             'Category JSON.... $categoriesJson', AppLogType.debug);</span>
+<span id="L124"><span class="lineNum">     124</span>              :         prefs.setString(PrefConstKeys.listOfCategory, categoriesJson);</span>
+<span id="L125"><span class="lineNum">     125</span>              : </span>
+<span id="L126"><span class="lineNum">     126</span>              :         //emit(CategoriesSavingState());</span>
+<span id="L127"><span class="lineNum">     127</span>              :         emit(CategoriesFetchedState(</span>
+<span id="L128"><span class="lineNum">     128</span>              :           categories: List.from(categories),</span>
+<span id="L129"><span class="lineNum">     129</span>              :           selectedCategories: List.from(selectedCategories),</span>
+<span id="L130"><span class="lineNum">     130</span>              :           selectCategoryState: SelectCategoryState.saved,</span>
+<span id="L131"><span class="lineNum">     131</span>              :         ));</span>
+<span id="L132"><span class="lineNum">     132</span>              :       }</span>
+<span id="L133"><span class="lineNum">     133</span>              :     } catch (e) {</span>
+<span id="L134"><span class="lineNum">     134</span>              :       emit(CategoriesFailureState(</span>
+<span id="L135"><span class="lineNum">     135</span>              :           errorMessage: AppUtils.getErrorMessage(e.toString())));</span>
+<span id="L136"><span class="lineNum">     136</span>              :     }</span>
+<span id="L137"><span class="lineNum">     137</span>              :   }</span>
+<span id="L138"><span class="lineNum">     138</span>              : }*/</span>
+<span id="L139"><span class="lineNum">     139</span>              : </span>
+<span id="L140"><span class="lineNum">     140</span>              : class CategoriesBloc extends Bloc&lt;CategoriesEvent, CategoriesState&gt; {</span>
+<span id="L141"><span class="lineNum">     141</span>              :   OnBoardingUseCase useCase;</span>
+<span id="L142"><span class="lineNum">     142</span>              :   SharedPreferencesHelper preferencesHelper;</span>
+<span id="L143"><span class="lineNum">     143</span>              :   SharedPreferences? helper;</span>
+<span id="L144"><span class="lineNum">     144</span>              :   String? deviceId = &quot;&quot;;</span>
+<span id="L145"><span class="lineNum">     145</span>              : </span>
+<span id="L146"><span class="lineNum">     146</span>              :   late SharedPreferences prefs;</span>
+<span id="L147"><span class="lineNum">     147</span>              : </span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC tlaBgGNC">           1 :   CategoriesBloc({</span></span>
+<span id="L149"><span class="lineNum">     149</span>              :     required this.useCase,</span>
+<span id="L150"><span class="lineNum">     150</span>              :     required this.preferencesHelper,</span>
+<span id="L151"><span class="lineNum">     151</span>              :     this.helper,</span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">           2 :   }) : super(CategoriesInitial()) {</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">           2 :     on&lt;FetchCategoriesEvent&gt;(_onFetchCategoriesEvent);</span></span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">           2 :     on&lt;CategorySelectedEvent&gt;(_onCategorySelectedEvent);</span></span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">           2 :     on&lt;CategorySearchEvent&gt;(_onCategorySearchEvent);</span></span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">           2 :     on&lt;CategoriesSaveEvent&gt;(_onCategoriesSaveEvent);</span></span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">           2 :     prefs = helper ?? preferencesHelper.sharedPreferences;</span></span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">           3 :     deviceId = prefs.getString(PrefConstKeys.deviceId);</span></span>
+<span id="L159"><span class="lineNum">     159</span>              :   }</span>
+<span id="L160"><span class="lineNum">     160</span>              : </span>
+<span id="L161"><span class="lineNum">     161</span>              :   List&lt;CategoryEntity&gt; selectedCategories = [];</span>
+<span id="L162"><span class="lineNum">     162</span>              :   List&lt;CategoryEntity&gt; categories = [];</span>
+<span id="L163"><span class="lineNum">     163</span>              : </span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">           1 :   FutureOr&lt;void&gt; _onCategorySelectedEvent(</span></span>
+<span id="L165"><span class="lineNum">     165</span>              :       CategorySelectedEvent event, Emitter&lt;CategoriesState&gt; emit) {</span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">           3 :     categories[event.position] =</span></span>
+<span id="L167"><span class="lineNum">     167</span> <span class="tlaGNC">           5 :         categories[event.position].copyWith(isSelected: event.isSelected);</span></span>
+<span id="L168"><span class="lineNum">     168</span>              :     CategoryEntity updatedCategory =</span>
+<span id="L169"><span class="lineNum">     169</span> <span class="tlaGNC">           5 :         categories[event.position].copyWith(isSelected: event.isSelected);</span></span>
+<span id="L170"><span class="lineNum">     170</span> <span class="tlaGNC">           1 :     if (event.isSelected) {</span></span>
+<span id="L171"><span class="lineNum">     171</span>              :       // Check if the category already exists in selectedCategories</span>
+<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">           1 :       if (!selectedCategories</span></span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">           5 :           .any((category) =&gt; category.id == updatedCategory.id)) {</span></span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">           2 :         selectedCategories.add(updatedCategory);</span></span>
+<span id="L175"><span class="lineNum">     175</span>              :       }</span>
+<span id="L176"><span class="lineNum">     176</span>              :     } else {</span>
+<span id="L177"><span class="lineNum">     177</span>              :       // Remove the category from selectedCategories based on its category property</span>
+<span id="L178"><span class="lineNum">     178</span> <span class="tlaUNC tlaBgUNC">           0 :       selectedCategories</span></span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaUNC">           0 :           .removeWhere((category) =&gt; category.id == updatedCategory.id);</span></span>
+<span id="L180"><span class="lineNum">     180</span>              :     }</span>
+<span id="L181"><span class="lineNum">     181</span>              : </span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC tlaBgGNC">           1 :     emit(</span></span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">           1 :       CategoriesFetchedState(</span></span>
+<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">           2 :           categories: List.from(categories),</span></span>
+<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">           2 :           selectedCategories: List.from(selectedCategories),</span></span>
+<span id="L186"><span class="lineNum">     186</span>              :           selectCategoryState: SelectCategoryState.loaded),</span>
+<span id="L187"><span class="lineNum">     187</span>              :     );</span>
+<span id="L188"><span class="lineNum">     188</span>              :   }</span>
+<span id="L189"><span class="lineNum">     189</span>              : </span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">           1 :   FutureOr&lt;void&gt; _onFetchCategoriesEvent(</span></span>
+<span id="L191"><span class="lineNum">     191</span>              :       FetchCategoriesEvent event, Emitter&lt;CategoriesState&gt; emit) async {</span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">           2 :     categories.clear();</span></span>
+<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">           1 :     emit(</span></span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">           1 :       CategoriesFetchedState(</span></span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">           2 :           categories: List.from(categories),</span></span>
+<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC">           2 :           selectedCategories: List.from(selectedCategories),</span></span>
+<span id="L197"><span class="lineNum">     197</span>              :           selectCategoryState: SelectCategoryState.loading),</span>
+<span id="L198"><span class="lineNum">     198</span>              :     );</span>
+<span id="L199"><span class="lineNum">     199</span>              :     try {</span>
+<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">           3 :       categories = await useCase.getCategories();</span></span>
+<span id="L201"><span class="lineNum">     201</span> <span class="tlaGNC">           1 :       emit(</span></span>
+<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">           1 :         CategoriesFetchedState(</span></span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">           2 :             categories: List.from(categories),</span></span>
+<span id="L204"><span class="lineNum">     204</span>              :             selectedCategories: const [],</span>
+<span id="L205"><span class="lineNum">     205</span>              :             selectCategoryState: SelectCategoryState.loaded),</span>
+<span id="L206"><span class="lineNum">     206</span>              :       );</span>
+<span id="L207"><span class="lineNum">     207</span>              :     } catch (e) {</span>
+<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">           2 :       emit(CategoriesFailureState(</span></span>
+<span id="L209"><span class="lineNum">     209</span> <span class="tlaGNC">           2 :           errorMessage: AppUtils.getErrorMessage(e.toString())));</span></span>
+<span id="L210"><span class="lineNum">     210</span>              :     }</span>
+<span id="L211"><span class="lineNum">     211</span>              :   }</span>
+<span id="L212"><span class="lineNum">     212</span>              : </span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">           1 :   FutureOr&lt;void&gt; _onCategorySearchEvent(</span></span>
+<span id="L214"><span class="lineNum">     214</span>              :       CategorySearchEvent event, Emitter&lt;CategoriesState&gt; emit) async {</span>
+<span id="L215"><span class="lineNum">     215</span> <span class="tlaGNC">           2 :     final query = event.query.toLowerCase();</span></span>
+<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">           2 :     await prefs.setString(PrefConstKeys.searchCategoryInput, query);</span></span>
+<span id="L217"><span class="lineNum">     217</span>              :   }</span>
+<span id="L218"><span class="lineNum">     218</span>              : </span>
+<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">           1 :   FutureOr&lt;void&gt; _onCategoriesSaveEvent(</span></span>
+<span id="L220"><span class="lineNum">     220</span>              :       CategoriesSaveEvent event, Emitter&lt;CategoriesState&gt; emit) async {</span>
+<span id="L221"><span class="lineNum">     221</span> <span class="tlaGNC">           2 :     emit(CategoriesFetchedState(</span></span>
+<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">           2 :       categories: List.from(categories),</span></span>
+<span id="L223"><span class="lineNum">     223</span> <span class="tlaGNC">           2 :       selectedCategories: List.from(selectedCategories),</span></span>
+<span id="L224"><span class="lineNum">     224</span>              :       selectCategoryState: SelectCategoryState.loading,</span>
+<span id="L225"><span class="lineNum">     225</span>              :     ));</span>
+<span id="L226"><span class="lineNum">     226</span>              :     try {</span>
+<span id="L227"><span class="lineNum">     227</span>              :       // Extract category names from selectedCategories and filter out null values</span>
+<span id="L228"><span class="lineNum">     228</span> <span class="tlaGNC">           1 :       final selectedCategoryNames = selectedCategories</span></span>
+<span id="L229"><span class="lineNum">     229</span> <span class="tlaGNC">           3 :           .where((category) =&gt; category.id != null)</span></span>
+<span id="L230"><span class="lineNum">     230</span> <span class="tlaGNC">           3 :           .map((category) =&gt; category.id!) // Use ! to assert non-nullability</span></span>
+<span id="L231"><span class="lineNum">     231</span> <span class="tlaGNC">           1 :           .toList();</span></span>
+<span id="L232"><span class="lineNum">     232</span> <span class="tlaGNC">           1 :       Map&lt;String, dynamic&gt; dataMap = &lt;String, dynamic&gt;{};</span></span>
+<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">           3 :       dataMap['deviceId'] = deviceId.toString();</span></span>
+<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">           1 :       dataMap['categories'] = selectedCategoryNames;</span></span>
+<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">           2 :       final success = await useCase.updateDevicePreference(dataMap);</span></span>
+<span id="L236"><span class="lineNum">     236</span>              :       if (success) {</span>
+<span id="L237"><span class="lineNum">     237</span>              :         String categoriesJson =</span>
+<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">           6 :             jsonEncode(selectedCategories.map((e) =&gt; e.toJson()).toList());</span></span>
+<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">           1 :         AppUtils.printLogs(</span></span>
+<span id="L240"><span class="lineNum">     240</span> <span class="tlaGNC">           1 :             'Category JSON.... $categoriesJson', AppLogType.debug);</span></span>
+<span id="L241"><span class="lineNum">     241</span> <span class="tlaGNC">           2 :         prefs.setString(PrefConstKeys.listOfCategory, categoriesJson);</span></span>
+<span id="L242"><span class="lineNum">     242</span>              : </span>
+<span id="L243"><span class="lineNum">     243</span>              :         //emit(CategoriesSavingState());</span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">           2 :         emit(CategoriesFetchedState(</span></span>
+<span id="L245"><span class="lineNum">     245</span> <span class="tlaGNC">           2 :           categories: List.from(categories),</span></span>
+<span id="L246"><span class="lineNum">     246</span> <span class="tlaGNC">           2 :           selectedCategories: List.from(selectedCategories),</span></span>
+<span id="L247"><span class="lineNum">     247</span>              :           selectCategoryState: SelectCategoryState.saved,</span>
+<span id="L248"><span class="lineNum">     248</span>              :         ));</span>
+<span id="L249"><span class="lineNum">     249</span>              :       }</span>
+<span id="L250"><span class="lineNum">     250</span>              :     } catch (e) {</span>
+<span id="L251"><span class="lineNum">     251</span> <span class="tlaUNC tlaBgUNC">           0 :       emit(CategoriesFailureState(</span></span>
+<span id="L252"><span class="lineNum">     252</span> <span class="tlaUNC">           0 :           errorMessage: AppUtils.getErrorMessage(e.toString())));</span></span>
+<span id="L253"><span class="lineNum">     253</span>              :     }</span>
+<span id="L254"><span class="lineNum">     254</span>              :   }</span>
+<span id="L255"><span class="lineNum">     255</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.1-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

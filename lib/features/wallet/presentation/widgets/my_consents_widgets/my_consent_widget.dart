@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:xplor/features/wallet/presentation/blocs/my_consent_bloc/my_consent_event.dart';
-
+import '../../blocs/my_consent_bloc/my_consent_event.dart';
 import '../../../../../const/app_state.dart';
 import '../../../../../utils/app_utils/app_utils.dart';
 import '../../../../../utils/widgets/loading_animation.dart';
@@ -9,6 +8,8 @@ import '../../blocs/my_consent_bloc/my_consent_bloc.dart';
 import '../../blocs/my_consent_bloc/my_consent_state.dart';
 import 'my_consent_list.dart';
 
+/// Widget that displays a list of consents, including active consents and previous consents.
+/// It listens to `MyConsentBloc` for state changes and updates the UI accordingly.
 class MyConsentWidget extends StatefulWidget {
   const MyConsentWidget({super.key});
 

@@ -1,16 +1,17 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:platform_device_id_v3/platform_device_id.dart';
-import 'package:xplor/gen/assets.gen.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/app_dimensions.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/utils.dart';
-import 'package:xplor/utils/widgets/app_background_widget.dart';
-
+import '../../../../core/connection/network_info.dart';
+import '../../../../utils/extensions/string_to_string.dart';
+import '../../../../core/exception_errors.dart';
+import '../../../../gen/assets.gen.dart';
+import '../../../../utils/app_colors.dart';
+import '../../../../utils/app_dimensions.dart';
+import '../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../utils/utils.dart';
+import '../../../../utils/widgets/app_background_widget.dart';
 import '../../../../config/routes/path_routing.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/dependency_injection.dart';
@@ -45,14 +46,16 @@ class _LocationPageState extends State<LocationAccessPage> {
     setState(() {
       isLoading = true;
     });
+
     bool serviceEnabled;
     LocationPermission permission;
 
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
+      await Geolocator.openLocationSettings();
       updateData();
-      return Future.error('Location services are disabled.');
+      AppUtils.printLogs('Location services are disabled.');
     }
 
     permission = await Geolocator.checkPermission();
@@ -60,23 +63,25 @@ class _LocationPageState extends State<LocationAccessPage> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         updateData();
-        return Future.error('Location permissions are denied');
+        AppUtils.printLogs('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      await Geolocator.openLocationSettings();
+      await Geolocator.openAppSettings();
       updateData();
-      // Permissions are denied forever, handle appropriately.
-      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+      AppUtils.printLogs(
+          'Location permissions are permanently denied, we cannot request permissions.');
     }
 
     Position position = await Geolocator.getCurrentPosition();
-    if (kDebugMode) {
-      print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
-    }
-    sl<SharedPreferencesHelper>().setDouble(PrefConstKeys.latitude, position.latitude);
-    sl<SharedPreferencesHelper>().setDouble(PrefConstKeys.longitude, position.longitude);
+
+    AppUtils.printLogs(
+        'Latitude: ${position.latitude}, Longitude: ${position.longitude}');
+    sl<SharedPreferencesHelper>()
+        .setDouble(PrefConstKeys.latitude, position.latitude);
+    sl<SharedPreferencesHelper>()
+        .setDouble(PrefConstKeys.longitude, position.longitude);
 
     updateData();
 
@@ -94,7 +99,7 @@ class _LocationPageState extends State<LocationAccessPage> {
     return Scaffold(
         body: PopScope(
       canPop: false,
-      onPopInvoked: (bool val) {
+      onPopInvokedWithResult: (val, result) {
         AppUtils.showAlertDialog(context, false);
       },
       child: AppBackgroundDecoration(
@@ -106,21 +111,31 @@ class _LocationPageState extends State<LocationAccessPage> {
               children: [
                 SvgPicture.asset(
                   Assets.images.accessLocation,
-                  width: MediaQuery.of(context).size.width, // Set the width of the SVG
+                  width: MediaQuery.of(context)
+                      .size
+                      .width, // Set the width of the SVG
                 ).scaleYAnimated(),
-                "Allow location\naccess".titleBlack(align: TextAlign.center).fadeAnimation(),
+                "Allow location\naccess"
+                    .titleBlack(align: TextAlign.center)
+                    .fadeAnimation(),
               ],
             ),
-            AppDimensions.small.w.vSpace(),
+            AppDimensions.small.verticalSpace,
             RichText(
-              text: const TextSpan(
-                style: TextStyle(color: AppColors.textColor, fontSize: 14.0, fontWeight: FontWeight.w400),
+              text: TextSpan(
+                style: TextStyle(
+                    color: AppColors.textColor,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400),
                 children: <TextSpan>[
-                  TextSpan(text: 'Allow '),
+                  const TextSpan(text: 'Allow '),
                   TextSpan(
                       text: 'Discover',
-                      style: TextStyle(color: AppColors.primaryColor, fontSize: 14.0, fontWeight: FontWeight.w800)),
-                  TextSpan(text: ' to access this device’s location'),
+                      style: TextStyle(
+                          color: AppColors.primaryColor,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w800)),
+                  const TextSpan(text: ' to access this device’s location'),
                 ],
               ),
             ).fadeAnimation(),
@@ -128,19 +143,32 @@ class _LocationPageState extends State<LocationAccessPage> {
             CircularButton(
               isValid: true,
               title: (!isLoading ? 'Allow' : 'Waiting'),
-              onPressed: () async {
-                await _determinePosition();
-
-                _goToNext();
+              onPressed: () {
+                _getLocation();
               },
-            ).fadeInAnimated().symmetricPadding(horizontal: AppDimensions.medium),
+            )
+                .fadeInAnimated()
+                .symmetricPadding(horizontal: AppDimensions.medium),
           ],
         ).symmetricPadding(vertical: AppDimensions.medium.w),
       )),
     ));
   }
 
-  _goToNext() {
-    Navigator.pushReplacementNamed(context, Routes.selectLanguageScreen);
+  void _getLocation() async {
+    if (await sl<NetworkInfo>().isConnected!) {
+      await _determinePosition();
+      _goToNext();
+    } else {
+      _showErrorMessage();
+    }
   }
+
+  void _showErrorMessage() {
+    AppUtils.showSnackBar(
+        context, ExceptionErrors.checkInternetConnection.stringToString);
+  }
+
+  void _goToNext() =>
+      Navigator.pushReplacementNamed(context, Routes.selectLanguageScreen);
 }

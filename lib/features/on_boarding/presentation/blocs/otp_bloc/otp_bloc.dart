@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:xplor/features/on_boarding/domain/entities/user_data_entity.dart';
-
+import '../../../domain/entities/user_data_entity.dart';
 import '../../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../../core/dependency_injection.dart';
 import '../../../../../utils/app_utils/app_utils.dart';
@@ -77,6 +74,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
     }
   }
 
+  /// Commented for future reference
   /*Future<void> _getUserJourney(
       GetUserJourneyEvent event, Emitter<OtpState> emit) async {
     emit(OtpLoadingState());
@@ -101,7 +99,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
       String categoryJson = sl<SharedPreferencesHelper>().getString(PrefConstKeys.listOfCategory);
       if (categoryJson.isEmpty || categoryJson == "NA") {
         String categoriesJson = jsonEncode(userDataEntity.categories.map((e) => e.toJson()).toList());
-        debugPrint('Category JSON.... $categoriesJson');
+        AppUtils.printLogs('Category JSON.... $categoriesJson');
         await sl<SharedPreferencesHelper>().setString(PrefConstKeys.listOfCategory, categoriesJson);
       }
 

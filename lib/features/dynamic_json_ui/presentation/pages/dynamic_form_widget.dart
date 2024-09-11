@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import '../../../../utils/app_dimensions.dart';
 import '../bloc/form_bloc.dart';
 import '../../data/models/form_field_data_model.dart';
 import '../widgets/common_widgets.dart';
@@ -41,11 +42,11 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
     return Scaffold(
       appBar: AppBar(title: const Text('Dynamic Form')),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppDimensions.medium),
         child: Column(
           children: [
             ...widgets,
-            const SizedBox(height: 16.0),
+            const SizedBox(height: AppDimensions.medium),
             ElevatedButton(
               onPressed: () {
                 if (formBloc.isFormValid()) {
@@ -75,7 +76,7 @@ class _DynamicFormWidgetState extends State<DynamicFormWidget> {
 
   /// Print the form data to the console.
   void printFormData() {
-    //print(formData);
+    //AppUtils.printLogs(formData);
   }
 
   /// Generate the widgets based on the [FormFieldDataModel] list.

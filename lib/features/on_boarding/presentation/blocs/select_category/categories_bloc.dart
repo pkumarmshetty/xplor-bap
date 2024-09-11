@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xplor/features/on_boarding/domain/entities/categories_entity.dart';
-import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.dart';
-
+import '../../../domain/entities/categories_entity.dart';
+import '../../../domain/usecase/on_boarding_usecase.dart';
 import '../../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../../core/dependency_injection.dart';
 import '../../../../../utils/app_utils/app_utils.dart';
@@ -107,7 +104,7 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
       final success = await useCase.updateDevicePreference(dataMap);
       if (success) {
         String categoriesJson = jsonEncode(selectedCategories.map((e) => e.toJson()).toList());
-        debugPrint('Category JSON.... $categoriesJson');
+        AppUtils.printLogs('Category JSON.... $categoriesJson');
         await sl<SharedPreferencesHelper>().setString(PrefConstKeys.listOfCategory, categoriesJson);
 
         //emit(CategoriesSavingState());

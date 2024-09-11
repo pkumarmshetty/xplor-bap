@@ -1,6 +1,3 @@
-/*part of 'services_items.dart';
-part of 'sse_services_entity.dart';*/
-
 class PriceEntity {
   final String currency;
   final String value;

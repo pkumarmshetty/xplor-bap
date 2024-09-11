@@ -2,10 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/space.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
@@ -29,17 +27,17 @@ class KycLoaderWidget extends StatelessWidget {
               height: 137.w,
               width: 148.w,
             ),
-            AppDimensions.large.vSpace(),
+            AppDimensions.large.verticalSpace,
 
             OnBoardingKeys.kycProcessing.stringToString
                 .titleMedium(size: 16.sp, color: AppColors.grey64697a, align: TextAlign.center),
-            AppDimensions.mediumXXL.vSpace(),
+            AppDimensions.mediumXXL.verticalSpace,
             // Dialog title
             OnBoardingKeys.pleaseWait.stringToString.titleExtraBold(
               color: AppColors.countryCodeColor,
               size: 20.sp,
             ),
-            AppDimensions.small.vSpace(),
+            AppDimensions.small.verticalSpace,
           ],
         ),
       ),

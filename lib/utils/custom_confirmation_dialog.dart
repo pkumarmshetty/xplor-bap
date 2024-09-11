@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/widgets/blur_widget.dart';
-
+import '../features/multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
+import 'extensions/string_to_string.dart';
+import 'widgets/blur_widget.dart';
 import 'app_colors.dart';
 import 'app_dimensions.dart';
 import 'extensions/padding.dart';
-import 'extensions/space.dart';
 
 /// Importing custom widgets and resources
 import 'widgets/build_button.dart';
@@ -63,13 +61,13 @@ class CustomConfirmationDialog extends StatelessWidget {
             height: 137.w,
             width: 148.w,
           ),
-          AppDimensions.large.vSpace(),
+          AppDimensions.large.verticalSpace,
           // Dialog title
           title,
-          AppDimensions.small.vSpace(),
+          AppDimensions.small.verticalSpace,
           // Dialog message
           message,
-          AppDimensions.mediumXL.vSpace(),
+          AppDimensions.mediumXL.verticalSpace,
           // OK button
           ButtonWidget(
             title: buttonTitle ?? OnBoardingKeys.okay.stringToString,

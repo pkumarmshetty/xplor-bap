@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/utils/app_dimensions.dart';
+import '../app_dimensions.dart';
 import '../app_colors.dart';
+import '../app_utils/app_utils.dart';
 import '../extensions/font_style/font_styles.dart';
 
 /// A button widget with customizable properties.
@@ -70,9 +70,7 @@ class ButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (kDebugMode) {
-      print('test....$radius');
-    }
+    AppUtils.printLogs('test....$radius');
     var cornerRadius = radius ?? AppDimensions.medium;
     var innerCornerRadius = radius == null ? cornerRadius - 5 : radius! - 4;
     return isFilled

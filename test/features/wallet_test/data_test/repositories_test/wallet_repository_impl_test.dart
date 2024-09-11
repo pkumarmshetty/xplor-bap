@@ -26,6 +26,7 @@ void main() {
       json.decode(readJson('features/wallet_test/helpers/json_responses/get_doc_vc_data.json')));
 
   final sharedEntity = SharedVcDataEntity(
+      sharedWithEntity: 'Self Shared',
       id: 'id',
       vcId: 'vcId',
       status: 'status',
@@ -227,7 +228,9 @@ void main() {
     test('should update consent when network is available', () async {
       // Arrange
       final entity = UpdateConsentEntity(
-          remarks: 'Test remarks', restrictions: ConsentRestrictions(expiresIn: 3600, viewOnce: false));
+          sharedWithEntity: 'Self Shared',
+          remarks: 'Test remarks',
+          restrictions: ConsentRestrictions(expiresIn: 3600, viewOnce: false));
       const requestId = 'request_id';
       when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       when(mockApiService.updateConsent(any, requestId)).thenAnswer((_) async => true);
@@ -242,7 +245,9 @@ void main() {
     test('should throw an exception when network is unavailable', () async {
       // Arrange
       final entity = UpdateConsentEntity(
-          remarks: 'Test remarks', restrictions: ConsentRestrictions(expiresIn: 3600, viewOnce: false));
+          sharedWithEntity: 'Self Shared',
+          remarks: 'Test remarks',
+          restrictions: ConsentRestrictions(expiresIn: 3600, viewOnce: false));
       const requestId = '123';
       when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
 

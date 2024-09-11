@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/app/xplorapp.dart';
-import 'package:xplor/utils/app_utils/app_utils.dart';
-
+import 'app/xplorapp.dart';
+import 'utils/app_utils/app_utils.dart';
 import 'const/bootstrap.dart';
 import 'core/dependency_injection.dart';
 

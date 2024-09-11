@@ -1,3 +1,4 @@
+/// Entity class for My Orders feature.
 class MyOrdersListEntity {
   final List<MyOrdersEntity> myOrders;
   final int totalCount;
@@ -9,8 +10,7 @@ class MyOrdersListEntity {
       totalCount: json['totalCount'] ?? 0,
       myOrders: json['orders'] == null
           ? []
-          : List<MyOrdersEntity>.from(
-              json['orders'].map((i) => MyOrdersEntity.fromJson(i))),
+          : List<MyOrdersEntity>.from(json['orders'].map((i) => MyOrdersEntity.fromJson(i))),
     );
   }
 }
@@ -25,18 +25,19 @@ class MyOrdersEntity {
   String? certificateUrl;
   ItemDetails? itemDetails;
   Fulfillment? fulfillment;
+  double? courseProgress;
 
-  MyOrdersEntity({
-    this.id,
-    this.orderId,
-    this.domain,
-    this.transactionId,
-    this.rating,
-    this.isAddedToWallet,
-    this.certificateUrl,
-    this.itemDetails,
-    this.fulfillment,
-  });
+  MyOrdersEntity(
+      {this.id,
+      this.orderId,
+      this.domain,
+      this.transactionId,
+      this.rating,
+      this.isAddedToWallet,
+      this.certificateUrl,
+      this.itemDetails,
+      this.fulfillment,
+      this.courseProgress});
 
   factory MyOrdersEntity.fromJson(Map<String, dynamic> json) {
     return MyOrdersEntity(
@@ -47,12 +48,8 @@ class MyOrdersEntity {
       isAddedToWallet: json['is_added_to_wallet'] ?? false,
       rating: json['rating'] == null ? null : Rating.fromJson(json['rating']),
       certificateUrl: json['certificate_url'] ?? "",
-      itemDetails: json['item_details'] == null
-          ? null
-          : ItemDetails.fromJson(json['item_details']),
-      fulfillment: json['fulfillment'] == null
-          ? null
-          : Fulfillment.fromJson(json['fulfillment']),
+      itemDetails: json['item_details'] == null ? null : ItemDetails.fromJson(json['item_details']),
+      fulfillment: json['fulfillment'] == null ? null : Fulfillment.fromJson(json['fulfillment']),
     );
   }
 
@@ -110,12 +107,8 @@ class ItemDetails {
     return ItemDetails(
       itemId: json['item_id'] ?? "",
       providerName: json['provider_name'] ?? "",
-      providerImages: json['provider_images'] == null
-          ? []
-          : List<String>.from(json['provider_images']),
-      descriptor: json['descriptor'] == null
-          ? null
-          : Descriptor.fromJson(json['descriptor']),
+      providerImages: json['provider_images'] == null ? [] : List<String>.from(json['provider_images']),
+      descriptor: json['descriptor'] == null ? null : Descriptor.fromJson(json['descriptor']),
     );
   }
 
@@ -168,9 +161,7 @@ class Fulfillment {
 
   factory Fulfillment.fromJson(Map<String, dynamic> json) {
     return Fulfillment(
-      media: json['media'] == null
-          ? []
-          : List<Media>.from(json['media'].map((i) => Media.fromJson(i))),
+      media: json['media'] == null ? [] : List<Media>.from(json['media'].map((i) => Media.fromJson(i))),
     );
   }
 

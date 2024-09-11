@@ -1,4 +1,4 @@
-import 'package:xplor/features/on_boarding/domain/entities/on_boarding_send_otp_entity.dart';
+import '../../domain/entities/on_boarding_send_otp_entity.dart';
 
 class OnBoardingSendOtpModel extends OnBoardingSendOtpEntity {
   OnBoardingSendOtpModel({

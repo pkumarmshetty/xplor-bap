@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:xplor/features/apply_course/presentation/blocs/apply_course_bloc.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/widgets/loading_animation.dart';
-
+import '../../../../utils/app_utils/app_utils.dart';
+import '../blocs/apply_course_bloc.dart';
+import '../../../../utils/extensions/string_to_string.dart';
+import '../../../../utils/widgets/loading_animation.dart';
 import '../../../../config/routes/path_routing.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/dependency_injection.dart';
@@ -31,7 +31,7 @@ class _StartCoursePageState extends State<StartCoursePage> {
   void initState() {
     super.initState();
 
-    debugPrint(
+    AppUtils.printLogs(
         "media_url... ${context.read<ApplyCourseBloc>().courseMediaUrl}");
 
     controller = WebViewController()
@@ -43,13 +43,13 @@ class _StartCoursePageState extends State<StartCoursePage> {
             // Update loading bar.
           },
           onPageStarted: (String url) {
-            debugPrint("page started");
+            AppUtils.printLogs("page started");
             setState(() {
               isLoading = true;
             });
           },
           onPageFinished: (String url) {
-            debugPrint("page finished");
+            AppUtils.printLogs("page finished");
             setState(() {
               isLoading = false;
             });
@@ -73,7 +73,7 @@ class _StartCoursePageState extends State<StartCoursePage> {
         body: PopScope(
       canPop: sl<SharedPreferencesHelper>()
           .getBoolean(PrefConstKeys.isStartUrlMyCourse),
-      onPopInvoked: (val) {
+      onPopInvokedWithResult: (val, result) {
         bool data = sl<SharedPreferencesHelper>()
             .getBoolean(PrefConstKeys.isStartUrlMyCourse);
 
@@ -130,5 +130,12 @@ class _StartCoursePageState extends State<StartCoursePage> {
     context
         .read<MyOrdersBloc>()
         .add(const MyOrdersCompletedEvent(isFirstTime: true));
+  }
+
+  @override
+  void dispose() {
+    controller!.clearLocalStorage();
+    controller!.clearCache();
+    super.dispose();
   }
 }

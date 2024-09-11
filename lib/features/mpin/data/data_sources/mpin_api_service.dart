@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xplor/const/local_storage/shared_preferences_helper.dart';
-import 'package:xplor/core/api_constants.dart';
-import 'package:xplor/core/connection/refresh_token_service.dart';
-import 'package:xplor/core/exception_errors.dart';
-import 'package:xplor/features/mpin/domain/entities/send_mpin_otp_entity.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
+import '../../../../const/local_storage/shared_preferences_helper.dart';
+import '../../../../core/api_constants.dart';
+import '../../../../core/connection/refresh_token_service.dart';
+import '../../domain/entities/send_mpin_otp_entity.dart';
+import '../../../../utils/app_utils/app_utils.dart';
 
 class MpinApiService {
   Dio dio;
@@ -61,9 +59,7 @@ class MpinApiService {
         : helper!.getString(PrefConstKeys.accessToken);
 
     try {
-      if (kDebugMode) {
-        print("send otp to reset mpin: $sendMpinOtp");
-      }
+      AppUtils.printLogs("send otp to reset mpin: $sendMpinOtp");
 
       final response = await dio.put(
         sendMpinOtp,
@@ -75,16 +71,12 @@ class MpinApiService {
         ),
       );
 
-      if (kDebugMode) {
-        print("send otp to reset mpin response ${response.data}");
-      }
+      AppUtils.printLogs("send otp to reset mpin response ${response.data}");
       SendResetMpinOtpEntity resetMpinOtpResult = SendResetMpinOtpEntity.fromJson(response.data['data']);
       return resetMpinOtpResult;
     } catch (e) {
-      if (kDebugMode) {
-        print("send otp to reset Mpin failed----> Catch $e");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("send otp to reset Mpin failed----> Catch $e");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
@@ -104,10 +96,8 @@ class MpinApiService {
       };
       String jsonData = json.encode(data);
 
-      if (kDebugMode) {
-        print("verify mpin otp to reset mpin:  $jsonData");
-        print("verify mpin otp to reset mpin:  $verifyOtpApi");
-      }
+      AppUtils.printLogs("verify mpin otp to reset mpin:  $jsonData");
+      AppUtils.printLogs("verify mpin otp to reset mpin:  $verifyOtpApi");
 
       final response = await dio.post(
         verifyOtpApi,
@@ -121,18 +111,14 @@ class MpinApiService {
         ),
       );
 
-      if (kDebugMode) {
-        print("verify mpin otp to reset mpin response ${response.data}");
-      }
+      AppUtils.printLogs("verify mpin otp to reset mpin response ${response.data}");
       /* Map<String,dynamic> decodedResponse = json.decode(response.data['data']);
       String verifiedKey = decodedResponse['verifiedMpinKey'];*/
       String verifiedKey = response.data['data']['verifiedMpinKey'];
       return verifiedKey;
     } catch (e) {
-      if (kDebugMode) {
-        print("verify mpin otp to reset Mpin failed----> Catch $e");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("verify mpin otp to reset Mpin failed----> Catch $e");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
@@ -147,11 +133,8 @@ class MpinApiService {
         'mPin': mPin,
       };
       String jsonData = json.encode(data);
-
-      if (kDebugMode) {
-        print("reset mpin api call:  $jsonData");
-        print("reset mpin api call:  $resetPin");
-      }
+      AppUtils.printLogs("reset mpin api call:  $jsonData");
+      AppUtils.printLogs("reset mpin api call:  $resetPin");
 
       final response = await dio.put(
         resetPin,
@@ -164,69 +147,11 @@ class MpinApiService {
         ),
       );
 
-      // if (helper != null) {
-      //   await helper!.setString(PrefConstKeys.userMpin, pin);
-      //   await helper!.setBool(PrefConstKeys.isMpinCreated, true);
-      // } else {
-      //   await preferencesHelper.setString(PrefConstKeys.userMpin, pin);
-      //   await preferencesHelper.setBoolean(PrefConstKeys.isMpinCreated, true);
-      // }
-      if (kDebugMode) {
-        print("mPin reset successfully response ${response.data}");
-      }
+      AppUtils.printLogs("mPin reset successfully response ${response.data}");
       return true;
     } catch (e) {
-      if (kDebugMode) {
-        print("Reset mPin failed----> Catch $e");
-      }
-      throw Exception(handleError(e));
-    }
-  }
-
-  String handleError(Object error) {
-    String errorDescription = "";
-
-    if (error is DioException) {
-      DioException dioError = error;
-      switch (dioError.type) {
-        case DioExceptionType.cancel:
-          errorDescription = ExceptionErrors.requestCancelError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.connectionTimeout:
-          errorDescription = ExceptionErrors.connectionTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.unknown:
-          errorDescription = ExceptionErrors.unknownConnectionError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.receiveTimeout:
-          errorDescription = ExceptionErrors.receiveTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.badResponse:
-          if (kDebugMode) {
-            print("${ExceptionErrors.badResponseError}  ${dioError.response!.data}");
-          }
-          return dioError.response!.data['message'];
-
-        case DioExceptionType.sendTimeout:
-          errorDescription = ExceptionErrors.sendTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.badCertificate:
-          errorDescription = ExceptionErrors.badCertificate.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.connectionError:
-          errorDescription = ExceptionErrors.serverConnectingIssue.stringToString;
-
-          return errorDescription;
-      }
-    } else {
-      errorDescription = ExceptionErrors.unexpectedErrorOccurred.stringToString;
-      return errorDescription;
+      AppUtils.printLogs("Reset mPin failed----> Catch $e");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 }

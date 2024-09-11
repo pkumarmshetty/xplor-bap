@@ -1,4 +1,4 @@
-import 'package:xplor/features/apply_course/domain/entities/get_response_entity/stop_entity.dart';
+import 'stop_entity.dart';
 
 import 'price_entity.dart';
 
@@ -16,6 +16,7 @@ class SseServicesEntity {
   final String status;
   final String formUrl;
   final Quote? quote;
+  final String? paymentUrl;
   final List<PaymentEntity>? payments;
   final List<StopsEntity>? stops;
 
@@ -30,6 +31,7 @@ class SseServicesEntity {
     required this.payments,
     required this.stops,
     required this.status,
+    required this.paymentUrl,
     required this.orderId,
   });
 
@@ -47,6 +49,7 @@ class SseServicesEntity {
 
       ///Info getting this on "action": "on_init"
       formUrl: json['form_url'] ?? "",
+      paymentUrl: json['paymentUrl'] ?? "",
 
       ///Info getting this on "action": "on_select",
       quote: json['quote'] == null ? null : Quote.fromJson(json['quote']),

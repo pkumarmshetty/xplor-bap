@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/seeker_dashboard/seeker_dashboard_keys.dart';
-import 'package:xplor/features/seeker_dashboard/presentation/widgets/profile_consent_widget.dart';
-import 'package:xplor/utils/app_dimensions.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/utils.dart';
-
+import '../../../../utils/widgets/profile_header__widget.dart';
+import '../../../multi_lang/domain/mappers/seeker_dashboard/seeker_dashboard_keys.dart';
+import 'profile_consent_widget.dart';
+import '../../../../utils/app_dimensions.dart';
+import '../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_colors.dart';
-import '../../../../utils/widgets/profile_header__widget.dart';
 import '../../../../utils/widgets/profile_skill_tile_widget.dart';
 
+/// Widget representing the profile tab in the seeker dashboard.
+///
+/// This widget displays various aspects of the seeker's profile, including
+/// profile header, skills (jobs and courses), recent activities, and consent sections.
 class ProfileTabWidget extends StatefulWidget {
   const ProfileTabWidget({super.key});
 
@@ -26,43 +28,49 @@ class _ProfileTabWidgetState extends State<ProfileTabWidget> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Profile header section
         const ProfileHeaderWidget(
           name: "David John",
           role: 'Joined on 22nd April, 2024',
-          imageUrl: '',
-          editOnProfile: false,
+          imageUrl: '', // Placeholder for profile image URL
+          editOnProfile: false, // Whether editing is enabled on profile
         ),
-        AppDimensions.large.vSpace(),
+        AppDimensions.large.verticalSpace, // Vertical space
+        // Row containing skills (jobs and courses)
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: ProfileSkillTileWidget(
-                title: SeekerDashboardKeys.jobs.stringToString,
-                value: '200',
-                icon: Assets.images.job,
-                backgroundColor: AppColors.lightGreen.withOpacity(0.25),
+                title: SeekerDashboardKeys.jobs.stringToString, // Jobs title
+                value: '200', // Number of jobs
+                icon: Assets.images.job, // Icon for jobs
+                backgroundColor: AppColors.lightGreen.withOpacity(0.25), // Background color
               ),
             ),
-            AppDimensions.smallXL.hSpace(),
+            AppDimensions.smallXL.w.horizontalSpace, // Horizontal space
             Expanded(
               child: ProfileSkillTileWidget(
                 title: SeekerDashboardKeys.courses.stringToString,
+                // Courses title
                 value: '928',
+                // Number of courses
                 icon: Assets.images.skilling,
-                backgroundColor: AppColors.lightBlue,
+                // Icon for courses
+                backgroundColor: AppColors.lightBlue, // Background color
               ),
             ),
           ],
         ),
-        AppDimensions.smallXXL.vSpace(),
-        const Divider(color: AppColors.hintColor),
-        AppDimensions.smallXXL.vSpace(),
+        AppDimensions.smallXXL.verticalSpace, // Vertical space
+        const Divider(color: AppColors.hintColor), // Divider
+        AppDimensions.smallXXL.verticalSpace, // Vertical space
+        // Title for recent activity section
         SeekerDashboardKeys.recentActivity.stringToString.titleBold(size: AppDimensions.medium.sp),
-        10.vSpace(),
-        const ProfileConsentWidget(),
-        AppDimensions.smallXL.vSpace(),
-        const ProfileConsentWidget(),
+        10.verticalSpace, // Vertical space
+        const ProfileConsentWidget(), // Consent widget
+        AppDimensions.smallXL.verticalSpace, // Vertical space
+        const ProfileConsentWidget(), // Consent widget
       ],
     );
   }

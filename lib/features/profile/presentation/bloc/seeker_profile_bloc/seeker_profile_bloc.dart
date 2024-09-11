@@ -1,11 +1,8 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:xplor/features/profile/domain/usecase/profile_usecase.dart';
-import 'package:xplor/utils/app_utils/app_utils.dart';
-
+import '../../../domain/usecase/profile_usecase.dart';
+import '../../../../../utils/app_utils/app_utils.dart';
 import '../../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../../core/dependency_injection.dart';
 import '../../../../on_boarding/domain/entities/user_data_entity.dart';
@@ -14,26 +11,44 @@ part 'seeker_profile_event.dart';
 
 part 'seeker_profile_state.dart';
 
+/// Bloc for the Seeker Profile page.
 class SeekerProfileBloc extends Bloc<SeekerProfileEvent, SeekerProfileState> {
+  // Instance of the ProfileUseCase.
   ProfileUseCase profileUseCase;
+
+  // Instance of the UserDataEntity.
   UserDataEntity? userData;
+
+  // Flag to check if translation is done.
   bool isTranslationDone = false;
 
-  SeekerProfileBloc({required this.profileUseCase}) : super(ProfileInitialState()) {
+  /// Constructor for the SeekerProfileBloc.
+  SeekerProfileBloc({required this.profileUseCase})
+      : super(ProfileInitialState()) {
     on<ProfileUserDataEvent>(_onProfileInitial);
     on<SeekerProfileLogoutEvent>(_onLogout);
     on<ProfileAndTranslationEvent>(_onProfileTranslationDone);
   }
 
-  Future<void> _onProfileInitial(ProfileUserDataEvent event, Emitter<SeekerProfileState> emit) async {
+  /// Event handler for the ProfileUserDataEvent.
+  Future<void> _onProfileInitial(
+      ProfileUserDataEvent event, Emitter<SeekerProfileState> emit) async {
     isTranslationDone = false;
     try {
       emit(state.copyWith(
-          profileState: ProfileState.loading, userData: null, uniqueId: DateTime.now().millisecondsSinceEpoch));
+          profileState: ProfileState.loading,
+          userData: null,
+          uniqueId: DateTime.now().millisecondsSinceEpoch));
       userData = await profileUseCase.getUserData();
-      if (sl<SharedPreferencesHelper>().getString(PrefConstKeys.selectedLanguageCode) == "en") {
+      sl<SharedPreferencesHelper>()
+          .setString(PrefConstKeys.walletId, userData?.wallet ?? "");
+      if (sl<SharedPreferencesHelper>()
+              .getString(PrefConstKeys.selectedLanguageCode) ==
+          "en") {
         emit(state.copyWith(
-            profileState: ProfileState.done, userData: userData, uniqueId: DateTime.now().millisecondsSinceEpoch));
+            profileState: ProfileState.done,
+            userData: userData,
+            uniqueId: DateTime.now().millisecondsSinceEpoch));
       } else {
         emit(state.copyWith(
             profileState: ProfileState.userDataLoaded,
@@ -46,12 +61,12 @@ class SeekerProfileBloc extends Bloc<SeekerProfileEvent, SeekerProfileState> {
           userData: null,
           message: AppUtils.getErrorMessage(e.toString()),
           uniqueId: DateTime.now().millisecondsSinceEpoch));
-      // emit(ProfileUserDataFailureState(errorMessage: AppUtils.getErrorMessage(e.toString())));
-      //throw Exception(e.toString());
     }
   }
 
-  Future<void> _onLogout(SeekerProfileLogoutEvent event, Emitter<SeekerProfileState> emit) async {
+  /// Event handler for the SeekerProfileLogoutEvent.
+  Future<void> _onLogout(
+      SeekerProfileLogoutEvent event, Emitter<SeekerProfileState> emit) async {
     try {
       await profileUseCase.logout();
       emit(ProfileLogoutState());
@@ -60,15 +75,19 @@ class SeekerProfileBloc extends Bloc<SeekerProfileEvent, SeekerProfileState> {
     }
   }
 
-  FutureOr<void> _onProfileTranslationDone(ProfileAndTranslationEvent event, Emitter<SeekerProfileState> emit) {
-    debugPrint("data..... ${event.isTranslationDone}");
-    debugPrint("data..... $userData");
+  /// Event handler for the ProfileAndTranslationEvent.
+  FutureOr<void> _onProfileTranslationDone(
+      ProfileAndTranslationEvent event, Emitter<SeekerProfileState> emit) {
+    AppUtils.printLogs("data..... ${event.isTranslationDone}");
+    AppUtils.printLogs("data..... $userData");
     if (!isTranslationDone && event.isTranslationDone != null) {
       isTranslationDone = true;
     }
     if (isTranslationDone && userData != null) {
       emit(state.copyWith(
-          profileState: ProfileState.done, userData: userData, uniqueId: DateTime.now().millisecondsSinceEpoch));
+          profileState: ProfileState.done,
+          userData: userData,
+          uniqueId: DateTime.now().millisecondsSinceEpoch));
     }
   }
 }

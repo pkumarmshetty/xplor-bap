@@ -1,16 +1,13 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/utils.dart';
-import 'package:xplor/utils/widgets/loading_animation.dart';
-
+import '../../../../multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
+import '../../../../../utils/extensions/string_to_string.dart';
+import '../../../../../utils/utils.dart';
+import '../../../../../utils/widgets/loading_animation.dart';
 import '../../../../../config/routes/path_routing.dart';
-import '../../../../../config/theme/theme_cubit.dart';
 import '../../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../../core/api_constants.dart';
 import '../../../../../core/dependency_injection.dart';
@@ -34,7 +31,8 @@ class CompleteProfileViewBelem extends StatefulWidget {
   const CompleteProfileViewBelem({super.key});
 
   @override
-  State<CompleteProfileViewBelem> createState() => _CompleteProfileViewBelemState();
+  State<CompleteProfileViewBelem> createState() =>
+      _CompleteProfileViewBelemState();
 }
 
 /// State class for the sign-in view.
@@ -66,14 +64,14 @@ class _CompleteProfileViewBelemState extends State<CompleteProfileViewBelem> {
     return BlocBuilder<KycBlocBelem, KycStateBelem>(builder: (context, state) {
       return PopScope(
           canPop: false,
-          onPopInvoked: (bool val) {
+          onPopInvokedWithResult: (val, result) {
             if (state is AuthorizedUserState) {
               return;
             }
             AppUtils.showAlertDialog(context, true);
           },
           child: Scaffold(
-            backgroundColor: appTheme().colors.white,
+            backgroundColor: AppColors.white,
             body: AppBackgroundDecoration(
               child: SafeArea(
                 child: BlocListener<KycBlocBelem, KycStateBelem>(
@@ -91,20 +89,18 @@ class _CompleteProfileViewBelemState extends State<CompleteProfileViewBelem> {
                         NavigationDelegate(
                           onProgress: (int progress) {},
                           onPageStarted: (String url) {
-                            if (kDebugMode) {
-                              print('onPageStarted $url');
-                            }
+                            AppUtils.printLogs('onPageStarted $url');
                           },
                           onPageFinished: (String url) {
                             // Do the task here
-                            if (kDebugMode) {
-                              print('onPageFinished $url');
-                            }
+                            AppUtils.printLogs('onPageFinished $url');
                             loader = false;
                             setState(() {});
 
                             if (url.startsWith(eAuthWebHook)) {
-                              context.read<KycBlocBelem>().add(const InitSseKycEvent());
+                              context
+                                  .read<KycBlocBelem>()
+                                  .add(const InitSseKycEvent());
                               //return NavigationDecision.navigate;
                             }
 
@@ -117,16 +113,19 @@ class _CompleteProfileViewBelemState extends State<CompleteProfileViewBelem> {
                           },
                           onWebResourceError: (WebResourceError error) {},
                           onNavigationRequest: (NavigationRequest request) {
-                            if (kDebugMode) {
-                              print('onNavigationRequest ${request.url}');
-                            }
+                            AppUtils.printLogs(
+                                'onNavigationRequest ${request.url}');
 
                             if (request.url.startsWith(eAuthWebHook)) {
-                              context.read<KycBlocBelem>().add(const InitSseKycEvent());
+                              context
+                                  .read<KycBlocBelem>()
+                                  .add(const InitSseKycEvent());
                               return NavigationDecision.navigate;
                             }
                             if (request.url.startsWith(eAuthWebHookError)) {
-                              context.read<KycBlocBelem>().add(const EAuthFailureEvent());
+                              context
+                                  .read<KycBlocBelem>()
+                                  .add(const EAuthFailureEvent());
                               return NavigationDecision.navigate;
                             }
                             return NavigationDecision.navigate;
@@ -134,20 +133,20 @@ class _CompleteProfileViewBelemState extends State<CompleteProfileViewBelem> {
                         ),
                       );
                       try {
-                        const platform = MethodChannel('com.example.xplor/webview');
+                        const platform =
+                            MethodChannel('com.example.xplor/webview');
                         await platform.invokeMethod('clearCache');
                         /*ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Cache cleared")),
                         );*/
                       } on PlatformException catch (e) {
-                        if (kDebugMode) {
-                          print("Failed to clear cache: '${e.message}'.");
-                        }
+                        AppUtils.printLogs(
+                            "Failed to clear cache: '${e.message}'.");
                       }
-                      if (kDebugMode) {
-                        print("state.requestUrl.trim()... ${state.requestUrl!.trim()}");
-                      }
-                      webViewController.loadRequest(Uri.parse(state.requestUrl!.trim()));
+                      AppUtils.printLogs(
+                          "state.requestUrl.trim()... ${state.requestUrl!.trim()}");
+                      webViewController
+                          .loadRequest(Uri.parse(state.requestUrl!.trim()));
                     }
 
                     // show failure dialog if KYC verification failed
@@ -165,20 +164,31 @@ class _CompleteProfileViewBelemState extends State<CompleteProfileViewBelem> {
                           if (state is ShowWebViewState)
                             Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [Expanded(child: WebViewWidget(controller: webViewController))]),
-                          if (state is! KycWebLoadingState && state is! AuthProviderLoadingState)
+                                children: [
+                                  Expanded(
+                                      child: WebViewWidget(
+                                          controller: webViewController))
+                                ]),
+                          if (state is! KycWebLoadingState &&
+                              state is! AuthProviderLoadingState)
                             Positioned(
                                 right: AppDimensions.medium,
                                 top: AppDimensions.medium,
                                 child: GestureDetector(
                                   onTap: () {
-                                    context.read<KycBlocBelem>().add(const CloseEAuthWebView());
+                                    context
+                                        .read<KycBlocBelem>()
+                                        .add(const CloseEAuthWebView());
                                   },
-                                  child: const Icon(Icons.close, color: AppColors.black),
+                                  child: const Icon(Icons.close,
+                                      color: AppColors.black),
                                 )),
-                          if (state is WebLoadingState || loader || state is AuthProviderLoadingState)
+                          if (state is WebLoadingState ||
+                              loader ||
+                              state is AuthProviderLoadingState)
                             const LoadingAnimation(),
-                          if (state is KycWebLoadingState) const KycLoaderWidget()
+                          if (state is KycWebLoadingState)
+                            const KycLoaderWidget()
                         ]);
                       }
                       return Stack(children: [
@@ -186,17 +196,20 @@ class _CompleteProfileViewBelemState extends State<CompleteProfileViewBelem> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CommonTopHeader(
-                                title: OnBoardingKeys.completeProfile.stringToString,
+                                title: OnBoardingKeys
+                                    .completeProfile.stringToString,
                                 onBackButtonPressed: () {
                                   AppUtils.showAlertDialog(context, true);
                                 }),
-                            AppDimensions.large.vSpace(),
+                            AppDimensions.large.verticalSpace,
                             context.read<KycBlocBelem>().entity != null
                                 ? Expanded(
                                     child: SingleSelectionWallet(
                                         selectedIndex: selectedIndex,
                                         onIndexChanged: setSelectedIndex,
-                                        entity: context.read<KycBlocBelem>().entity!))
+                                        entity: context
+                                            .read<KycBlocBelem>()
+                                            .entity!))
                                 : Container(),
                             _bottomViewContent(context, state)
                           ],
@@ -219,17 +232,18 @@ class _CompleteProfileViewBelemState extends State<CompleteProfileViewBelem> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         agreeConditionWidget(),
-        AppDimensions.smallXL.vSpace(),
+        AppDimensions.smallXL.verticalSpace,
         CircularButton(
           isValid: isValid && selectedIndex != -1,
           title: OnBoardingKeys.verify.stringToString,
           onPressed: () {
             loader = true;
-            context.read<KycBlocBelem>().add(
-                OpenWebViewEvent(redirectUrl: sl<SharedPreferencesHelper>().getString(PrefConstKeys.kycRedirectUrl)));
+            context.read<KycBlocBelem>().add(OpenWebViewEvent(
+                redirectUrl: sl<SharedPreferencesHelper>()
+                    .getString(PrefConstKeys.kycRedirectUrl)));
           },
         ),
-        AppDimensions.large.w.vSpace()
+        AppDimensions.large.verticalSpace
       ],
     ).symmetricPadding(
       horizontal: AppDimensions.medium,
@@ -248,7 +262,7 @@ class _CompleteProfileViewBelemState extends State<CompleteProfileViewBelem> {
             });
           },
         ),
-        AppDimensions.small.hSpace(),
+        AppDimensions.small.w.horizontalSpace,
         Flexible(
           child: GestureDetector(
             onTap: () {
@@ -258,7 +272,8 @@ class _CompleteProfileViewBelemState extends State<CompleteProfileViewBelem> {
               text: TextSpan(
                 children: [
                   '${OnBoardingKeys.iHereConfirmMy.stringToString} '
-                      .textSpanRegular(color: AppColors.alertDialogMessageColor),
+                      .textSpanRegular(
+                          color: AppColors.alertDialogMessageColor),
                   OnBoardingKeys.consentToAuthorize.stringToString
                       .textSpanSemiBold(decoration: TextDecoration.underline),
                 ],
@@ -300,14 +315,23 @@ class _CompleteProfileViewBelemState extends State<CompleteProfileViewBelem> {
               color: AppColors.countryCodeColor,
               size: 20.sp,
             ),
-            message: OnBoardingKeys.youHaveBeenSuccessFullyVerified.stringToString
-                .titleRegular(size: 14.sp, color: AppColors.grey64697a, align: TextAlign.center),
+            message: OnBoardingKeys
+                .youHaveBeenSuccessFullyVerified.stringToString
+                .titleRegular(
+                    size: 14.sp,
+                    color: AppColors.grey64697a,
+                    align: TextAlign.center),
             onConfirmPressed: () {
               // Implement the action when OK button is pressed
-              var role = sl<SharedPreferencesHelper>().getString(PrefConstKeys.selectedRole);
-              var route = role == PrefConstKeys.seekerKey ? Routes.seekerHome : Routes.home;
+              var role = sl<SharedPreferencesHelper>()
+                  .getString(PrefConstKeys.selectedRole);
+              var route = role == PrefConstKeys.seekerKey
+                  ? Routes.seekerHome
+                  : Routes.home;
 
-              if (sl<SharedPreferencesHelper>().getString(PrefConstKeys.loginFrom) == PrefConstKeys.seekerHomeKey) {
+              if (sl<SharedPreferencesHelper>()
+                      .getString(PrefConstKeys.loginFrom) ==
+                  PrefConstKeys.seekerHomeKey) {
                 //Navigator.pop(context);
                 Navigator.pop(context);
 
@@ -338,7 +362,10 @@ class _CompleteProfileViewBelemState extends State<CompleteProfileViewBelem> {
             ),
             buttonTitle: OnBoardingKeys.tryAgain.stringToString,
             message: OnBoardingKeys.kycVerificationFailedMessage.stringToString
-                .titleRegular(size: 14.sp, color: AppColors.grey64697a, align: TextAlign.center),
+                .titleRegular(
+                    size: 14.sp,
+                    color: AppColors.grey64697a,
+                    align: TextAlign.center),
             onConfirmPressed: () {
               // Implement the action when OK button is pressed
               Navigator.of(context).pop(); // Close the dialog
@@ -350,9 +377,7 @@ class _CompleteProfileViewBelemState extends State<CompleteProfileViewBelem> {
 
   @override
   void dispose() {
-    if (kDebugMode) {
-      print("asdsda  dispose ");
-    }
+    AppUtils.printLogs("dispose ");
     webViewController.clearCache();
     webViewController.clearLocalStorage();
 

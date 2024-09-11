@@ -1,12 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../utils/extensions/font_style/font_styles.dart';
-import '../../../../utils/extensions/space.dart';
-
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
@@ -24,15 +22,12 @@ class DescriptionHeaderWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppDimensions.mediumXL.vSpace(),
-        course.descriptor.name
-            .titleBold(size: 16.sp, color: AppColors.textColor),
+        AppDimensions.mediumXL.verticalSpace,
+        course.descriptor.name.titleBold(size: AppDimensions.medium.sp, color: AppColors.textColor),
+        if (course.descriptor.shortDesc.isNotEmpty) AppDimensions.extraSmall.verticalSpace,
         if (course.descriptor.shortDesc.isNotEmpty)
-          AppDimensions.extraSmall.vSpace(),
-        if (course.descriptor.shortDesc.isNotEmpty)
-          course.descriptor.shortDesc
-              .titleRegular(size: 16.sp, color: AppColors.textColor),
-        AppDimensions.smallXL.vSpace(),
+          course.descriptor.shortDesc.titleRegular(size: AppDimensions.medium.sp, color: AppColors.textColor),
+        AppDimensions.smallXL.verticalSpace,
         if (course.rateable)
           Row(
             children: [
@@ -41,41 +36,50 @@ class DescriptionHeaderWidget extends StatelessWidget {
                 filledColor: AppColors.primaryColor,
                 readable: true,
               ),
-              AppDimensions.small.hSpace(),
+              AppDimensions.small.w.horizontalSpace,
               course.rating.titleSemiBold(
-                size: 12.sp,
+                size: AppDimensions.smallXL.sp,
                 color: AppColors.primaryColor,
               ),
-              AppDimensions.small.hSpace(),
-              SeekerHomeKeys.reviews.stringToString.titleRegular(size: 12.sp)
+              AppDimensions.small.w.horizontalSpace,
+              SeekerHomeKeys.reviews.stringToString.titleRegular(size: AppDimensions.smallXL.sp)
             ],
           ),
-        if (course.tagData != null) AppDimensions.medium.vSpace(),
+        if (course.tagData != null) AppDimensions.medium.verticalSpace,
         if (course.tagData != null)
-          Row(
+          Column(
             children: [
-              SvgPicture.asset(Assets.images.level),
-              AppDimensions.small.hSpace(),
-              course.tagData!.level.value
-                  .titleBold(size: AppDimensions.smallXL.sp),
-              AppDimensions.small.hSpace(),
-              Container(
-                width: 2.0, // Width of the vertical line
-                height: 13.0, // Height of the vertical line
-                color: AppColors
-                    .checkBoxDisableColor, // Color of the vertical line
+              Row(
+                children: [
+                  SvgPicture.asset(Assets.images.level),
+                  AppDimensions.small.w.horizontalSpace,
+                  SizedBox(
+                    width: 100.w,
+                    child: course.tagData!.level.value.titleBold(
+                      size: AppDimensions.smallXL.sp,
+                      maxLine: 1,
+                    ),
+                  ),
+                  AppDimensions.small.w.horizontalSpace,
+                  Container(
+                    width: 2.0, // Width of the vertical line
+                    height: 13.0, // Height of the vertical line
+                    color: AppColors.checkBoxDisableColor, // Color of the vertical line
+                  ),
+                  AppDimensions.small.w.horizontalSpace,
+                  SvgPicture.asset(Assets.images.timer),
+                  AppDimensions.small.w.horizontalSpace,
+                  SizedBox(
+                    width: 100.w,
+                    child: course.tagData!.duration.value.titleBold(size: AppDimensions.smallXL.sp, maxLine: 1),
+                  ),
+                ],
               ),
-              AppDimensions.small.hSpace(),
-              SvgPicture.asset(Assets.images.timer),
-              AppDimensions.small.hSpace(),
-              course.tagData!.duration.value
-                  .titleBold(size: AppDimensions.smallXL.sp),
             ],
           ),
-        AppDimensions.medium.vSpace(),
+        AppDimensions.medium.verticalSpace,
         course.status == "COMPLETED"
-            ? SeekerHomeKeys.completed.stringToString
-                .titleExtraBold(size: 18.sp, color: AppColors.green)
+            ? SeekerHomeKeys.completed.stringToString.titleExtraBold(size: 18.sp, color: AppColors.green)
             : course.enrolled
                 ? SeekerHomeKeys.enrolled.stringToString.titleExtraBold(
                     size: 18.sp,
@@ -85,10 +89,10 @@ class DescriptionHeaderWidget extends StatelessWidget {
                         ? "${course.price.value} ${course.price.currency}"
                         : SeekerHomeKeys.free.stringToString)
                     .titleExtraBold(
-                    size: 24.sp,
+                    size: AppDimensions.large.sp,
                     color: AppColors.green,
                   ),
-        AppDimensions.small.vSpace(),
+        AppDimensions.small.verticalSpace,
       ],
     );
   }

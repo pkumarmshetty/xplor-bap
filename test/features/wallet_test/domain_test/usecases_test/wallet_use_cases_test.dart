@@ -66,6 +66,7 @@ void main() {
     test('updateConsent returns true', () async {
       // Mock the behavior of the repository method
       final entity = UpdateConsentEntity(
+        sharedWithEntity: 'Self Shared',
         remarks: 'Remarks',
         restrictions: ConsentRestrictions(expiresIn: 3, viewOnce: false),
       );
@@ -118,6 +119,7 @@ void main() {
     test('revokeConsent returns true', () async {
       // Mock the behavior of the repository method
       final entity = SharedVcDataEntity(
+          sharedWithEntity: 'Self Shared',
           id: 'id',
           vcId: 'vcId',
           status: 'status',

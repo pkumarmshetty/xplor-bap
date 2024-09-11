@@ -2,15 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xplor/core/api_constants.dart';
-
+import '../../../../core/api_constants.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/connection/refresh_token_service.dart';
 import '../../../../core/exception_errors.dart';
+import '../../../../utils/app_utils/app_utils.dart';
 import '../../../../utils/extensions/string_to_string.dart';
 import '../../domain/entities/get_response_entity/sse_services_entity.dart';
 
@@ -76,14 +75,9 @@ class ApplyFormsApiServiceImpl implements ApplyFormsApiService {
         authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
       }
 
-      if (kDebugMode) {
-        print("Home User Data token==>$authToken");
-      }
-
-      if (kDebugMode) {
-        print("Apply search entity ${body.toString()}");
-        print("Apply search entity $initRequestApi");
-      }
+      AppUtils.printLogs("Home User Data token==>$authToken");
+      AppUtils.printLogs("Apply search entity ${body.toString()}");
+      AppUtils.printLogs("Apply search entity $initRequestApi");
 
       final response = await dio.post(
         initRequestApi,
@@ -95,24 +89,18 @@ class ApplyFormsApiServiceImpl implements ApplyFormsApiService {
           contentType: Headers.jsonContentType,
         ),
       );
-      if (kDebugMode) {
-        print("Apply Search---->Response of seeker search  ${response.data}");
-      }
+      AppUtils.printLogs("Apply Search---->Response of seeker search  ${response.data}");
     } catch (e) {
-      if (kDebugMode) {
-        print("Apply search----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("Apply search----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
   @override
   Future<void> confirmRequest(String body) async {
     try {
-      if (kDebugMode) {
-        print("Apply search entity ${body.toString()}");
-        print("Apply search entity $confirmRequestApi");
-      }
+      AppUtils.printLogs("Apply search entity ${body.toString()}");
+      AppUtils.printLogs("Apply search entity $confirmRequestApi");
       String? authToken;
 
       if (helper != null) {
@@ -131,24 +119,18 @@ class ApplyFormsApiServiceImpl implements ApplyFormsApiService {
           contentType: Headers.jsonContentType,
         ),
       );
-      if (kDebugMode) {
-        print("Apply Search---->Response of seeker search  ${response.data}");
-      }
+      AppUtils.printLogs("Apply Search---->Response of seeker search  ${response.data}");
     } catch (e) {
-      if (kDebugMode) {
-        print("Apply search----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("Apply search----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
   @override
   Future<dynamic> selectRequest(String body) async {
     try {
-      if (kDebugMode) {
-        print("Apply select entity ${body.toString()}");
-        print("Apply select entity $selectRequestApi");
-      }
+      AppUtils.printLogs("Apply select entity ${body.toString()}");
+      AppUtils.printLogs("Apply select entity $selectRequestApi");
 
       String? authToken;
 
@@ -169,26 +151,19 @@ class ApplyFormsApiServiceImpl implements ApplyFormsApiService {
         ),
       );
 
-      if (kDebugMode) {
-        print("Apply Search---->Response of seeker search  ${response.data}");
-      }
+      AppUtils.printLogs("Apply Search---->Response of seeker search  ${response.data}");
     } catch (e) {
-      if (kDebugMode) {
-        print("Apply search----> Catch ${handleError(e)}");
-      }
+      AppUtils.printLogs("Apply search----> Catch ${AppUtils.handleError(e)}");
 
-      // return Future.error(handleError(handleError(e)));
-      throw Exception(handleError(e));
+      // return Future.error(AppUtils.handleError(AppUtils.handleError(e)));
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
   @override
   Stream<SseServicesEntity> sseConnectionResponse(String transactionId, Duration timeout) {
     final StreamController<SseServicesEntity> stringStream = StreamController.broadcast();
-
-    if (kDebugMode) {
-      print("Apply Body Datta $seekerSearchSSEApi/transaction_id=$transactionId");
-    }
+    AppUtils.printLogs("Apply Body Datta ${seekerSearchSSEApi}transaction_id=$transactionId");
 
     // Start a timer to enforce the timeout
     final timer = Timer(timeout, () {
@@ -208,7 +183,7 @@ class ApplyFormsApiServiceImpl implements ApplyFormsApiService {
             "Cache-Control": "no-cache",
           }).listen(
         (event) {
-          debugPrint('Data: ${event.data!}');
+          AppUtils.printLogs('Data: ${event.data!}');
 
           try {
             // Parse JSON string into Map
@@ -225,18 +200,14 @@ class ApplyFormsApiServiceImpl implements ApplyFormsApiService {
               timer.cancel();
             }
           } catch (e) {
-            if (kDebugMode) {
-              print('SSE Error: $e');
-            }
+            AppUtils.printLogs('SSE Error: $e');
             stringStream.addError(ExceptionErrors.checkTimeOut.stringToString);
             stringStream.close();
           }
         },
         onError: (error) {
           // Ensure the stream is closed on error
-          if (kDebugMode) {
-            print('SSE Error: $error');
-          }
+          AppUtils.printLogs('SSE Error: $error');
           stringStream.addError(error);
           stringStream.close();
           //throw Exception("SSE Connection Closed");
@@ -255,52 +226,5 @@ class ApplyFormsApiServiceImpl implements ApplyFormsApiService {
     }
 
     return stringStream.stream;
-  }
-
-  String handleError(Object error) {
-    String errorDescription = "";
-
-    if (error is DioException) {
-      DioException dioError = error;
-      switch (dioError.type) {
-        case DioExceptionType.cancel:
-          errorDescription = ExceptionErrors.requestCancelError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.connectionTimeout:
-          errorDescription = ExceptionErrors.connectionTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.unknown:
-          errorDescription = ExceptionErrors.unknownConnectionError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.receiveTimeout:
-          errorDescription = ExceptionErrors.receiveTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.badResponse:
-          if (kDebugMode) {
-            print("${ExceptionErrors.badResponseError}  ${dioError.response!.data}");
-          }
-          return dioError.response!.data['message'];
-
-        case DioExceptionType.sendTimeout:
-          errorDescription = ExceptionErrors.sendTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.badCertificate:
-          errorDescription = ExceptionErrors.badCertificate.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.connectionError:
-          errorDescription = ExceptionErrors.checkInternetConnection.stringToString;
-
-          return errorDescription;
-      }
-    } else {
-      errorDescription = ExceptionErrors.unexpectedErrorOccurred.stringToString;
-      return errorDescription;
-    }
   }
 }

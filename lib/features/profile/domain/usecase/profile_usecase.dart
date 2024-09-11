@@ -1,16 +1,22 @@
-import 'package:xplor/features/profile/domain/repository/profile_repository.dart';
-
+import '../repository/profile_repository.dart';
 import '../../../on_boarding/domain/entities/user_data_entity.dart';
 
+/// Use case for interacting with user profile data and actions.
 class ProfileUseCase {
-  ProfileRepository repository;
+  /// Repository responsible for accessing and managing profile data.
+  final ProfileRepository repository;
 
+  /// Constructor for the ProfileUseCase.
+  ///
+  /// Requires a [repository] to handle data operations.
   ProfileUseCase({required this.repository});
 
+  /// Fetches the user's profile data.
   Future<UserDataEntity> getUserData() async {
     return await repository.getUserData();
   }
 
+  /// Performs a logout action for the user.
   Future<void> logout() async {
     return await repository.logout();
   }

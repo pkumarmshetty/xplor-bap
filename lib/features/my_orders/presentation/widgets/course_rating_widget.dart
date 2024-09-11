@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/profile/profile_keys.dart';
-import 'package:xplor/features/my_orders/presentation/blocs/course_rating_bloc/course_ratings_bloc.dart';
-import 'package:xplor/features/my_orders/presentation/blocs/my_orders_bloc/my_orders_bloc.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/app_dimensions.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/utils.dart';
-import 'package:xplor/utils/widgets/build_button.dart';
-import 'package:xplor/utils/widgets/loading_animation.dart';
-
+import '../../../multi_lang/domain/mappers/profile/profile_keys.dart';
+import '../blocs/course_rating_bloc/course_ratings_bloc.dart';
+import '../blocs/my_orders_bloc/my_orders_bloc.dart';
+import '../../../../utils/app_colors.dart';
+import '../../../../utils/app_dimensions.dart';
+import '../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../utils/extensions/string_to_string.dart';
+import '../../../../utils/utils.dart';
+import '../../../../utils/widgets/build_button.dart';
+import '../../../../utils/widgets/loading_animation.dart';
 import '../../../../utils/widgets/rating_bar.dart';
 import '../blocs/my_orders_bloc/my_orders_event.dart';
 
+/// A widget for displaying and submitting course ratings.
 class CourseRatingWidget extends StatefulWidget {
   const CourseRatingWidget({super.key});
 
   @override
   State<CourseRatingWidget> createState() => _CourseRatingWidgetState();
+
+  // Indicates whether the bottom sheet is currently visible
   static bool isBottomSheetVisible = false;
 
+  /// Displays the ratings bottom sheet.
   static void showRatingsBottomSheet(BuildContext context) {
     isBottomSheetVisible = true;
+    var courseRatingBloc = context.read<CourseRatingsBloc>();
     showModalBottomSheet(
       backgroundColor: AppColors.white,
       isScrollControlled: true,
@@ -35,10 +38,12 @@ class CourseRatingWidget extends StatefulWidget {
       },
     ).whenComplete(() {
       isBottomSheetVisible = false;
-      context.read<CourseRatingsBloc>().add(RatingsResetEvent());
+      // Resets the ratings state after closing the bottom sheet
+      courseRatingBloc.add(const RatingsResetEvent());
     });
   }
 
+  /// Displays a thank you dialog after submitting feedback.
   static void showThanksForFeedbackDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -46,16 +51,18 @@ class CourseRatingWidget extends StatefulWidget {
         return Dialog(
           surfaceTintColor: AppColors.white,
           backgroundColor: AppColors.white,
-          insetPadding: const EdgeInsets.all(20),
+          insetPadding: const EdgeInsets.all(AppDimensions.mediumXL),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: BorderRadius.circular(AppDimensions.mediumXL),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               ProfileKeys.thanksForFeedback.stringToString.titleExtraBold(
-                  color: AppColors.black, size: 24.sp, align: TextAlign.center),
+                  color: AppColors.black,
+                  size: AppDimensions.large.sp,
+                  align: TextAlign.center),
               AppDimensions.medium.verticalSpace,
               ProfileKeys.gladEnjoyingApp.stringToString.titleRegular(
                   color: AppColors.grey9098A3,
@@ -67,28 +74,28 @@ class CourseRatingWidget extends StatefulWidget {
                 isValid: true,
                 onPressed: () {
                   Navigator.pop(context);
-                  // if (states is ApplyFormLoaderState) {
-                  //   return;
-                  // }
-                  // context.read<CourseRatingsBloc>().add(const RatingsSubmitEvent(orderId:,ratings: ,feedback: ));
                 },
               ),
               AppDimensions.medium.verticalSpace
             ],
-          ).paddingAll(padding: 20.w),
+          ).paddingAll(padding: AppDimensions.mediumXL.w),
         );
       },
     );
   }
 }
 
+/// The state for [CourseRatingWidget].
 class _CourseRatingWidgetState extends State<CourseRatingWidget> {
+  // Controller for the feedback text field
   TextEditingController feedbackController = TextEditingController();
 
+  // Variable to store the rating value
   double rating = 0;
 
   @override
   Widget build(BuildContext context) {
+    // Listens for changes in the course ratings state
     return BlocListener<CourseRatingsBloc, CourseRatingsState>(
       listener: (context, state) {
         if (state is RatingsSubmittedSuccessState) {
@@ -96,6 +103,7 @@ class _CourseRatingWidgetState extends State<CourseRatingWidget> {
             Navigator.pop(context);
           }
           CourseRatingWidget.showThanksForFeedbackDialog(context);
+          // Reloads the orders data after submitting the rating
           context
               .read<MyOrdersBloc>()
               .add(const MyOrdersDataEvent(isFirstTime: true));
@@ -109,7 +117,7 @@ class _CourseRatingWidgetState extends State<CourseRatingWidget> {
           return Container(
             height: MediaQuery.of(context).size.height / 2 + 50.w,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(AppDimensions.mediumXL),
                 color: AppColors.white),
             child: Stack(
               alignment: Alignment.center,
@@ -120,16 +128,21 @@ class _CourseRatingWidgetState extends State<CourseRatingWidget> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        // Title of the rating section
                         ProfileKeys.experienceSoFar.stringToString
                             .titleBold(
                                 color: AppColors.black,
-                                size: 24.sp,
+                                size: AppDimensions.large.sp,
                                 align: TextAlign.center)
-                            .symmetricPadding(horizontal: 20.w),
+                            .symmetricPadding(
+                                horizontal: AppDimensions.mediumXL.w),
                         AppDimensions.small.verticalSpace,
+                        // Subtitle or description
                         ProfileKeys.loveToKnow.stringToString.titleRegular(
-                            color: AppColors.grey9098A3, size: 16.sp),
+                            color: AppColors.grey9098A3,
+                            size: AppDimensions.medium.sp),
                         AppDimensions.medium.verticalSpace,
+                        // Rating bar for user to provide rating
                         SizedBox(
                           width: double.infinity,
                           child: RatingBarWidget(
@@ -138,6 +151,7 @@ class _CourseRatingWidgetState extends State<CourseRatingWidget> {
                                 : 0.0,
                             onChanged: (val) {
                               rating = val;
+                              // Updates the rating in the bloc
                               context.read<CourseRatingsBloc>().add(
                                   RatingsUpdateEvent(
                                       ratings: rating,
@@ -146,6 +160,7 @@ class _CourseRatingWidgetState extends State<CourseRatingWidget> {
                           ),
                         ),
                         AppDimensions.large.verticalSpace,
+                        // Feedback text field
                         Container(
                           height: 20 * 8,
                           decoration: BoxDecoration(
@@ -153,20 +168,22 @@ class _CourseRatingWidgetState extends State<CourseRatingWidget> {
                                   color: AppColors.black.withOpacity(0.1),
                                   width: 1),
                               borderRadius: BorderRadius.circular(6.w)),
-                          // Calculate the height based on the number of lines
+                          // Limits the number of lines to 5
                           child: TextField(
                             onChanged: (text) {
+                              // Updates the feedback in the bloc
                               context.read<CourseRatingsBloc>().add(
                                   RatingsUpdateEvent(
                                       ratings: rating, feedback: text));
                               feedbackController.text = text;
                             },
                             style: TextStyle(
-                                fontSize: 16.sp,
+                                fontSize: AppDimensions.medium.sp,
                                 color: AppColors.countryCodeColor),
                             maxLines: 5,
                             controller: feedbackController,
                             inputFormatters: [
+                              // Restricts the number of lines to 5
                               TextInputFormatter.withFunction(
                                   (oldValue, newValue) {
                                 int newLines = newValue.text.split('\n').length;
@@ -186,14 +203,13 @@ class _CourseRatingWidgetState extends State<CourseRatingWidget> {
                           ).symmetricPadding(horizontal: 10, vertical: 5),
                         ),
                         AppDimensions.mediumXXL.verticalSpace,
+                        // Submit button for feedback
                         ButtonWidget(
                           title: ProfileKeys.send.stringToString,
                           isValid: (state is CourseRatingsUpdatedState &&
                               state.feedback.isNotEmpty),
                           onPressed: () {
-                            // if (states is ApplyFormLoaderState) {
-                            //   return;
-                            // }
+                            // Triggers the submission of the rating
                             context.read<CourseRatingsBloc>().add(
                                 RatingsSubmitEvent(
                                     ratings: rating,
@@ -202,9 +218,10 @@ class _CourseRatingWidgetState extends State<CourseRatingWidget> {
                         ),
                         AppDimensions.large.verticalSpace
                       ],
-                    ).paddingAll(padding: 20),
+                    ).paddingAll(padding: AppDimensions.mediumXL),
                   ),
                 ),
+                // Loading animation during state update
                 (state is CourseRatingsUpdatedState && state.isLoading)
                     ? const Center(child: LoadingAnimation())
                     : Container()

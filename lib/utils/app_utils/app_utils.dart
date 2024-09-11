@@ -3,22 +3,21 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
-import 'package:xplor/core/exception_errors.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/wallet/wallet_keys.dart';
-import 'package:xplor/features/wallet/presentation/widgets/enter_mpin_dialog.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/utils.dart';
+import '../../core/exception_errors.dart';
+import '../../features/multi_lang/domain/mappers/wallet/wallet_keys.dart';
+import '../../features/my_orders/presentation/blocs/my_orders_bloc/my_orders_bloc.dart';
+import '../../features/wallet/presentation/widgets/enter_mpin_dialog.dart';
+import '../app_colors.dart';
+import '../extensions/font_style/font_styles.dart';
+import '../extensions/string_to_string.dart';
+import '../utils.dart';
 import '../../config/services/app_services.dart';
-
 import '../../const/local_storage/shared_preferences_helper.dart';
 import '../../const/user_define_function.dart';
 import '../../core/dependency_injection.dart';
@@ -47,27 +46,25 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
     FocusScope.of(AppServices.navState.currentContext!).unfocus();
   }
 
-  static void showSnackBar(BuildContext context, String message,
-      {Color? bgColor}) {
+  static void showSnackBar(BuildContext context, String message, {Color? bgColor}) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       backgroundColor: bgColor ?? AppColors.errorColor,
-      padding: const EdgeInsets.symmetric(
-          vertical: AppDimensions.mediumXL, horizontal: AppDimensions.medium),
-      content: (message.contains("Exception:")
-              ? message.replaceAll("Exception:", "")
-              : message)
+      padding: const EdgeInsets.symmetric(vertical: AppDimensions.mediumXL, horizontal: AppDimensions.medium),
+      content: (message.contains("Exception:") ? message.replaceAll("Exception:", "") : message)
           .titleBold(size: 14.sp, color: AppColors.white),
     ));
   }
 
   static String getErrorMessage(String message) {
-    return message.contains("Exception: ")
-        ? message.replaceAll("Exception: ", "")
-        : message;
+    return message.contains("Exception: ") ? message.replaceAll("Exception: ", "") : message;
   }
 
   static void showAlertDialog(BuildContext context, bool isTokenClear) {
     AppUtilsDialogMixin.showAlertDialog(context, isTokenClear);
+  }
+
+  static void showPaymentAlertDialog(BuildContext context, VoidCallback? onPressed) {
+    AppUtilsDialogMixin.showPaymentAlertDialog(context, onPressed);
   }
 
   static void showAlertDialogForConfirmation(
@@ -78,8 +75,8 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
     String rightButtonMessage, {
     required VoidCallback onConfirm,
   }) {
-    AppUtilsDialogMixin.showAlertDialogForConfirmation(context, title, message,
-        leftButtonMessage, rightButtonMessage, false, onConfirm);
+    AppUtilsDialogMixin.showAlertDialogForConfirmation(
+        context, title, message, leftButtonMessage, rightButtonMessage, false, onConfirm);
   }
 
   static void linkGeneratedDialog(
@@ -89,18 +86,11 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
     String buttonText, {
     required VoidCallback onConfirm,
   }) {
-    AppUtilsDialogMixin.linkGeneratedDialog(
-        context, title, message, buttonText, onConfirm);
+    AppUtilsDialogMixin.linkGeneratedDialog(context, title, message, buttonText, onConfirm);
   }
 
-  static void showAlertDialogForRevokeAccess(
-      BuildContext context,
-      String title,
-      String message,
-      String leftButtonMessage,
-      String rightButtonMessage,
-      bool isCrossIconVisible,
-      VoidCallback onConfirm) {
+  static void showAlertDialogForRevokeAccess(BuildContext context, String title, String message,
+      String leftButtonMessage, String rightButtonMessage, bool isCrossIconVisible, VoidCallback onConfirm) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -111,22 +101,18 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
             ),
             backgroundColor: AppColors.white,
             elevation: 0,
-            insetPadding:
-                const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
+            insetPadding: const EdgeInsets.symmetric(horizontal: AppDimensions.medium),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TopHeaderForDialogs(
-                    title: title, isCrossIconVisible: isCrossIconVisible),
+                TopHeaderForDialogs(title: title, isCrossIconVisible: isCrossIconVisible),
 
                 /// Message with custom styling
-                message
-                    .titleSemiBold(size: 16.sp)
-                    .symmetricPadding(horizontal: AppDimensions.mediumXL),
+                message.titleSemiBold(size: 16.sp).symmetricPadding(horizontal: AppDimensions.mediumXL),
 
                 /// Vertical space below the message
-                AppDimensions.large.vSpace(),
+                AppDimensions.large.verticalSpace,
 
                 /// OK button
                 Row(
@@ -138,18 +124,16 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
                           backgroundColor: AppColors.cancelButtonBgColor,
                           // Text color
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(8.0), // Rounded edges
+                            borderRadius: BorderRadius.circular(8.0), // Rounded edges
                           ),
                           elevation: 5, // Shadow
                         ),
                         child: leftButtonMessage
-                            .titleMedium(
-                                color: AppColors.cancelStyle, size: 12.sp)
+                            .titleMedium(color: AppColors.cancelStyle, size: 12.sp)
                             .paddingAll(padding: AppDimensions.smallXL.w),
                       ),
                     ),
-                    AppDimensions.mediumXL.hSpace(),
+                    AppDimensions.mediumXL.w.horizontalSpace,
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () => onConfirm(),
@@ -157,8 +141,7 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
                           surfaceTintColor: AppColors.errorColor,
                           backgroundColor: AppColors.errorColor,
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(8.0), // Rounded edges
+                            borderRadius: BorderRadius.circular(8.0), // Rounded edges
                           ),
                           elevation: 5, // Shadow
                         ),
@@ -171,7 +154,7 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
                 ).symmetricPadding(horizontal: AppDimensions.mediumXL),
 
                 /// Vertical space below the OK button
-                AppDimensions.xxl.vSpace(),
+                AppDimensions.xxl.verticalSpace,
               ],
             ),
           );
@@ -185,8 +168,7 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
     return initializeSharedPreferencesHelper(preferencesHelper);
   }
 
-  static Future<bool> initializeSharedPreferencesHelper(
-      SharedPreferencesHelper preferencesHelper) async {
+  static Future<bool> initializeSharedPreferencesHelper(SharedPreferencesHelper preferencesHelper) async {
     // Initialize SharedPreferencesHelper and wait for initialization
     await preferencesHelper.init();
 
@@ -205,9 +187,7 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
   static void shareFile(String text) {
     var sharedId = "Test share";
     sharedId = sl<SharedPreferencesHelper>().getString(PrefConstKeys.sharedId);
-    if (kDebugMode) {
-      print("sharedId....$sharedId");
-    }
+    AppUtils.printLogs("sharedId....$sharedId");
 
     if (Platform.isAndroid) {
       Share.share(sharedId);
@@ -223,8 +203,7 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
     return formattedDate;
   }
 
-  static String convertDateFormatToAnother(
-      String inputDateFormat, String outputDateFormat, String input) {
+  static String convertDateFormatToAnother(String inputDateFormat, String outputDateFormat, String input) {
     try {
       if (input == 'NA') {
         return '';
@@ -236,10 +215,7 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
       DateFormat outputFormat = DateFormat(outputDateFormat);
       String formattedDate = outputFormat.format(dateTime);
 
-      if (kDebugMode) {
-        print(formattedDate);
-      } // Output: 24 November, 2000
-
+      AppUtils.printLogs(formattedDate);
       return formattedDate;
     } catch (e) {
       return "Format issue";
@@ -248,12 +224,9 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
 
   static String convertValidityToDays(int dateString) {
     double result = dateString / 24;
-    String formattedResult =
-        result % 1 == 0 ? result.toInt().toString() : result.toStringAsFixed(2);
+    String formattedResult = result % 1 == 0 ? result.toInt().toString() : result.toStringAsFixed(2);
 
-    String title = formattedResult == "1"
-        ? WalletKeys.day.stringToString
-        : WalletKeys.days.stringToString;
+    String title = formattedResult == "1" ? WalletKeys.day.stringToString : WalletKeys.days.stringToString;
     return '$formattedResult $title';
   }
 
@@ -304,27 +277,27 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
   }
 
   static disposeAllBlocs(BuildContext context) {
-    if (kDebugMode) {
-      print("All Blocs Dispose in progress");
-    }
+    AppUtils.printLogs("All Blocs Dispose in progress");
     BlocProvider.of<ChooseDomainBloc>(context, listen: false).domains.clear();
     BlocProvider.of<CategoriesBloc>(context, listen: false).categories.clear();
-    BlocProvider.of<CategoriesBloc>(context, listen: false)
-        .selectedCategories
-        .clear();
+    BlocProvider.of<CategoriesBloc>(context, listen: false).selectedCategories.clear();
     BlocProvider.of<SeekerProfileBloc>(context, listen: false).userData = null;
     BlocProvider.of<AgentProfileBloc>(context, listen: false).userData = null;
-    var translationBloc =
-        BlocProvider.of<TranslationBloc>(context, listen: false);
+    var translationBloc = BlocProvider.of<TranslationBloc>(context, listen: false);
     translationBloc.recommendedLangModel = null;
     translationBloc.selectedModel = null;
     translationBloc.translationTextMap.clear();
     translationBloc.langModel.clear();
     BlocProvider.of<SeekerHomeBloc>(context, listen: false).providers.clear();
 
-    if (kDebugMode) {
-      print("All Blocs Dispose in done");
-    }
+    var myOrdersBloc = BlocProvider.of<MyOrdersBloc>(context, listen: false);
+    myOrdersBloc.onCompTotalCount = 0;
+    myOrdersBloc.onGoingTotalCount = 0;
+    myOrdersBloc.completedOrders.clear();
+    myOrdersBloc.ongoingOrders.clear();
+    myOrdersBloc.orderItem = null;
+
+    AppUtils.printLogs("All Blocs Dispose in done");
   }
 
   static loadThumbnailBasedOnMimeTime(String? mimeType) {
@@ -334,6 +307,14 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
       return Assets.images.icImagePngIcon;
     } else {
       return Assets.images.icImageJpgIcon;
+    }
+  }
+
+  static loadText(List<String> tags, {double? fontSize}) {
+    if (tags.isNotEmpty) {
+      return tags[0][0].titleExtraBold(size: fontSize ?? 50.sp, align: TextAlign.center);
+    } else {
+      return const SizedBox();
     }
   }
 
@@ -348,13 +329,11 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
 
           return errorDescription;
         case DioExceptionType.connectionTimeout:
-          errorDescription =
-              ExceptionErrors.connectionTimeOutError.stringToString;
+          errorDescription = ExceptionErrors.connectionTimeOutError.stringToString;
 
           return errorDescription;
         case DioExceptionType.unknown:
-          errorDescription =
-              ExceptionErrors.unknownConnectionError.stringToString;
+          errorDescription = ExceptionErrors.unknownConnectionError.stringToString;
 
           return errorDescription;
         case DioExceptionType.receiveTimeout:
@@ -362,10 +341,7 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
 
           return errorDescription;
         case DioExceptionType.badResponse:
-          if (kDebugMode) {
-            print(
-                "${ExceptionErrors.badResponseError}  ${dioError.response!.data}");
-          }
+          AppUtils.printLogs("${ExceptionErrors.badResponseError}  ${dioError.response!.data}");
           return dioError.response!.data['message'];
 
         case DioExceptionType.sendTimeout:
@@ -377,8 +353,7 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
 
           return errorDescription;
         case DioExceptionType.connectionError:
-          errorDescription =
-              ExceptionErrors.checkInternetConnection.stringToString;
+          errorDescription = ExceptionErrors.checkInternetConnection.stringToString;
 
           return errorDescription;
       }
@@ -386,5 +361,9 @@ class AppUtils with AppUtilsDialogMixin, AppUtilsMediaMixin {
       errorDescription = ExceptionErrors.unexpectedErrorOccurred.stringToString;
       return errorDescription;
     }
+  }
+
+  static printLogs(String message) {
+    debugPrint(message);
   }
 }

@@ -1,15 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:xplor/features/apply_course/presentation/blocs/apply_course_bloc.dart';
-import 'package:xplor/features/course_description/presentation/blocs/course_description_bloc.dart';
-import 'package:xplor/features/course_description/presentation/blocs/course_description_state.dart';
-import 'package:xplor/utils/app_utils/app_utils.dart';
-import 'package:xplor/utils/widgets/loading_animation.dart';
+import '../../../apply_course/presentation/blocs/apply_course_bloc.dart';
+import '../blocs/course_description_bloc.dart';
+import '../blocs/course_description_state.dart';
+import '../../../../utils/app_utils/app_utils.dart';
+import '../../../../utils/widgets/loading_animation.dart';
 import '../../../../config/routes/path_routing.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/dependency_injection.dart';
@@ -19,7 +17,6 @@ import '../../../multi_lang/domain/mappers/seeker_home/seeker_home_keys.dart';
 import '../widgets/description_details_widget.dart';
 import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../utils/utils.dart';
-
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_dimensions.dart';
 import '../widgets/description_header_widget.dart';
@@ -37,7 +34,6 @@ class _CourseDescriptionViewState extends State<CourseDescriptionView> {
   @override
   void initState() {
     super.initState();
-
     context.read<ApplyCourseBloc>().add(UpdateInitStateEvent());
   }
 
@@ -52,6 +48,10 @@ class _CourseDescriptionViewState extends State<CourseDescriptionView> {
             if (state is CourseUrlDataState) {
               Navigator.pushNamed(context, Routes.applyCourse);
             }
+
+            if (state is PaymentUrlState) {
+              Navigator.pushNamed(context, Routes.payment, arguments: state.url);
+            }
             if (state is NavigationSuccessState) {
               Navigator.pushNamedAndRemoveUntil(
                 context,
@@ -64,7 +64,6 @@ class _CourseDescriptionViewState extends State<CourseDescriptionView> {
             if (state is CourseDetailsFailureState) {
               AppUtils.showSnackBar(context, state.error);
             }
-
             if (state is CourseSelectedState && !state.course.enrolled) {
               context
                   .read<ApplyCourseBloc>()
@@ -73,14 +72,11 @@ class _CourseDescriptionViewState extends State<CourseDescriptionView> {
           }, child: BlocBuilder<ApplyCourseBloc, ApplyCourseState>(builder: (context, applyState) {
             return BlocBuilder<CourseDescriptionBloc, CourseDescriptionState>(
               builder: (context, state) {
-                if (kDebugMode) {
-                  print("assafsf ${applyState is SuccessOnSelectState && state is CourseSelectedState} ");
-                }
+                AppUtils.printLogs("assafsf ${applyState is SuccessOnSelectState && state is CourseSelectedState} ");
 
                 if (state is CourseLoaderData) {
                   return const LoadingAnimation();
                 }
-
                 return state is CourseSelectedState
                     ? Stack(
                         children: [
@@ -94,15 +90,8 @@ class _CourseDescriptionViewState extends State<CourseDescriptionView> {
                               ),
                               SliverToBoxAdapter(
                                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                  DescriptionHeaderWidget(
-                                    course: state.course,
-                                  ),
-                                  DescriptionDetailsWidget(
-                                    course: state.course,
-                                  ),
-
-                                  /*      ).symmetricPadding(
-                                    horizontal: AppDimensions.smallXXL.sp),*/
+                                  DescriptionHeaderWidget(course: state.course),
+                                  DescriptionDetailsWidget(course: state.course),
                                 ]).symmetricPadding(horizontal: AppDimensions.medium),
                               ),
                             ]),
@@ -115,36 +104,38 @@ class _CourseDescriptionViewState extends State<CourseDescriptionView> {
                                   child: SvgPicture.asset(Assets.images.leftWhiteArrow)),
                             ),
                           ])),
-                          if (!state.course.enrolled)
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                BlocBuilder<ApplyCourseBloc, ApplyCourseState>(builder: (context, state) {
-                                  return ButtonWidget(
-                                    isShadow: false,
-                                    onPressed: () async {
-                                      if (state is ApplyFormLoaderState) {
-                                        return;
-                                      }
-                                      final bool isLoggedIn = await AppUtils.checkToken();
-                                      if (!context.mounted) return;
-                                      _goToNext(context, isLoggedIn);
-                                    },
-                                    title: state is ApplyFormLoaderState
-                                        ? SeekerHomeKeys.plsWait.stringToString
-                                        : SeekerHomeKeys.enrollNow.stringToString,
-                                    isValid: context.read<ApplyCourseBloc>().isEnabledOnSelect,
-                                  ).symmetricPadding(
-                                      vertical: AppDimensions.large.sp, horizontal: AppDimensions.medium.sp);
-                                }),
-                              ],
-                            ),
+                          if (!state.course.enrolled) _enrollButton(),
                         ],
                       )
                     : Container();
               },
             );
           }))),
+    );
+  }
+
+  Widget _enrollButton() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        BlocBuilder<ApplyCourseBloc, ApplyCourseState>(builder: (context, state) {
+          return ButtonWidget(
+            isShadow: false,
+            onPressed: () async {
+              if (state is ApplyFormLoaderState) {
+                return;
+              }
+              final bool isLoggedIn = await AppUtils.checkToken();
+              if (!context.mounted) return;
+              _goToNext(context, isLoggedIn);
+            },
+            title: state is ApplyFormLoaderState
+                ? SeekerHomeKeys.plsWait.stringToString
+                : SeekerHomeKeys.enrollNow.stringToString,
+            isValid: context.read<ApplyCourseBloc>().isEnabledOnSelect,
+          ).symmetricPadding(vertical: AppDimensions.large.sp, horizontal: AppDimensions.medium.sp);
+        }),
+      ],
     );
   }
 
@@ -193,12 +184,6 @@ class _CourseDescriptionViewState extends State<CourseDescriptionView> {
           ),
         ],
       ),
-      /*Positioned(
-        top: 89,
-        left: 0,
-        right: 0,
-        child: SvgPicture.asset(Assets.images.play),
-      ),*/
     ]);
   }
 

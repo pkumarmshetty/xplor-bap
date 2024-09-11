@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:xplor/utils/app_dimensions.dart';
 
 final ThemeData myTheme = ThemeData(
   useMaterial3: true,
@@ -23,7 +24,7 @@ final ThemeData myTheme = ThemeData(
     textTheme: ButtonTextTheme.normal,
     minWidth: 88,
     height: 36,
-    padding: EdgeInsets.only(top: 0, bottom: 0, left: 16, right: 16),
+    padding: EdgeInsets.only(top: 0, bottom: 0, left: AppDimensions.medium, right: AppDimensions.medium),
     shape: RoundedRectangleBorder(
       side: BorderSide(
         color: Color(0xff000000),
@@ -238,8 +239,7 @@ final ThemeData myTheme = ThemeData(
     ),
     errorMaxLines: null,
     isDense: false,
-    contentPadding:
-        const EdgeInsets.only(top: 12, bottom: 12, left: 0, right: 0),
+    contentPadding: const EdgeInsets.only(top: AppDimensions.smallXL, bottom: AppDimensions.smallXL, left: 0, right: 0),
     isCollapsed: false,
     prefixStyle: GoogleFonts.manrope(
       color: const Color(0xdd000000),
@@ -268,7 +268,7 @@ final ThemeData myTheme = ThemeData(
         width: 1,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+      borderRadius: BorderRadius.all(Radius.circular(AppDimensions.extraSmall)),
     ),
     focusedBorder: const UnderlineInputBorder(
       borderSide: BorderSide(
@@ -276,7 +276,7 @@ final ThemeData myTheme = ThemeData(
         width: 1,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+      borderRadius: BorderRadius.all(Radius.circular(AppDimensions.extraSmall)),
     ),
     focusedErrorBorder: const UnderlineInputBorder(
       borderSide: BorderSide(
@@ -284,7 +284,7 @@ final ThemeData myTheme = ThemeData(
         width: 1,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+      borderRadius: BorderRadius.all(Radius.circular(AppDimensions.extraSmall)),
     ),
     disabledBorder: const UnderlineInputBorder(
       borderSide: BorderSide(
@@ -292,7 +292,7 @@ final ThemeData myTheme = ThemeData(
         width: 1,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+      borderRadius: BorderRadius.all(Radius.circular(AppDimensions.extraSmall)),
     ),
     enabledBorder: const UnderlineInputBorder(
       borderSide: BorderSide(
@@ -300,7 +300,7 @@ final ThemeData myTheme = ThemeData(
         width: 1,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+      borderRadius: BorderRadius.all(Radius.circular(AppDimensions.extraSmall)),
     ),
     border: const UnderlineInputBorder(
       borderSide: BorderSide(
@@ -308,18 +308,18 @@ final ThemeData myTheme = ThemeData(
         width: 1,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+      borderRadius: BorderRadius.all(Radius.circular(AppDimensions.extraSmall)),
     ),
   ),
   iconTheme: const IconThemeData(
     color: Color(0xdd000000),
     opacity: 1,
-    size: 24,
+    size: AppDimensions.large,
   ),
   primaryIconTheme: const IconThemeData(
     color: Color(0xffffffff),
     opacity: 1,
-    size: 24,
+    size: AppDimensions.large,
   ),
   sliderTheme: SliderThemeData(
     activeTrackColor: null,
@@ -359,7 +359,11 @@ final ThemeData myTheme = ThemeData(
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
-    padding: const EdgeInsets.only(top: 4, bottom: 4, left: 4, right: 4),
+    padding: const EdgeInsets.only(
+        top: AppDimensions.extraSmall,
+        bottom: AppDimensions.extraSmall,
+        left: AppDimensions.extraSmall,
+        right: AppDimensions.extraSmall),
     secondaryLabelStyle: GoogleFonts.manrope(
       color: const Color(0x3d000000),
       fontSize: null,
@@ -390,8 +394,7 @@ final ThemeData myTheme = ThemeData(
     selectionHandleColor: Color(0xff64b5f6),
   ),
   checkboxTheme: CheckboxThemeData(
-    fillColor:
-        WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+    fillColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
       if (states.contains(WidgetState.disabled)) {
         return null;
       }
@@ -402,8 +405,7 @@ final ThemeData myTheme = ThemeData(
     }),
   ),
   radioTheme: RadioThemeData(
-    fillColor:
-        WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+    fillColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
       if (states.contains(WidgetState.disabled)) {
         return null;
       }
@@ -414,8 +416,7 @@ final ThemeData myTheme = ThemeData(
     }),
   ),
   switchTheme: SwitchThemeData(
-    thumbColor:
-        WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+    thumbColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
       if (states.contains(WidgetState.disabled)) {
         return null;
       }
@@ -424,8 +425,7 @@ final ThemeData myTheme = ThemeData(
       }
       return null;
     }),
-    trackColor:
-        WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+    trackColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
       if (states.contains(WidgetState.disabled)) {
         return null;
       }

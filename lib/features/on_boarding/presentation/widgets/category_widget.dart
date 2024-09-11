@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:xplor/gen/assets.gen.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/utils.dart';
+import '../../../../gen/assets.gen.dart';
+import '../../../../utils/app_colors.dart';
+import '../../../../utils/app_dimensions.dart';
+import '../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../utils/utils.dart';
 
 class CategoryWidget extends StatelessWidget {
   const CategoryWidget({
@@ -29,9 +30,9 @@ class CategoryWidget extends StatelessWidget {
       child: Card(
           color: AppColors.white,
           surfaceTintColor: AppColors.white,
-          elevation: 2,
+          elevation: AppDimensions.extraExtraSmall,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.w),
+            borderRadius: BorderRadius.circular(AppDimensions.medium.w),
             side: BorderSide(
                 color: isSelected ? AppColors.blueBorder1581.withOpacity(0.26) : AppColors.white,
                 width: isSelected ? 2 : 1), // Border color and width
@@ -41,15 +42,15 @@ class CategoryWidget extends StatelessWidget {
             children: [
               category
                   .titleSemiBold(size: 14.sp, color: AppColors.countryCodeColor)
-                  .symmetricPadding(horizontal: 10.w, vertical: 10.w),
+                  .symmetricPadding(horizontal: AppDimensions.smallXL.w, vertical: AppDimensions.smallXL.w),
               isSelected
                   ? Positioned(
-                      right: 10.w,
-                      top: 10.w,
+                      right: AppDimensions.smallXL.w,
+                      top: AppDimensions.smallXL.w,
                       child: SvgPicture.asset(
                         Assets.images.icCheckSelection,
-                        height: 20.w,
-                        width: 20.w,
+                        height: AppDimensions.mediumXL.w,
+                        width: AppDimensions.mediumXL.w,
                       ),
                     )
                   : Container(),

@@ -67,11 +67,9 @@ final Map<String, dynamic> originalWalletMap = {
 
   /// Add Document Keys
   WalletKeys.documentUploaded: "Document Uploaded Successfully",
-  WalletKeys.documentUploadedMessage:
-      "Your document has been successfully uploaded.",
+  WalletKeys.documentUploadedMessage: "Your document has been successfully uploaded.",
   WalletKeys.documentUploadFailed: "Document Upload Failed!",
-  WalletKeys.documentUploadFailedMessage:
-      "An error occurred while uploading the file. Please try again later.",
+  WalletKeys.documentUploadFailedMessage: "An error occurred while uploading the file. Please try again later.",
   WalletKeys.forAssistance: "For assistance,",
   WalletKeys.contactSupport: "contact support.",
   WalletKeys.retry: "Retry",
@@ -89,8 +87,7 @@ final Map<String, dynamic> originalWalletMap = {
   WalletKeys.revoke: "Revoke",
   WalletKeys.revokeMessage: "Are you sure, you want to revoke access",
   WalletKeys.noConsentSharedYet: "No Consent Shared Yet!",
-  WalletKeys.thereAreCurrentlyNoConsent:
-      "There are currently no consent\nrecords shared.",
+  WalletKeys.thereAreCurrentlyNoConsent: "There are currently no consent\nrecords shared.",
 
   /// Bloc messages
   WalletKeys.fileNameCannotBeEmpty: "Filename cannot be empty",
@@ -101,13 +98,11 @@ final Map<String, dynamic> originalWalletMap = {
   /// My Consent List
   WalletKeys.activeConsents: "Active Consents",
   WalletKeys.previousConsents: "Previous Consents",
-  WalletKeys.walletIdEmptyError:
-      "Wallet Id is empty from backend so you are not able to upload any document",
+  WalletKeys.walletIdEmptyError: "Wallet Id is empty from backend so you are not able to upload any document",
 
   WalletKeys.linkGeneratedTitle: "Link Generated successfully",
 
-  WalletKeys.linkGeneratedDescription:
-      'The link is copied on the clipboard. Please paste it into the required field.',
+  WalletKeys.linkGeneratedDescription: 'The link is copied on the clipboard. Please paste it into the required field.',
 
   WalletKeys.gotIt: "Got it!",
 
@@ -132,10 +127,9 @@ final Map<String, dynamic> originalWalletMap = {
   GenerateMpinKeys.iDidntReceiveCode: "I didn’t receive code.",
   GenerateMpinKeys.resend: "Resend",
   GenerateMpinKeys.reEnterMPin: "Re-Enter MPIN",
-  GenerateMpinKeys.thereIsAMismatchBetween:
-      "There is a mismatch between pin1 and pin2!",
-  GenerateMpinKeys.enterSixDigitsOtp:
-      "Enter the 6 digit OTP that we have sent to",
+  GenerateMpinKeys.thereIsAMismatchBetween: "There is a mismatch between pin1 and pin2!",
+  GenerateMpinKeys.enterSixDigitsOtp: "Enter the 6 digit OTP that we have sent to",
   GenerateMpinKeys.enterOtp: "Enter OTP",
   GenerateMpinKeys.exceeded: "exceeded",
+  GenerateMpinKeys.pinDonMatch: "PINs don't match. Please enter identical PINs and try again."
 };

@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-
 import '../../../domain/entities/get_response_entity/services_items.dart';
 
+/// Enum for data state
 enum DataState {
   success,
   error,
@@ -10,6 +10,7 @@ enum DataState {
   sseFailure,
 }
 
+/// Base state
 @immutable
 sealed class SeekerHomeState extends Equatable {
   const SeekerHomeState();
@@ -18,8 +19,10 @@ sealed class SeekerHomeState extends Equatable {
   List<Object> get props => [];
 }
 
+/// Initial state
 class SeekerHomeInitialState extends SeekerHomeState {}
 
+/// Seeker home updated state
 class SeekerHomeUpdatedState extends SeekerHomeState {
   final DataState state;
   final String? errorMessage;

@@ -14,10 +14,10 @@ class FormSubmittedState extends ApplyCourseState {
   List<Object> get props => [];
 }
 
-class CourseSuccessState extends ApplyCourseState {
+/*class CourseSuccessState extends ApplyCourseState {
   @override
   List<Object> get props => [];
-}
+}*/
 
 class CourseFailureState extends ApplyCourseState {
   final String errorMessage;
@@ -27,6 +27,17 @@ class CourseFailureState extends ApplyCourseState {
 
   const CourseFailureState({
     required this.errorMessage,
+  });
+}
+
+class PaymentUrlState extends ApplyCourseState {
+  final String url;
+
+  @override
+  List<Object> get props => [];
+
+  const PaymentUrlState({
+    required this.url,
   });
 }
 

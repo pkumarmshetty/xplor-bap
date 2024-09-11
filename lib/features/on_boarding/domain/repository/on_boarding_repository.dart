@@ -1,8 +1,7 @@
-import 'package:xplor/features/on_boarding/domain/entities/e_auth_providers_entity.dart';
-import 'package:xplor/features/on_boarding/domain/entities/ob_boarding_verify_otp_entity.dart';
-import 'package:xplor/features/on_boarding/domain/entities/on_boarding_assign_role_entity.dart';
-import 'package:xplor/features/on_boarding/domain/entities/on_boarding_send_otp_entity.dart';
-
+import '../entities/e_auth_providers_entity.dart';
+import '../entities/ob_boarding_verify_otp_entity.dart';
+import '../entities/on_boarding_assign_role_entity.dart';
+import '../entities/on_boarding_send_otp_entity.dart';
 import '../../../on_boarding/domain/entities/user_data_entity.dart';
 import '../entities/categories_entity.dart';
 import '../entities/domains_entity.dart';

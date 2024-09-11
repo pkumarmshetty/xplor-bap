@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
-import 'package:xplor/features/on_boarding/domain/usecase/on_boarding_usecase.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../../domain/usecase/on_boarding_usecase.dart';
+import '../../../../../utils/extensions/string_to_string.dart';
 import '../../../../../core/exception_errors.dart';
 import '../../../../../utils/app_utils/app_utils.dart';
 import '../../../domain/entities/e_auth_providers_entity.dart';
@@ -27,7 +25,6 @@ class KycBloc extends Bloc<KycEvent, KycState> {
     on<CloseEAuthWebView>(closeEAuthWebView);
     on<EAuthFailureEvent>(authorizationFail);
     on<InitSseKycEvent>(initSseKycEvent);
-    on<UpdateLoaderEvent>(_updateLoaderState);
     on<KycSseFailureEvent>(_failureState);
     on<OpenWebViewEvent>(_openWebViewEvent);
 
@@ -51,10 +48,6 @@ class KycBloc extends Bloc<KycEvent, KycState> {
   Future<void> _failureState(KycSseFailureEvent event, Emitter<KycState> emit) async {
     emit(KycErrorState(event.error));
     add(const EAuthFailureEvent());
-  }
-
-  Future<void> _updateLoaderState(UpdateLoaderEvent event, Emitter<KycState> emit) async {
-    /// emit loading state
   }
 
   Future<bool> authorize(EAuthSuccessEvent event, Emitter<KycState> emit) async {
@@ -97,9 +90,7 @@ class KycBloc extends Bloc<KycEvent, KycState> {
       }
     }, onError: (error) {
       // Handle error
-      if (kDebugMode) {
-        print('Error occurred: $error');
-      }
+      AppUtils.printLogs('Error occurred: $error');
 
       var message = AppUtils.getErrorMessage(error.toString());
 

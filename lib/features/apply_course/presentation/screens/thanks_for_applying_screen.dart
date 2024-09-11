@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:xplor/features/apply_course/presentation/blocs/apply_course_bloc.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/seeker_home/seeker_home_keys.dart';
-import 'package:xplor/gen/assets.gen.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/app_dimensions.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/padding.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/widgets/app_background_widget.dart';
-import 'package:xplor/utils/widgets/build_button.dart';
-
+import '../blocs/apply_course_bloc.dart';
+import '../../../multi_lang/domain/mappers/seeker_home/seeker_home_keys.dart';
+import '../../../../gen/assets.gen.dart';
+import '../../../../utils/app_colors.dart';
+import '../../../../utils/app_dimensions.dart';
+import '../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../utils/extensions/padding.dart';
+import '../../../../utils/extensions/string_to_string.dart';
+import '../../../../utils/widgets/app_background_widget.dart';
+import '../../../../utils/widgets/build_button.dart';
 import '../../../../config/routes/path_routing.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/dependency_injection.dart';
@@ -46,9 +45,7 @@ class ThanksForApplyingScreen extends StatelessWidget {
               ).symmetricPadding(horizontal: AppDimensions.mediumXXL.w),
               AppDimensions.smallXL.verticalSpace,
               GestureDetector(
-                onTap: () => _navigation(
-                  context,
-                ),
+                onTap: () => _navigation(context),
                 child: Container(
                   width: double.maxFinite,
                   decoration: BoxDecoration(
@@ -60,11 +57,10 @@ class ThanksForApplyingScreen extends StatelessWidget {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primaryLightColor.withOpacity(0.25),
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                          offset: const Offset(0, 2), // changes position of shadow
-                        ),
+                            color: AppColors.primaryLightColor.withOpacity(0.25),
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                            offset: const Offset(0, 2)),
                       ]),
                   child: Container(
                       decoration: BoxDecoration(

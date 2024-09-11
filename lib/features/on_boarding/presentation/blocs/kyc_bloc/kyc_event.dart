@@ -25,12 +25,6 @@ class EAuthSuccessEvent extends KycEvent {
   const EAuthSuccessEvent();
 }
 
-class UpdateLoaderEvent extends KycEvent {
-  final bool loader;
-
-  const UpdateLoaderEvent({this.loader = false});
-}
-
 class EAuthFailureEvent extends KycEvent {
   const EAuthFailureEvent();
 }

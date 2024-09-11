@@ -1,14 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/home/home_keys.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/app_dimensions.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/utils.dart';
+import '../../../multi_lang/domain/mappers/home/home_keys.dart';
+import '../../../../utils/app_colors.dart';
+import '../../../../utils/app_dimensions.dart';
+import '../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../utils/extensions/string_to_string.dart';
+import '../../../../utils/utils.dart';
 
-// ignore: must_be_immutable
+/// Widget for displaying a line graph.
 class LineGraphView extends StatelessWidget {
   const LineGraphView({super.key});
 
@@ -21,20 +21,22 @@ class LineGraphView extends StatelessWidget {
     FlSpot(5, 600),
   ];
 
+  /// Bottom title widget for the line graph.
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     final titles = <String>['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     return SideTitleWidget(
         axisSide: meta.axisSide,
         space: 0,
-        child: titles[value.toInt()].titleSemiBold(color: AppColors.grey400, size: 12.sp));
+        child: titles[value.toInt()].titleSemiBold(color: AppColors.grey400, size: AppDimensions.smallXL.sp));
   }
 
+  /// Left title widget for the line graph.
   Widget leftTitleWidgets(double value, TitleMeta meta, double chartWidth) {
     return SideTitleWidget(
         axisSide: meta.axisSide,
         space: AppDimensions.large,
-        child: meta.formattedValue.titleSemiBold(color: AppColors.grey400, size: 12.sp));
+        child: meta.formattedValue.titleSemiBold(color: AppColors.grey400, size: AppDimensions.smallXL.sp));
   }
 
   @override
@@ -54,12 +56,12 @@ class LineGraphView extends StatelessWidget {
                       const textStyle = TextStyle(
                         color: AppColors.grey100,
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
+                        fontSize: AppDimensions.smallXXL,
                       );
                       const titleStyle = TextStyle(
                         color: AppColors.grey50,
                         fontWeight: FontWeight.w600,
-                        fontSize: 12,
+                        fontSize: AppDimensions.smallXL,
                       );
                       return LineTooltipItem("${HomeKeys.seekers.stringToString}\n", textStyle,
                           children: [TextSpan(text: touchedSpot.y.toStringAsFixed(2).toString(), style: titleStyle)]);

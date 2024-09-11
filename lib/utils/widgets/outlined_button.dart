@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-
+import '../extensions/font_style/font_styles.dart';
 import '../app_colors.dart';
 import '../app_dimensions.dart';
 
@@ -23,7 +22,7 @@ class OutLinedButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: buttonWidth,
-        height: 32,
+        height: AppDimensions.xxl.w,
         decoration: BoxDecoration(
           color: Colors.transparent,
           // Set the background color to white or Colors.transparent for transparency

@@ -43,5 +43,14 @@ final Map<String, dynamic> originalSeekerHomeMap = {
   SeekerHomeKeys.plsWait: "Please wait",
   SeekerHomeKeys.goToDashboard: "Go to Dashboard",
   SeekerHomeKeys.startCourse: "Course",
-  SeekerHomeKeys.thanksForApplying: "Thanks For Applying!",
+  SeekerHomeKeys.thanksForApplying: "Thanks For Enrolling!",
+
+  ///Payment page screen
+  SeekerHomeKeys.payment: "Payment",
+  SeekerHomeKeys.tryAgain: "Try Again",
+  SeekerHomeKeys.paymentSuccessful: "Payment Successful!",
+  SeekerHomeKeys.paymentFullyVerified: "  Your payment has been made successfully.",
+
+  SeekerHomeKeys.paymentUnsuccessful: "Payment Unsuccessful!",
+  SeekerHomeKeys.paymentFailedMessage: "We’re sorry your payment was unsuccessful.",
 };

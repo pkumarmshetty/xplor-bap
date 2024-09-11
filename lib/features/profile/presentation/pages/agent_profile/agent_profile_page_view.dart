@@ -1,16 +1,11 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/app_dimensions.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/utils.dart';
-
+import '../../../../../utils/app_colors.dart';
+import '../../../../../utils/app_dimensions.dart';
+import '../../../../../utils/extensions/string_to_string.dart';
+import '../../../../../utils/utils.dart';
 import '../../../../../config/routes/path_routing.dart';
 import '../../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../../core/dependency_injection.dart';
@@ -22,11 +17,13 @@ import '../../../../multi_lang/domain/mappers/profile/profile_keys.dart';
 import '../../../../multi_lang/presentation/blocs/bloc/translate_bloc.dart';
 import '../../../domain/entities/profile_card_options_entity.dart';
 import '../../bloc/agent_profile_bloc/agent_profile_bloc.dart';
+import '../../widgets/agent_profile_top_header_widget.dart';
+import '../../widgets/agent_titles_widget.dart';
 import '../../widgets/logout_button_widget.dart';
 import '../../../../../utils/widgets/profile_header__widget.dart';
 import '../../widgets/profile_option_widget.dart';
-import '../../../../../utils/widgets/profile_skill_tile_widget.dart';
 
+/// The main view for the Agent Profile page.
 class AgentProfilePageView extends StatefulWidget {
   const AgentProfilePageView({super.key});
 
@@ -34,9 +31,12 @@ class AgentProfilePageView extends StatefulWidget {
   State<AgentProfilePageView> createState() => _AgentProfilePageViewState();
 }
 
+/// The view state for the Agent Profile page.
 class _AgentProfilePageViewState extends State<AgentProfilePageView> {
+  /// List of profile card options.
   List<ProfileCardOptionsEntity> _profileCardOptions = [];
 
+  /// Initializes the profile card options based on the selected language.
   @override
   void initState() {
     super.initState();
@@ -74,17 +74,17 @@ class _AgentProfilePageViewState extends State<AgentProfilePageView> {
         listeners: [
           BlocListener<AgentProfileBloc, AgentProfileState>(
             listener: (context, state) {
-              if (kDebugMode) {
-                print("bloc state... ${state.profileState}");
-              }
+              // Show error message if the profile state is failure.
               if (state.profileState == ProfileState.failure) {
                 AppUtils.showSnackBar(context, state.message.toString());
               }
+              // Navigate to the main page if the logout state is success.
               if (state is ProfileLogoutState) {
                 AppUtils.clearSession();
                 AppUtils.disposeAllBlocs(context);
                 Navigator.pushNamedAndRemoveUntil(context, Routes.main, (routes) => false);
               }
+              // Load user data if the profile state is userDataLoaded.
               if (state.profileState == ProfileState.userDataLoaded) {
                 context.read<AgentProfileBloc>().add(const ProfileAndTranslationEvent());
               }
@@ -92,6 +92,7 @@ class _AgentProfilePageViewState extends State<AgentProfilePageView> {
           ),
           BlocListener<TranslationBloc, TranslateState>(
             listener: (context, state) {
+              // Load translations after user data is loaded.
               if (state is TranslationLoaded && state.isNavigation) {
                 _profileCardOptions.clear();
                 _profileCardOptions = [
@@ -125,42 +126,17 @@ class _AgentProfilePageViewState extends State<AgentProfilePageView> {
                     child: (state.profileState == ProfileState.done && state.userData != null)
                         ? Column(
                             children: [
-                              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                ProfileKeys.myProfile.stringToString.titleExtraBold(size: 24.sp),
-                                Container(
-                                  padding: EdgeInsets.symmetric(vertical: 6.sp, horizontal: AppDimensions.small.sp),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: AppColors.checkBoxDisableColor,
-                                      // Border color
-                                      width: 1, // Border width
-                                    ),
-                                    borderRadius: const BorderRadius.horizontal(
-                                      left: Radius.circular(AppDimensions.mediumXL),
-                                      right: Radius.circular(AppDimensions.mediumXL),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      SvgPicture.asset(Assets.images.coins),
-                                      10.hSpace(),
-                                      '₹ 0'.titleSemiBold(
-                                        size: AppDimensions.smallXXL.sp,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ]).symmetricPadding(
-                                  vertical: AppDimensions.mediumXL.sp, horizontal: AppDimensions.medium.sp),
+                              const AgentTopHeaderWidget(),
                               const Divider(color: AppColors.checkBoxDisableColor),
                               bodyView(state),
-                              AppDimensions.mediumXL.vSpace(),
+                              AppDimensions.mediumXL.verticalSpace,
                             ],
                           )
                         : Container(),
                   )
                 ],
               ),
+              // Show loading animation if the profile state is loading.
               if (state.profileState == ProfileState.loading || state.profileState == ProfileState.userDataLoaded)
                 const LoadingAnimation(),
             ],
@@ -168,6 +144,7 @@ class _AgentProfilePageViewState extends State<AgentProfilePageView> {
         }));
   }
 
+  /// Builds the main body view of the profile page.
   Widget bodyView(AgentProfileState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,17 +156,17 @@ class _AgentProfilePageViewState extends State<AgentProfilePageView> {
           userData: state.userData,
           editOnProfile: true,
         ),
-        AppDimensions.large.vSpace(),
-        titlesWidget(state),
-        AppDimensions.smallXL.vSpace(),
+        AppDimensions.large.verticalSpace,
+        const AgentTilesWidget(),
+        AppDimensions.smallXL.verticalSpace,
         const Divider(color: AppColors.checkBoxDisableColor),
-        AppDimensions.small.vSpace(),
+        AppDimensions.small.verticalSpace,
         if (_profileCardOptions.isNotEmpty)
           ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               separatorBuilder: (context, index) {
-                return AppDimensions.medium.vSpace();
+                return AppDimensions.medium.verticalSpace;
               },
               itemCount: 3,
               // Number of items in the list
@@ -201,58 +178,13 @@ class _AgentProfilePageViewState extends State<AgentProfilePageView> {
                   userData: state.userData,
                 );
               }),
-        AppDimensions.mediumXXL.vSpace(),
+        AppDimensions.mediumXXL.verticalSpace,
         const LogoutButtonWidget(),
       ],
     ).symmetricPadding(horizontal: AppDimensions.mediumXL, vertical: AppDimensions.mediumXL);
   }
 
-  Widget titlesWidget(AgentProfileState state) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: ProfileSkillTileWidget(
-                  title: ProfileKeys.skilling.stringToString,
-                  icon: Assets.images.skilling,
-                  value: '0',
-                  backgroundColor: AppColors.lightBlueProfileTiles),
-            ),
-            AppDimensions.smallXL.hSpace(),
-            Expanded(
-              child: ProfileSkillTileWidget(
-                  title: ProfileKeys.retail.stringToString,
-                  icon: Assets.images.retail,
-                  value: '${state.userData?.count.retail}',
-                  backgroundColor: AppColors.lightPurple),
-            ),
-          ],
-        ),
-        AppDimensions.smallXL.vSpace(),
-        Row(
-          children: [
-            Expanded(
-              child: ProfileSkillTileWidget(
-                  title: ProfileKeys.agriculture.stringToString,
-                  icon: Assets.images.agriculture,
-                  value: '0',
-                  backgroundColor: AppColors.lightOrange),
-            ),
-            AppDimensions.smallXL.hSpace(),
-            Expanded(
-              child: ProfileSkillTileWidget(
-                  title: ProfileKeys.job.stringToString,
-                  icon: Assets.images.job,
-                  value: '${state.userData?.count.job}',
-                  backgroundColor: AppColors.lightGreen.withOpacity(0.25)),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
+  /// Formats the address from a JSON string to a human-readable format
   String address(String? address) {
     if (address == null) {
       return "";

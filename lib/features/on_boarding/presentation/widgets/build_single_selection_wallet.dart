@@ -2,13 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/app_dimensions.dart';
-import 'package:xplor/utils/extensions/font_style/font_styles.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-import 'package:xplor/utils/utils.dart';
-
+import '../../../multi_lang/domain/mappers/on_boarding/on_boardings_keys.dart';
+import '../../../../utils/app_colors.dart';
+import '../../../../utils/app_dimensions.dart';
+import '../../../../utils/extensions/font_style/font_styles.dart';
+import '../../../../utils/extensions/string_to_string.dart';
+import '../../../../utils/utils.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/dependency_injection.dart';
 import '../../../../gen/assets.gen.dart';
@@ -32,14 +31,6 @@ class SingleSelectionWallet extends StatefulWidget {
 }
 
 class _SingleSelectionWalletState extends State<SingleSelectionWallet> {
-  /*List<WalletSelectionEntity> items = [
-    WalletSelectionEntity(
-      icon: Assets.images.digilocker.path,
-      title: OnBoardingKeys.digilocker.stringToString,
-      message: OnBoardingKeys.continueWithDigilocker.stringToString,
-    ),
-  ];*/
-
   List<EAuthProviderEntity> items = [];
 
   @override
@@ -72,7 +63,7 @@ class _SingleSelectionWalletState extends State<SingleSelectionWallet> {
                 border: Border.all(
                   color:
                       widget.selectedIndex == index ? AppColors.primaryColor.withOpacity(0.26) : AppColors.greye8e8e8,
-                  width: 2.w,
+                  width: AppDimensions.extraExtraSmall.w,
                 ),
                 borderRadius: BorderRadius.circular(AppDimensions.medium),
               ),
@@ -107,7 +98,7 @@ class _SingleSelectionWalletState extends State<SingleSelectionWallet> {
                               height: 60.w,
                               width: 60.w,
                             ),
-                      AppDimensions.medium.hSpace(),
+                      AppDimensions.medium.w.horizontalSpace,
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +107,7 @@ class _SingleSelectionWalletState extends State<SingleSelectionWallet> {
                               size: 16.sp,
                               color: AppColors.blackMedium,
                             ),
-                            AppDimensions.extraSmall.vSpace(),
+                            AppDimensions.extraSmall.verticalSpace,
                             item.title.titleRegular(
                               size: 12.sp,
                               color: AppColors.blackMedium,
@@ -126,8 +117,8 @@ class _SingleSelectionWalletState extends State<SingleSelectionWallet> {
                       ),
                       if (widget.selectedIndex == index)
                         SvgPicture.asset(
-                          width: 20.w,
-                          height: 20.w,
+                          width: AppDimensions.mediumXL.w,
+                          height: AppDimensions.mediumXL.w,
                           Assets.images.icCheckSelection,
                         ),
                     ],

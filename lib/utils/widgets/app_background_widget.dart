@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:xplor/gen/assets.gen.dart';
+import '../../gen/assets.gen.dart';
 
 class AppBackgroundDecoration extends StatelessWidget {
   const AppBackgroundDecoration({super.key, required this.child});

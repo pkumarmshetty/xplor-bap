@@ -1,34 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:xplor/features/apply_course/presentation/blocs/apply_course_bloc.dart';
-import 'package:xplor/features/apply_course/presentation/screens/apply_course_screen.dart';
-import 'package:xplor/features/course_description/presentation/blocs/course_description_bloc.dart';
-import 'package:xplor/features/course_description/presentation/pages/course_description_view.dart';
-import 'package:xplor/features/mpin/presentation/blocs/reset_mpin_bloc.dart';
-import 'package:xplor/features/mpin/presentation/pages/reset_mpin_screen.dart';
-import 'package:xplor/features/multi_lang/presentation/blocs/bloc/translate_bloc.dart';
-import 'package:xplor/features/my_orders/presentation/blocs/certificate_bloc/cerificate_bloc.dart';
-import 'package:xplor/features/my_orders/presentation/blocs/course_rating_bloc/course_ratings_bloc.dart';
-import 'package:xplor/features/my_orders/presentation/blocs/my_orders_bloc/my_orders_bloc.dart';
-import 'package:xplor/features/my_orders/presentation/pages/certificate_view.dart';
-import 'package:xplor/features/my_orders/presentation/pages/my_orders_view.dart';
-import 'package:xplor/features/my_orders/presentation/widgets/course_rating_widget.dart';
-import 'package:xplor/features/on_boarding/presentation/blocs/choose_domain/choose_domain_bloc.dart';
-import 'package:xplor/features/on_boarding/presentation/blocs/kyc_bloc_belem/kyc_bloc_belem.dart';
-import 'package:xplor/features/on_boarding/presentation/blocs/select_category/categories_bloc.dart';
-import 'package:xplor/features/on_boarding/presentation/pages/choose_domain/choose_domain_screen.dart';
-import 'package:xplor/features/on_boarding/presentation/pages/complete_kyc/complete_profile_view_for_belem.dart';
-import 'package:xplor/features/on_boarding/presentation/pages/otp/verify_otp_view.dart';
-import 'package:xplor/features/on_boarding/presentation/pages/select_category/select_category_screen.dart';
-import 'package:xplor/features/on_boarding/presentation/pages/sign_in/phone_number_view.dart';
-import 'package:xplor/features/profile/presentation/bloc/agent_profile_bloc/agent_profile_bloc.dart';
-import 'package:xplor/features/profile/presentation/pages/agent_profile/agent_profile_page_view.dart';
-import 'package:xplor/features/seeker_home/presentation/blocs/seeker_dashboard_bloc/seeker_home_bloc.dart';
-
-import 'package:xplor/features/seeker_home/presentation/blocs/seeker_search_result_bloc/seeker_search_result_bloc.dart';
-import 'package:xplor/features/seeker_home/presentation/pages/seeker_home_page_view.dart';
-import 'package:xplor/features/seeker_home/presentation/pages/seeker_serach_result_view.dart';
-
+import '../features/apply_course/presentation/blocs/apply_course_bloc.dart';
+import '../features/apply_course/presentation/screens/apply_course_screen.dart';
+import '../features/course_description/presentation/blocs/course_description_bloc.dart';
+import '../features/course_description/presentation/pages/course_description_view.dart';
+import '../features/mpin/presentation/blocs/reset_mpin_bloc.dart';
+import '../features/mpin/presentation/pages/reset_mpin_screen.dart';
+import '../features/multi_lang/presentation/blocs/bloc/translate_bloc.dart';
+import '../features/my_orders/presentation/blocs/certificate_bloc/cerificate_bloc.dart';
+import '../features/my_orders/presentation/blocs/course_rating_bloc/course_ratings_bloc.dart';
+import '../features/my_orders/presentation/blocs/my_orders_bloc/my_orders_bloc.dart';
+import '../features/my_orders/presentation/pages/certificate_view.dart';
+import '../features/my_orders/presentation/pages/my_orders_view.dart';
+import '../features/my_orders/presentation/widgets/course_rating_widget.dart';
+import '../features/on_boarding/presentation/blocs/choose_domain/choose_domain_bloc.dart';
+import '../features/on_boarding/presentation/blocs/kyc_bloc_belem/kyc_bloc_belem.dart';
+import '../features/on_boarding/presentation/blocs/select_category/categories_bloc.dart';
+import '../features/on_boarding/presentation/pages/choose_domain/choose_domain_screen.dart';
+import '../features/on_boarding/presentation/pages/complete_kyc/complete_profile_view_for_belem.dart';
+import '../features/on_boarding/presentation/pages/otp/verify_otp_view.dart';
+import '../features/on_boarding/presentation/pages/select_category/select_category_screen.dart';
+import '../features/on_boarding/presentation/pages/sign_in/phone_number_view.dart';
+import '../features/profile/presentation/bloc/agent_profile_bloc/agent_profile_bloc.dart';
+import '../features/profile/presentation/pages/agent_profile/agent_profile_page_view.dart';
+import '../features/seeker_home/presentation/blocs/seeker_dashboard_bloc/seeker_home_bloc.dart';
+import '../features/seeker_home/presentation/blocs/seeker_search_result_bloc/seeker_search_result_bloc.dart';
+import '../features/seeker_home/presentation/pages/seeker_home_page_view.dart';
+import '../features/seeker_home/presentation/pages/seeker_serach_result_view.dart';
 import '../config/theme/theme_cubit.dart';
 import '../core/dependency_injection.dart';
 import '../features/home/presentation/bloc/home_bloc.dart';
@@ -39,7 +37,7 @@ import '../features/on_boarding/presentation/blocs/otp_bloc/otp_bloc.dart';
 import '../features/on_boarding/presentation/blocs/phone_bloc/phone_bloc.dart';
 import '../features/on_boarding/presentation/blocs/select_role_bloc/select_role_bloc.dart';
 import '../features/on_boarding/presentation/pages/choose_role/choose_role_view.dart';
-import '../features/on_boarding/presentation/pages/complete_kyc/complete_profile_view.dart';
+import '../features/on_boarding/presentation/pages/complete_kyc/complete_profile_view/complete_profile_view.dart';
 import '../features/on_boarding/presentation/pages/mpin/generate_mpin_screen.dart';
 import '../features/profile/presentation/bloc/seeker_profile_bloc/seeker_profile_bloc.dart';
 import '../features/wallet/presentation/blocs/add_document_bloc/add_document_bloc.dart';
@@ -73,8 +71,7 @@ class AppBlocProviders {
   /// phone: Provides the application phone.
   static final _phoneBloc = BlocProvider<PhoneBloc>(
     create: (BuildContext context) => PhoneBloc(useCase: sl()),
-    child: const PhoneNumberView(
-        userCheck: false), // Initial screen with the application theme
+    child: const PhoneNumberView(userCheck: false), // Initial screen with the application theme
   );
 
   /// otp: Provides the application otp.
@@ -132,8 +129,7 @@ class AppBlocProviders {
 
   /// addDocument: Provides the application add document.
   static final _addDocumentBloc = BlocProvider(
-    create: (BuildContext context) =>
-        AddDocumentsBloc(walletUseCases: sl(), preferencesHelper: sl()),
+    create: (BuildContext context) => AddDocumentsBloc(walletUseCases: sl(), preferencesHelper: sl()),
     child: const AddDocumentView(),
   );
 
@@ -144,9 +140,8 @@ class AppBlocProviders {
   );
 
   /// Wallet: Provides the document sharing state.
-  static final _walletVcBloc = BlocProvider(
-      create: (BuildContext context) => WalletVcBloc(useCase: sl()),
-      child: const MyDocumentWidget());
+  static final _walletVcBloc =
+      BlocProvider(create: (BuildContext context) => WalletVcBloc(useCase: sl()), child: const MyDocumentWidget());
 
   /// Wallet: Provides the document update consent state.
   static final _consentUpdateDialogBloc = BlocProvider(
@@ -163,8 +158,8 @@ class AppBlocProviders {
   );
 
   /// Multi Language: Provides the language bloc.
-  static final _languageTranslationBloc = BlocProvider(
-      create: (BuildContext context) => TranslationBloc(useCase: sl()));
+  static final _languageTranslationBloc =
+      BlocProvider(create: (BuildContext context) => TranslationBloc(useCase: sl()));
 
   static final _resetMpinBloc = BlocProvider(
     create: (BuildContext context) => ResetMpinBloc(useCase: sl()),
@@ -178,8 +173,7 @@ class AppBlocProviders {
 
   static final _selectCategoryBloc = BlocProvider(
     create: (BuildContext context) =>
-        CategoriesBloc(useCase: sl(), preferencesHelper: sl())
-          ..add(FetchCategoriesEvent()),
+        CategoriesBloc(useCase: sl(), preferencesHelper: sl())..add(FetchCategoriesEvent()),
     child: const SelectCategoryScreen(),
   );
 
@@ -226,8 +220,8 @@ class AppBlocProviders {
 
   /// Agent Profile: Provides the application home.
   static final _certificateBloc = BlocProvider(
-    create: (BuildContext context) => DownloadBloc(),
-    child: const CertificateView(certificateUrl: ""),
+    create: (BuildContext context) => CertificateBloc(myOrdersUseCase: sl()),
+    child: const CertificateView(),
   );
 
   /// appBlocs: A list containing all the BlocProviders used in the application.

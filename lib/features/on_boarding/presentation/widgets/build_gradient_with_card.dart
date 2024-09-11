@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:xplor/utils/app_dimensions.dart';
-import 'package:xplor/utils/extensions/padding.dart';
-
+import '../../../../utils/app_dimensions.dart';
+import '../../../../utils/extensions/padding.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../utils/app_gradient.dart';
 import '../../../../utils/widgets/loading_animation.dart';
@@ -37,8 +36,8 @@ Widget buildScreenContent(Widget contentWidget, Widget bottomWidget, BuildContex
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(32),
-                        topRight: Radius.circular(32),
+                        topLeft: Radius.circular(AppDimensions.xxl),
+                        topRight: Radius.circular(AppDimensions.xxl),
                       ),
                     ),
                     child: CustomScrollView(

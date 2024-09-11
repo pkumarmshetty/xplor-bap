@@ -2,13 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/profile/profile_keys.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
+import '../../features/multi_lang/domain/mappers/profile/profile_keys.dart';
+import '../extensions/string_to_string.dart';
 import '../../config/routes/path_routing.dart';
 import '../../features/on_boarding/domain/entities/user_data_entity.dart';
 import '../extensions/font_style/font_styles.dart';
-import '../extensions/space.dart';
-
 import '../../gen/assets.gen.dart';
 import '../app_colors.dart';
 import '../app_dimensions.dart';
@@ -90,16 +88,16 @@ class ProfileHeaderWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               name.titleSemiBold(size: AppDimensions.mediumXL.sp),
-              AppDimensions.extraExtraSmall.vSpace(),
+              AppDimensions.extraExtraSmall.verticalSpace,
               //role.titleSemiBold(color: AppColors.grey9898a5, size: AppDimensions.smallXXL.sp),
-              //AppDimensions.extraSmall.vSpace(),
+              //AppDimensions.extraSmall.verticalSpace,
               if (editOnProfile)
                 Row(
                   children: [
                     SvgPicture.asset(Assets.images.rating),
-                    6.hSpace(),
+                    6.w.horizontalSpace,
                     '0'.titleSemiBold(size: AppDimensions.smallXL.sp, color: AppColors.primaryColor),
-                    AppDimensions.extraSmall.hSpace(),
+                    AppDimensions.extraSmall.w.horizontalSpace,
                     ProfileKeys.ratingSeekers.stringToString
                         .titleSemiBold(size: AppDimensions.smallXL.sp, color: AppColors.tabsUnselectedTextColor),
                   ],

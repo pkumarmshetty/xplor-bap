@@ -1,19 +1,17 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:xplor/config/routes/path_routing.dart';
-import 'package:xplor/features/multi_lang/domain/mappers/wallet/wallet_keys.dart';
-import 'package:xplor/features/wallet/domain/entities/wallet_vc_list_entity.dart';
-import 'package:xplor/features/wallet/presentation/blocs/share_doc_vc_bloc/share_doc_vc_bloc.dart';
-import 'package:xplor/features/wallet/presentation/blocs/wallet_vc_bloc/wallet_vc_event.dart';
-import 'package:xplor/gen/assets.gen.dart';
-import 'package:xplor/utils/app_colors.dart';
-import 'package:xplor/utils/app_utils/app_utils.dart';
-import 'package:xplor/utils/extensions/padding.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../../../../config/routes/path_routing.dart';
+import '../../../../multi_lang/domain/mappers/wallet/wallet_keys.dart';
+import '../../../domain/entities/wallet_vc_list_entity.dart';
+import '../../blocs/share_doc_vc_bloc/share_doc_vc_bloc.dart';
+import '../../blocs/wallet_vc_bloc/wallet_vc_event.dart';
+import '../../../../../gen/assets.gen.dart';
+import '../../../../../utils/app_colors.dart';
+import '../../../../../utils/app_utils/app_utils.dart';
+import '../../../../../utils/extensions/padding.dart';
+import '../../../../../utils/extensions/string_to_string.dart';
 import '../../../../../utils/app_dimensions.dart';
 import '../../../../../utils/extensions/font_style/font_styles.dart';
 import '../../blocs/wallet_vc_bloc/wallet_vc_bloc.dart';
@@ -21,6 +19,7 @@ import '../../blocs/wallet_vc_bloc/wallet_vc_state.dart';
 import '../../pages/wallet_no_doc_view.dart';
 import '../../widgets/document_widget.dart';
 
+/// My Document Widget
 class MyDocumentWidget extends StatefulWidget {
   const MyDocumentWidget({super.key});
 
@@ -28,6 +27,7 @@ class MyDocumentWidget extends StatefulWidget {
   State<MyDocumentWidget> createState() => _MyDocumentWidgetState();
 }
 
+/// searchController
 TextEditingController searchController = TextEditingController();
 
 class _MyDocumentWidgetState extends State<MyDocumentWidget> {
@@ -57,67 +57,62 @@ class _MyDocumentWidgetState extends State<MyDocumentWidget> {
     }));
   }
 
+  /// _docVcWidgets
   Widget _docVcWidgets({
     required List<DocumentVcData> docVc,
     required List<DocumentVcData> selectedDocs,
     bool isSearchData = false,
   }) {
-    if (kDebugMode) {
-      print("isSeacrhing daata  $isSearchData");
-      print("isSeacrhing daata  ${docVc.length}");
-      print("isSeacrhing daata  ${docVc.isNotEmpty && docVc.isEmpty && isSearchData}");
-    }
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
-          child: Card(
-            color: AppColors.white,
-            surfaceTintColor: AppColors.white,
-            child: Row(
-              children: [
-                SvgPicture.asset(
-                  Assets.images.icSearch,
-                  height: 18.w,
-                  width: 18.w,
-                ),
-                AppDimensions.medium.horizontalSpace,
-                Expanded(
-                  child: TextFormField(
-                    controller: searchController,
-                    textInputAction: TextInputAction.search,
-                    decoration: InputDecoration(
-                      hintStyle: TextStyle(color: AppColors.grey9898a5),
-                      hintText: WalletKeys.searchSomething.stringToString,
-                      border: InputBorder.none,
-                    ),
-                    onChanged: (input) {
-                      if (input == '') {
-                        context.read<WalletVcBloc>().add(WalletSearchDocumentsEvent(documentsName: input));
-                      }
-                    },
-                    onFieldSubmitted: (search) {
-                      context.read<WalletVcBloc>().add(WalletSearchDocumentsEvent(documentsName: search));
-                    },
+            child: Card(
+          color: AppColors.white,
+          surfaceTintColor: AppColors.white,
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                Assets.images.icSearch,
+                height: 18.w,
+                width: 18.w,
+              ),
+              AppDimensions.medium.w.horizontalSpace,
+              Expanded(
+                child: TextFormField(
+                  controller: searchController,
+                  textInputAction: TextInputAction.search,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(color: AppColors.grey9898a5),
+                    hintText: WalletKeys.searchSomething.stringToString,
+                    border: InputBorder.none,
                   ),
-                ),
-                const SizedBox(width: 8.0),
-                GestureDetector(
-                  onTap: () {
-                    // Add functionality for mic icon tap
+                  onChanged: (input) {
+                    if (input == '') {
+                      context.read<WalletVcBloc>().add(WalletSearchDocumentsEvent(documentsName: input));
+                    }
                   },
-                  child: SvgPicture.asset(
-                    Assets.images.icMic,
-                    height: 20.w,
-                    width: 12.w,
-                  ),
+                  onFieldSubmitted: (search) {
+                    context.read<WalletVcBloc>().add(WalletSearchDocumentsEvent(documentsName: search));
+                  },
                 ),
-              ],
-            ).symmetricPadding(
-              vertical: AppDimensions.extraExtraSmall.w,
-              horizontal: AppDimensions.medium.w,
-            ),
+              ),
+              const SizedBox(width: 8.0),
+              GestureDetector(
+                onTap: () {
+                  // Add functionality for mic icon tap
+                },
+                child: SvgPicture.asset(
+                  Assets.images.icMic,
+                  height: AppDimensions.mediumXL.w,
+                  width: AppDimensions.smallXL.w,
+                ),
+              ),
+            ],
+          ).symmetricPadding(
+            vertical: AppDimensions.extraExtraSmall.w,
+            horizontal: AppDimensions.medium.w,
           ),
-        ),
+        )),
         SliverToBoxAdapter(
           child: Row(
             children: [
@@ -260,7 +255,7 @@ class _MyDocumentWidgetState extends State<MyDocumentWidget> {
                 height: 18.w,
                 width: 18.w,
               ),
-              AppDimensions.medium.horizontalSpace,
+              AppDimensions.medium.w.horizontalSpace,
               // Add spacing between the icon and text field
               Expanded(
                 child: TextFormField(
@@ -293,8 +288,8 @@ class _MyDocumentWidgetState extends State<MyDocumentWidget> {
                 },
                 child: SvgPicture.asset(
                   Assets.images.icMic,
-                  height: 20.w,
-                  width: 12.w,
+                  height: AppDimensions.mediumXL,
+                  width: AppDimensions.smallXL.w,
                 ),
               ),
             ],
@@ -339,12 +334,12 @@ class _MyDocumentWidgetState extends State<MyDocumentWidget> {
                                   color: AppColors.primaryColor,
                                 ),
                               ),
-                              */ /*AppDimensions.extraSmall.hSpace(),
+                              */ /*AppDimensions.extraSmall.w.horizontalSpace,
                               WalletKeys.share.stringToString.titleBold(
                                   size: 14.sp, color: AppColors.blue1E88E5)*/ /*
                             ],
                           )),
-                      //AppDimensions.smallXL.hSpace(),
+                      //AppDimensions.smallXL.w.horizontalSpace,
                       InkWell(
                           onTap: () {
                             AppUtils.showAlertDialogForConfirmation(
@@ -380,7 +375,7 @@ class _MyDocumentWidgetState extends State<MyDocumentWidget> {
                                   color: AppColors.redColor,
                                 ),
                               ),
-                              */ /* AppDimensions.extraSmall.hSpace(),
+                              */ /* AppDimensions.extraSmall.w.horizontalSpace,
                               WalletKeys.delete.stringToString.titleBold(
                                   size: 14.sp, color: AppColors.redF04438)*/ /*
                             ],
@@ -422,6 +417,7 @@ class _MyDocumentWidgetState extends State<MyDocumentWidget> {
     );
   }*/
 
+  /// Navigate to share document screen
   void _navigateToMultiShareDialog(BuildContext context, List<DocumentVcData> documentsVcData) {
     context.read<SharedDocVcBloc>().add(ShareDocumentsEvent(selectedDocs: documentsVcData));
     Navigator.pushNamed(context, Routes.shareDocument);

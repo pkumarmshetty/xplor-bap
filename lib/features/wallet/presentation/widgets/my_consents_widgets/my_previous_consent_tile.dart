@@ -19,7 +19,7 @@ _buildPreviousConsentsTile(int index, BuildContext context, PreviousConsentEntit
               height: 44.w,
               width: 44.w,
             ),
-            AppDimensions.smallXL.hSpace(),
+            AppDimensions.smallXL.w.horizontalSpace,
             Expanded(
               child: Align(
                 alignment: Alignment.centerLeft,
@@ -32,15 +32,16 @@ _buildPreviousConsentsTile(int index, BuildContext context, PreviousConsentEntit
                     ),
                     Row(
                       children: [
-                        AppDimensions.extraSmall.vSpace(),
+                        AppDimensions.extraSmall.verticalSpace,
                         AppUtils.convertDateFormat(data.createdAt)
                             .titleSemiBold(size: 10.sp, color: AppColors.hintColor),
-                        AppDimensions.extraSmall.hSpace(),
+                        AppDimensions.extraSmall.w.horizontalSpace,
                         // Add space between the date/time and dot
-                        '•'.titleSemiBold(size: 20.sp, color: AppColors.hintColor),
-                        AppDimensions.extraSmall.hSpace(),
+                        '•'.titleSemiBold(size: AppDimensions.mediumXL.sp, color: AppColors.hintColor),
+                        AppDimensions.extraSmall.w.horizontalSpace,
                         // Add space between the dot and the word "inactive"
-                        WalletKeys.inactive.stringToString.titleSemiBold(size: 12.sp, color: AppColors.errorColor),
+                        WalletKeys.inactive.stringToString
+                            .titleSemiBold(size: AppDimensions.smallXL.sp, color: AppColors.errorColor),
                       ],
                     )
                   ],

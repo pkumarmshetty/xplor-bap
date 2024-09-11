@@ -1,14 +1,14 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
-import 'package:xplor/features/wallet/domain/entities/wallet_vc_list_entity.dart';
-
+import '../../../domain/entities/wallet_vc_list_entity.dart';
 import '../../../domain/usecase/wallet_usecase.dart';
 import 'wallet_vc_event.dart';
 import 'wallet_vc_state.dart';
 
+/// Enum for flow type.
 enum FlowType { course, document, consent }
 
+/// Bloc for wallet vc.
 class WalletVcBloc extends Bloc<WalletVcEvent, WalletVcState> {
   WalletUseCase useCase;
 
@@ -25,6 +25,7 @@ class WalletVcBloc extends Bloc<WalletVcEvent, WalletVcState> {
     on<WalletSearchDocumentsEvent>(_onDocumentsSearchEvent);
   }
 
+  /// Method to  get wallet vc.
   Future<void> _onGetUserWalletVc(
     GetWalletVcEvent event,
     Emitter<WalletVcState> emit,
@@ -41,6 +42,7 @@ class WalletVcBloc extends Bloc<WalletVcEvent, WalletVcState> {
     }
   }
 
+  /// Method to select documents.
   Future<void> _onDocumentSelected(
     WalletDocumentSelectedEvent event,
     Emitter<WalletVcState> emit,
@@ -82,6 +84,7 @@ class WalletVcBloc extends Bloc<WalletVcEvent, WalletVcState> {
     }
   }
 
+  /// Method to delete wallet vc.
   Future<void> _walletDeletedEvents(
     WalletDelVcEvent event,
     Emitter<WalletVcState> emit,
@@ -97,6 +100,7 @@ class WalletVcBloc extends Bloc<WalletVcEvent, WalletVcState> {
     }
   }
 
+  /// Method to unselect documents.
   Future<void> _onDocumentsUnselectedEvents(
     WalletDocumentsUnselectedEvent event,
     Emitter<WalletVcState> emit,
@@ -108,6 +112,7 @@ class WalletVcBloc extends Bloc<WalletVcEvent, WalletVcState> {
     }
   }
 
+  /// Method to search documents.
   FutureOr<void> _onDocumentsSearchEvent(WalletSearchDocumentsEvent event, Emitter<WalletVcState> emit) {
     if (event.documentsName == '') {
       if (selectedDocuments.isNotEmpty) {

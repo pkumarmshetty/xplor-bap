@@ -43,7 +43,7 @@ class CourseDocumentRemovedEvent extends ApplyCourseEvent {
   const CourseDocumentRemovedEvent();
 }
 
-class ConnectSSEEvent extends ApplyCourseEvent {
+/*class ConnectSSEEvent extends ApplyCourseEvent {
   final String transactionId;
   final String domain;
 
@@ -54,7 +54,7 @@ class ConnectSSEEvent extends ApplyCourseEvent {
     required this.transactionId,
     required this.domain,
   });
-}
+}*/
 
 class FormSubmitSuccessfully extends ApplyCourseEvent {
   const FormSubmitSuccessfully();
@@ -65,6 +65,7 @@ class FormSubmitSuccessfully extends ApplyCourseEvent {
 
 class SelectSseResponseEvent extends ApplyCourseEvent {
   final String transactionId;
+
   @override
   List<Object?> get props => [transactionId];
 
@@ -88,6 +89,15 @@ class CourseGetUrlEvent extends ApplyCourseEvent {
   final String url;
 
   const CourseGetUrlEvent({required this.url});
+
+  @override
+  List<Object?> get props => [url];
+}
+
+class PaymentEvent extends ApplyCourseEvent {
+  final String url;
+
+  const PaymentEvent({required this.url});
 
   @override
   List<Object?> get props => [url];
@@ -136,17 +146,13 @@ class ConfirmSseResponseEvent extends ApplyCourseEvent {
 }
 
 class CourseConfirmEvent extends ApplyCourseEvent {
-  final String data;
-
   @override
   List<Object?> get props => [];
 
-  const CourseConfirmEvent({
-    required this.data,
-  });
+  const CourseConfirmEvent();
 }
 
-class StatusSseResponseEvent extends ApplyCourseEvent {
+/*class StatusSseResponseEvent extends ApplyCourseEvent {
   @override
   List<Object?> get props => [];
 
@@ -158,7 +164,7 @@ class CourseStatusEvent extends ApplyCourseEvent {
   List<Object?> get props => [];
 
   const CourseStatusEvent();
-}
+}*/
 
 class SuccessNavigatedEvent extends ApplyCourseEvent {
   @override

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:xplor/utils/widgets/app_background_widget.dart';
+import '../../../../utils/widgets/app_background_widget.dart';
 import '../../../multi_lang/domain/mappers/home/home_keys.dart';
 import '../../../profile/presentation/pages/agent_profile/agent_profile_page_view.dart';
 import '../../../../utils/extensions/string_to_string.dart';
@@ -12,7 +12,6 @@ import '../../../../utils/app_dimensions.dart';
 import '../../../../utils/app_utils/app_utils.dart';
 import '../../../../utils/extensions/font_style/font_styles.dart';
 import '../../../../utils/utils.dart';
-
 import '../bloc/home_bloc.dart';
 import '../pages/home_page_view.dart';
 
@@ -46,7 +45,7 @@ class _HomeTabBarWidgetState extends State<HomeTabBarWidget> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (bool val) {
+      onPopInvokedWithResult: (val, result) {
         AppUtils.showAlertDialog(context, false);
       },
       child: Scaffold(
@@ -58,7 +57,8 @@ class _HomeTabBarWidgetState extends State<HomeTabBarWidget> {
             });
           }
         }, child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
-          return AppBackgroundDecoration(child: SafeArea(child: _screens[_currentIndex]));
+          return AppBackgroundDecoration(
+              child: SafeArea(child: _screens[_currentIndex]));
         })),
         bottomNavigationBar: Container(
           color: AppColors.cancelButtonBgColor,
@@ -127,7 +127,8 @@ class _HomeTabBarWidgetState extends State<HomeTabBarWidget> {
               shape: BoxShape.circle,
               color: AppColors.primaryColor,
             ),
-            child: SvgPicture.asset(Assets.images.add).paddingAll(padding: 20.sp),
+            child: SvgPicture.asset(Assets.images.add)
+                .paddingAll(padding: AppDimensions.mediumXL),
           ),
         ),
       ),
@@ -150,12 +151,17 @@ class _HomeTabBarWidgetState extends State<HomeTabBarWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(
-                _currentIndex == index ? getSelectedIcon(index) : getUnSelectedIcon(index),
+                _currentIndex == index
+                    ? getSelectedIcon(index)
+                    : getUnSelectedIcon(index),
               ),
-              5.vSpace(),
+              5.verticalSpace,
               _currentIndex == index
                   ? label.titleBold(size: 11.sp, color: AppColors.primaryColor)
-                  : label.titleBold(size: 11.sp, color: AppColors.tabsUnselectedTextColor.withOpacity(0.6)),
+                  : label.titleBold(
+                      size: 11.sp,
+                      color:
+                          AppColors.tabsUnselectedTextColor.withOpacity(0.6)),
             ],
           ),
         ));

@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xplor/const/local_storage/shared_preferences_helper.dart';
-
+import '../../../../utils/app_utils/app_utils.dart';
+import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/api_constants.dart';
-import '../../../../core/exception_errors.dart';
 import '../models/lang_translation_model.dart';
 
 abstract class LanguageTranslationRemote {
@@ -28,7 +26,7 @@ class LanguageTranslationRemoteImpl extends LanguageTranslationRemote {
   @override
   Future<Map<String, dynamic>> translateMap(String body) async {
     try {
-      debugPrint("debugPrint App ====>$body");
+      AppUtils.printLogs("debugPrint App ====>$body");
       final response = await dio.post(
         translationApi,
         options: Options(headers: {
@@ -37,14 +35,12 @@ class LanguageTranslationRemoteImpl extends LanguageTranslationRemote {
         data: body,
       );
 
-      if (kDebugMode) {
-        print("Translation Response====>${response.statusCode}");
-        print("Translation Response====>${response.data}");
-      }
+      AppUtils.printLogs("Translation Response====>${response.statusCode}");
+      AppUtils.printLogs("Translation Response====>${response.data}");
 
       return response.data['translated_text'];
     } catch (e) {
-      throw Exception(handleError(e));
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
@@ -52,30 +48,21 @@ class LanguageTranslationRemoteImpl extends LanguageTranslationRemote {
   Future<List<LanguageTranslationModel>> getLanguageModel(String body) async {
     try {
       double lat, lng;
-
-      /*if (helper != null) {
-        lat = helper!.getDouble(PrefConstKeys.latitude)!;
-        lng = helper!.getDouble(PrefConstKeys.longitude)!;
-      } else {
-        lat = preferencesHelper.getDouble(PrefConstKeys.latitude);
-        lng = preferencesHelper.getDouble(PrefConstKeys.longitude);
-      }*/
       Position pos = await Geolocator.getCurrentPosition();
-      lat = pos.latitude; /*pos.latitude;*/
-      lng = pos.longitude; /*pos.longitude;*/
+      lat = pos.latitude;
+      lng = pos.longitude;
 
-      if (kDebugMode) {
-        print("getLanguagesListApi  $getLanguagesListApi latat: $lat, Lng: $lng");
-      }
+      /*lat = 30.744600;
+      lng = 76.652496;*/
+
+      AppUtils.printLogs("getLanguagesListApi  $getLanguagesListApi latat: $lat, Lng: $lng");
       final response = await dio.get(
         getLanguagesListApi,
         queryParameters: {"lat": lat, "long": lng},
       );
 
-      if (kDebugMode) {
-        print("getLanguagesListApi Response====>${response.statusCode}");
-        print("getLanguagesListApi Response====>${response.data}");
-      }
+      AppUtils.printLogs("getLanguagesListApi Response====>${response.statusCode}");
+      AppUtils.printLogs("getLanguagesListApi Response====>${response.data}");
 
       List<dynamic> data = response.data['data']['regionalLanguages'];
 
@@ -84,7 +71,7 @@ class LanguageTranslationRemoteImpl extends LanguageTranslationRemote {
 
       return languageModel;
     } catch (e) {
-      throw Exception(handleError(e));
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
@@ -103,13 +90,9 @@ class LanguageTranslationRemoteImpl extends LanguageTranslationRemote {
 
       var jsonBody = json.encode({"deviceId": deviceId, "languageCode": languageCode});
 
-      if (kDebugMode) {
-        print("json Body  $jsonBody");
-      }
+      AppUtils.printLogs("json Body  $jsonBody");
+      AppUtils.printLogs("selectLanguagesApi  $selectLanguagesApi");
 
-      if (kDebugMode) {
-        print("selectLanguagesApi  $selectLanguagesApi");
-      }
       final response = await dio.post(
         selectLanguagesApi,
         options: Options(headers: {
@@ -118,61 +101,12 @@ class LanguageTranslationRemoteImpl extends LanguageTranslationRemote {
         data: jsonBody,
       );
 
-      if (kDebugMode) {
-        print("Wallet App Response====>${response.statusCode}");
-        print("Wallet App Response====>${response.data}");
-      }
+      AppUtils.printLogs("Save language api Response====>${response.statusCode}");
+      AppUtils.printLogs("Save language api Response====>${response.data}");
 
       return true;
     } catch (e) {
-      throw Exception(handleError(e));
-    }
-  }
-
-  String handleError(Object error) {
-    String errorDescription = "";
-
-    if (error is DioException) {
-      DioException dioError = error;
-      switch (dioError.type) {
-        case DioExceptionType.cancel:
-          errorDescription = ExceptionErrors.requestCancelError;
-
-          return errorDescription;
-        case DioExceptionType.connectionTimeout:
-          errorDescription = ExceptionErrors.connectionTimeOutError;
-
-          return errorDescription;
-        case DioExceptionType.unknown:
-          errorDescription = ExceptionErrors.unknownConnectionError;
-
-          return errorDescription;
-        case DioExceptionType.receiveTimeout:
-          errorDescription = ExceptionErrors.receiveTimeOutError;
-
-          return errorDescription;
-        case DioExceptionType.badResponse:
-          if (kDebugMode) {
-            print("${ExceptionErrors.badResponseError}  ${dioError.response!.data}");
-          }
-          return dioError.response!.data['message'];
-
-        case DioExceptionType.sendTimeout:
-          errorDescription = ExceptionErrors.sendTimeOutError;
-
-          return errorDescription;
-        case DioExceptionType.badCertificate:
-          errorDescription = ExceptionErrors.badCertificate;
-
-          return errorDescription;
-        case DioExceptionType.connectionError:
-          errorDescription = ExceptionErrors.serverConnectingIssue;
-
-          return errorDescription;
-      }
-    } else {
-      errorDescription = ExceptionErrors.unexpectedErrorOccurred;
-      return errorDescription;
+      throw Exception(AppUtils.handleError(e));
     }
   }
 }

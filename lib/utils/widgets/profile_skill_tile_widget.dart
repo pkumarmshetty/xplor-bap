@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import '../extensions/font_style/font_styles.dart';
-import '../extensions/space.dart';
-
 import '../app_colors.dart';
 import '../app_dimensions.dart';
 
@@ -33,7 +31,7 @@ class ProfileSkillTileWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SvgPicture.asset(icon),
-          10.hSpace(),
+          10.w.horizontalSpace,
           Expanded(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

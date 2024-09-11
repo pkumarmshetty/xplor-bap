@@ -1,10 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../config/routes/path_routing.dart';
 import '../../config/services/app_services.dart';
 import '../../const/local_storage/shared_preferences_helper.dart';
@@ -15,15 +13,15 @@ class RefreshTokenService {
   static Future<void> refreshTokenAndRetry({
     required RequestOptions options,
     required dynamic handler,
-    required SharedPreferencesHelper preferencesHelper,
-    required SharedPreferences? helper,
+    SharedPreferencesHelper? preferencesHelper,
+    SharedPreferences? helper,
     required Dio dio,
   }) async {
     try {
       // Call token refresh API endpoint
       // Assuming refreshToken() returns a new access token
       final newAccessToken = await refreshToken(
-        preferencesHelper: preferencesHelper,
+        preferencesHelper: preferencesHelper!,
         helper: helper,
         dio: dio,
       );
@@ -89,49 +87,35 @@ class RefreshTokenService {
         handler.resolve(response);
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("Token refresh failed: $e");
-      }
+      AppUtils.printLogs("Token refresh failed: $e");
+      AppUtils.printLogs("Refresh Token----> Exception ${e.toString()}");
 
-      if (kDebugMode) {
-        print("Refresh Token----> Exception ${e.toString()}");
-      }
       if (e is DioException) {
         if (e.response?.statusCode == 401) {
-          if (kDebugMode) {
-            print("Refresh Token Expired-->: ${e.message}");
-          }
+          AppUtils.printLogs("Refresh Token Expired-->: ${e.message}");
           AppUtils.clearSession();
           Navigator.pushReplacementNamed(
             AppServices.navState.currentContext!,
             Routes.main,
           );
         } else {
-          if (kDebugMode) {
-            print("Refresh Token----> Error: ${e.message}");
-          }
+          AppUtils.printLogs("Refresh Token----> Error: ${e.message}");
           handler.reject(e);
         }
       } else {
         // Check if the error message contains "401"
         if (e.toString().contains("401")) {
-          if (kDebugMode) {
-            print("Refresh Token Expired-->: ${e.toString()}");
-          }
+          AppUtils.printLogs("Refresh Token Expired-->: ${e.toString()}");
           AppUtils.clearSession();
           Navigator.pushReplacementNamed(
             AppServices.navState.currentContext!,
             Routes.main,
           );
         } else {
-          if (kDebugMode) {
-            print("Refresh Token----> Error: ${e.toString()}");
-          }
+          AppUtils.printLogs("Refresh Token----> Error: ${e.toString()}");
           handler.reject(e);
         }
-        if (kDebugMode) {
-          print("Refresh Token----> Error: ${e.toString()}");
-        }
+        AppUtils.printLogs("Refresh Token----> Error: ${e.toString()}");
         handler.reject(e);
       }
     }
@@ -154,20 +138,18 @@ class RefreshTokenService {
           },
         ),
       );
-      if (kDebugMode) {
-        print("Refresh Token----> Response ${response.data}");
-      }
+      AppUtils.printLogs("Refresh Token----> Response ${response.data}");
       final newAccessToken = response.data["data"]["accessToken"];
       if (helper != null) {
-        await helper.setString(PrefConstKeys.accessToken, response.data["data"]["accessToken"]);
+        await helper.setString(
+            PrefConstKeys.accessToken, response.data["data"]["accessToken"]);
       } else {
-        await preferencesHelper.setString(PrefConstKeys.accessToken, response.data["data"]["accessToken"]);
+        await preferencesHelper.setString(
+            PrefConstKeys.accessToken, response.data["data"]["accessToken"]);
       }
       return newAccessToken;
     } catch (e) {
-      if (kDebugMode) {
-        print("Refresh Token----> Exception ${e.toString()}");
-      }
+      AppUtils.printLogs("Refresh Token----> Exception ${e.toString()}");
       throw Exception(e.toString());
     }
   }

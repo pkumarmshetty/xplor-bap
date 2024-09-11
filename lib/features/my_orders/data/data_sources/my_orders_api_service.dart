@@ -1,45 +1,45 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xplor/core/exception_errors.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
+import '../../../../core/exception_errors.dart';
+import '../../../../utils/app_utils/app_utils.dart';
+import '../../../../utils/extensions/string_to_string.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/api_constants.dart';
 import '../../../../core/connection/refresh_token_service.dart';
+import '../../domain/entities/add_document_to_wallet_entity.dart';
 import '../../domain/entities/my_orders_entity.dart';
 import '../../domain/entities/status_entity_model.dart';
 
+/// My Orders API Service.
 abstract class MyOrdersApiService {
-  Future<MyOrdersListEntity> getOngoingOrdersData(
-      String initialIndex, String lastIndex);
+  Future<MyOrdersListEntity> getOngoingOrdersData(String initialIndex, String lastIndex);
 
-  Future<MyOrdersListEntity> getCompletedOrdersData(
-      String initialIndex, String lastIndex);
+  Future<MyOrdersListEntity> getCompletedOrdersData(String initialIndex, String lastIndex);
 
   Future<bool> rateOrder(String orderId, String rating, String feedback);
 
   Future<void> statusRequest(String body);
 
-  Stream<StatusEntityModel> sseConnectionResponse(
-      String transactionId, Duration timeout);
+  Stream<StatusEntityModel> sseConnectionResponse(String transactionId, Duration timeout);
+
+  Future<bool> uploadCertificateToWallet(AddDocumentToWalletEntity entity);
+
+  Future<void> markAddToWallet(String orderId);
 }
 
+/// Implementation of [MyOrdersApiService] that interacts with the API service and manages network connectivity.
 class MyOrdersApiServiceImpl implements MyOrdersApiService {
-  MyOrdersApiServiceImpl(
-      {required this.dio, required this.preferencesHelper, this.helper}) {
+  MyOrdersApiServiceImpl({required this.dio, required this.preferencesHelper, this.helper}) {
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
         handler.next(options);
       },
-      onError: (DioException dioException,
-          ErrorInterceptorHandler errorInterceptorHandler) async {
+      onError: (DioException dioException, ErrorInterceptorHandler errorInterceptorHandler) async {
         if (dioException.response?.statusCode == 511) {
           await RefreshTokenService.refreshTokenAndRetry(
             options: dioException.response!.requestOptions,
@@ -74,9 +74,9 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
   SharedPreferencesHelper preferencesHelper;
   SharedPreferences? helper;
 
+  /// Fetches ongoing orders data from the API service.
   @override
-  Future<MyOrdersListEntity> getOngoingOrdersData(
-      String initialIndex, String lastIndex) async {
+  Future<MyOrdersListEntity> getOngoingOrdersData(String initialIndex, String lastIndex) async {
     try {
       String? authToken;
 
@@ -85,11 +85,8 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
       } else {
         authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
       }
-      if (kDebugMode) {
-        print("Orders token==>$authToken");
-        print(
-            "Orders token==>$myOrdersApi?page=$initialIndex&pageSize=$lastIndex");
-      }
+      AppUtils.printLogs("Orders token==>$authToken");
+      AppUtils.printLogs("Orders token==>$myOrdersApi?page=$initialIndex&pageSize=$lastIndex");
 
       final response = await dio.get(
         myOrdersApi,
@@ -103,22 +100,18 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
           "Authorization": authToken,
         }),
       );
-      if (kDebugMode) {
-        print("Orders Progress Data----> Response ${response.data}");
-      }
+      AppUtils.printLogs("Orders Progress Data----> Response ${response.data}");
 
       return MyOrdersListEntity.fromJson(response.data['data']);
     } catch (e) {
-      if (kDebugMode) {
-        print("Orders Progress Data----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("Orders Progress Data----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
+  /// Fetches completed orders data from the API service.
   @override
-  Future<MyOrdersListEntity> getCompletedOrdersData(
-      String initialIndex, String lastIndex) async {
+  Future<MyOrdersListEntity> getCompletedOrdersData(String initialIndex, String lastIndex) async {
     try {
       String? authToken;
 
@@ -127,11 +120,8 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
       } else {
         authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
       }
-      if (kDebugMode) {
-        print("Orders token==>$authToken");
-        print(
-            "Orders token==>$myOrdersApi?page=$initialIndex&pageSize=$lastIndex");
-      }
+      AppUtils.printLogs("Orders token==>$authToken");
+      AppUtils.printLogs("Orders token==>$myOrdersApi?page=$initialIndex&pageSize=$lastIndex");
 
       final response = await dio.get(
         myOrdersApi,
@@ -146,19 +136,16 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
           "Authorization": authToken,
         }),
       );
-      if (kDebugMode) {
-        print("Orders Completed Data----> Response ${response.data}");
-      }
+      AppUtils.printLogs("Orders Completed Data----> Response ${response.data}");
 
       return MyOrdersListEntity.fromJson(response.data['data']);
     } catch (e) {
-      if (kDebugMode) {
-        print("Orders Completed Data----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("Orders Completed Data----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
+  /// Rates an order using provided order ID, rating, and feedback.
   @override
   Future<bool> rateOrder(
     String orderId,
@@ -173,10 +160,8 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
       } else {
         authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
       }
-      if (kDebugMode) {
-        print("Rate order api token==>$authToken");
-        print("Rate orderId:$orderId ,ratings:$ratings, reviews:$review");
-      }
+      AppUtils.printLogs("Rate order api token==>$authToken");
+      AppUtils.printLogs("Rate orderId:$orderId ,ratings:$ratings, reviews:$review");
 
       final Map<String, dynamic> data = {
         'rating': ratings,
@@ -191,29 +176,21 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
           "Authorization": authToken,
         }),
       );
-      if (kDebugMode) {
-        print("Rate order---->Response of Rate order  ${response.data}");
-      }
+      AppUtils.printLogs("Rate order---->Response of Rate order  ${response.data}");
 
       return response.data != null ? response.data["success"] : false;
     } catch (e) {
-      if (kDebugMode) {
-        print("Rate order----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("Rate order----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
+  /// Sends status request with provided body to check order status.
   @override
-  Stream<StatusEntityModel> sseConnectionResponse(
-      String transactionId, Duration timeout) {
-    final StreamController<StatusEntityModel> stringStream =
-        StreamController.broadcast();
+  Stream<StatusEntityModel> sseConnectionResponse(String transactionId, Duration timeout) {
+    final StreamController<StatusEntityModel> stringStream = StreamController.broadcast();
 
-    if (kDebugMode) {
-      print(
-          "Apply Body Datta $seekerSearchSSEApi/transaction_id=$transactionId");
-    }
+    AppUtils.printLogs("Apply Body Datta $seekerSearchSSEApi/transaction_id=$transactionId");
 
     // Start a timer to enforce the timeout
     final timer = Timer(timeout, () {
@@ -233,7 +210,7 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
             "Cache-Control": "no-cache",
           }).listen(
         (event) {
-          debugPrint('Data: ${event.data!}');
+          AppUtils.printLogs('Data: ${event.data!}');
 
           try {
             // Parse JSON string into Map
@@ -250,18 +227,14 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
               timer.cancel();
             }
           } catch (e) {
-            if (kDebugMode) {
-              print('SSE Error: $e');
-            }
+            AppUtils.printLogs('SSE Error: $e');
             stringStream.addError(ExceptionErrors.checkTimeOut.stringToString);
             stringStream.close();
           }
         },
         onError: (error) {
           // Ensure the stream is closed on error
-          if (kDebugMode) {
-            print('SSE Error: $error');
-          }
+          AppUtils.printLogs('SSE Error: $error');
           stringStream.addError(error);
           stringStream.close();
           //throw Exception("SSE Connection Closed");
@@ -282,13 +255,12 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
     return stringStream.stream;
   }
 
+  /// Sends status request with provided body to check order status.
   @override
   Future<void> statusRequest(String body) async {
     try {
-      if (kDebugMode) {
-        print("Apply search entity ${body.toString()}");
-        print("Apply search entity $statusRequestApi");
-      }
+      AppUtils.printLogs("Apply search entity ${body.toString()}");
+      AppUtils.printLogs("Apply search entity $statusRequestApi");
 
       String? authToken;
 
@@ -308,65 +280,77 @@ class MyOrdersApiServiceImpl implements MyOrdersApiService {
           contentType: Headers.jsonContentType,
         ),
       );
-      if (kDebugMode) {
-        print("Apply Search---->Response of seeker search  ${response.data}");
-      }
+      AppUtils.printLogs("Apply Search---->Response of seeker search  ${response.data}");
     } catch (e) {
-      if (kDebugMode) {
-        print("Apply search----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e).toString());
+      AppUtils.printLogs("Apply search----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e).toString());
     }
   }
 
-  String handleError(Object error) {
-    String errorDescription = "";
+  @override
+  Future<bool> uploadCertificateToWallet(
+    AddDocumentToWalletEntity entity,
+  ) async {
+    try {
+      String? authToken;
 
-    if (error is DioException) {
-      DioException dioError = error;
-      switch (dioError.type) {
-        case DioExceptionType.cancel:
-          errorDescription = ExceptionErrors.requestCancelError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.connectionTimeout:
-          errorDescription =
-              ExceptionErrors.connectionTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.unknown:
-          errorDescription =
-              ExceptionErrors.unknownConnectionError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.receiveTimeout:
-          errorDescription = ExceptionErrors.receiveTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.badResponse:
-          if (kDebugMode) {
-            print(
-                "${ExceptionErrors.badResponseError}  ${dioError.response!.data}");
-          }
-          return dioError.response!.data['message'];
-
-        case DioExceptionType.sendTimeout:
-          errorDescription = ExceptionErrors.sendTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.badCertificate:
-          errorDescription = ExceptionErrors.badCertificate.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.connectionError:
-          errorDescription =
-              ExceptionErrors.serverConnectingIssue.stringToString;
-
-          return errorDescription;
+      if (helper != null) {
+        authToken = helper!.getString(PrefConstKeys.accessToken);
+      } else {
+        authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
       }
-    } else {
-      errorDescription = ExceptionErrors.unexpectedErrorOccurred.stringToString;
-      return errorDescription;
+
+      var jsonData = json.encode(entity.toJson());
+      AppUtils.printLogs("Add Document to Wallet token==>$authToken");
+      AppUtils.printLogs("Add Document to Wallet request==>$jsonData");
+
+      final response = await dio.post(
+        addCertificateToWalletApi,
+        data: jsonData,
+        options: Options(contentType: Headers.jsonContentType, headers: {
+          "Authorization": authToken,
+        }),
+      );
+      AppUtils.printLogs("Add Document to Wallet---->Response  ${response.data}");
+
+      return response.data != null ? response.data["success"] : false;
+    } catch (e) {
+      AppUtils.printLogs("Mark Add Document to wallet----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
+    }
+  }
+
+  @override
+  Future<void> markAddToWallet(
+    String orderId,
+  ) async {
+    try {
+      String? authToken;
+
+      if (helper != null) {
+        authToken = helper!.getString(PrefConstKeys.accessToken);
+      } else {
+        authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
+      }
+
+      AppUtils.printLogs("Mark Add Document to wallet token==>$authToken");
+      AppUtils.printLogs("Mark Add Document to wallet request==>$orderId");
+
+      final response = await dio.patch(
+        markAddToWalletApi,
+        queryParameters: {
+          'orderId': orderId,
+        },
+        options: Options(contentType: Headers.jsonContentType, headers: {
+          "Authorization": authToken,
+        }),
+      );
+      AppUtils.printLogs("Mark Add Document to wallet---->Response  ${response.data}");
+
+      return response.data != null ? response.data["success"] : false;
+    } catch (e) {
+      AppUtils.printLogs("Mark Add Document to wallet----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 }

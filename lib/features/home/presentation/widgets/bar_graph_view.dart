@@ -1,7 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:xplor/utils/app_colors.dart';
+import '../../../../utils/app_dimensions.dart';
+import '../../../../utils/app_colors.dart';
 
+/// BarGraphView Page
 class BarGraphView extends StatefulWidget {
   const BarGraphView({super.key});
 
@@ -48,7 +50,7 @@ class _BarGraphViewState extends State<BarGraphView> {
     return AspectRatio(
       aspectRatio: 1,
       child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppDimensions.medium),
           child: BarChart(
             BarChartData(
               maxY: 20,
@@ -131,7 +133,7 @@ class _BarGraphViewState extends State<BarGraphView> {
     const style = TextStyle(
       color: AppColors.greyTextColor,
       fontWeight: FontWeight.w500,
-      fontSize: 14,
+      fontSize: AppDimensions.smallXXL,
     );
     String text;
     if (value == 0) {
@@ -160,20 +162,20 @@ class _BarGraphViewState extends State<BarGraphView> {
       style: const TextStyle(
         color: AppColors.greyTextColor,
         fontWeight: FontWeight.w500,
-        fontSize: 14,
+        fontSize: AppDimensions.smallXXL,
       ),
     );
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      space: 16, //margin top
+      space: AppDimensions.medium, //margin top
       child: text,
     );
   }
 
   BarChartGroupData makeGroupData(int x, double y1, Color color) {
     return BarChartGroupData(
-      barsSpace: 4,
+      barsSpace: AppDimensions.extraSmall,
       x: x,
       barRods: [
         BarChartRodData(

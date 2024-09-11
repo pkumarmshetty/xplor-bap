@@ -13,9 +13,9 @@ class NetworkInfoImpl implements NetworkInfo {
   Future<bool> get isConnected async {
     final connectivityResult = await connectionChecker!.checkConnectivity();
 
-    return (connectivityResult == ConnectivityResult.mobile ||
-            connectivityResult == ConnectivityResult.wifi ||
-            connectivityResult == ConnectivityResult.ethernet)
+    return (connectivityResult.first == ConnectivityResult.mobile ||
+            connectivityResult.first == ConnectivityResult.wifi ||
+            connectivityResult.first == ConnectivityResult.ethernet)
         ? true
         : false;
   }

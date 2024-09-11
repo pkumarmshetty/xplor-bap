@@ -1,22 +1,19 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xplor/core/exception_errors.dart';
-import 'package:xplor/features/wallet/domain/entities/previous_consent_entity.dart';
-import 'package:xplor/features/wallet/domain/entities/shared_data_entity.dart';
-import 'package:xplor/features/wallet/domain/entities/update_consent_entity.dart';
-import 'package:xplor/utils/extensions/string_to_string.dart';
-
+import '../../../../utils/app_utils/app_utils.dart';
+import '../../domain/entities/previous_consent_entity.dart';
+import '../../domain/entities/shared_data_entity.dart';
+import '../../domain/entities/update_consent_entity.dart';
 import '../../../../const/local_storage/shared_preferences_helper.dart';
 import '../../../../core/api_constants.dart';
 import '../../../../core/connection/refresh_token_service.dart';
 import '../../domain/entities/wallet_add_document_entity.dart';
 import '../../domain/entities/wallet_vc_list_entity.dart';
 
+/// Abstract class for wallet api service.
 abstract class WalletApiService {
   Future<String> getWalletId();
 
@@ -41,6 +38,7 @@ abstract class WalletApiService {
   Future<bool> verifyMpin(String pin);
 }
 
+/// Implementation class for wallet api service.
 class WalletApiServiceImpl implements WalletApiService {
   WalletApiServiceImpl({required this.dio, required this.preferencesHelper, this.helper}) {
     dio.interceptors.add(InterceptorsWrapper(
@@ -82,12 +80,11 @@ class WalletApiServiceImpl implements WalletApiService {
   SharedPreferencesHelper preferencesHelper;
   SharedPreferences? helper;
 
+  /// Method to get wallet id.
   @override
   Future<String> getWalletId() async {
     try {
-      if (kDebugMode) {
-        print("Wallet Base Url ==>$getWalletApi");
-      }
+      AppUtils.printLogs("Wallet Base Url ==>$getWalletApi");
       String? authToken;
       String? userId = "";
 
@@ -97,19 +94,15 @@ class WalletApiServiceImpl implements WalletApiService {
         authToken = preferencesHelper.getString(PrefConstKeys.accessToken);
         userId = preferencesHelper.getString(PrefConstKeys.userId);
       }
-      if (kDebugMode) {
-        print("Wallet Base Url ==>$getWalletApi?userId=$userId");
-        print("Wallet Base Url ==>$getWalletApi?token=$authToken");
-      }
+      AppUtils.printLogs("Wallet Base Url ==>$getWalletApi?userId=$userId");
+      AppUtils.printLogs("Wallet Base Url ==>$getWalletApi?token=$authToken");
       final response = await dio.get(
         "$getWalletApi?userId=$userId",
         options: Options(contentType: Headers.jsonContentType, headers: {
           "Authorization": authToken,
         }),
       );
-      if (kDebugMode) {
-        print("Wallet----> Response ${response.data}");
-      }
+      AppUtils.printLogs("Wallet----> Response ${response.data}");
       if (helper != null) {
         await helper!.setString(PrefConstKeys.walletId, response.data["data"]["_id"]);
       } else {
@@ -123,13 +116,12 @@ class WalletApiServiceImpl implements WalletApiService {
       } else {
         await preferencesHelper.setString(PrefConstKeys.walletId, "");
       }
-      if (kDebugMode) {
-        print("Wallet----> Catch ${handleError(e)}");
-      }
+      AppUtils.printLogs("Wallet----> Catch ${AppUtils.handleError(e)}");
       return "";
     }
   }
 
+  /// Method to add document to wallet.
   @override
   Future<List<DocumentVcData>> getWalletVcData() async {
     try {
@@ -144,30 +136,25 @@ class WalletApiServiceImpl implements WalletApiService {
         walletId = preferencesHelper.getString(PrefConstKeys.walletId);
       }
 
-      if (kDebugMode) {
-        print("Wallet Base Url ==>$getWalletVcApi$walletId");
-      }
+      AppUtils.printLogs("Wallet Base Url ==>$getWalletVcApi$walletId");
       final response = await dio.get(
         "$getWalletVcApi$walletId",
         options: Options(contentType: Headers.jsonContentType, headers: {
           "Authorization": authToken,
         }),
       );
-      if (kDebugMode) {
-        print("Wallet----> Response ${response.data}");
-      }
+      AppUtils.printLogs("Wallet----> Response ${response.data}");
 
       DocumentVcResponse vcWallet = DocumentVcResponse.fromJson(response.data);
 
       return vcWallet.data;
     } catch (e) {
-      if (kDebugMode) {
-        print("Wallet----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("Wallet----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
+  /// Method to share wallet vc data.
   @override
   Future<String> sharedVcId(List<String> vcIds, String request) async {
     try {
@@ -185,11 +172,9 @@ class WalletApiServiceImpl implements WalletApiService {
 // Construct the full URL with query parameters
       String urlWithParams = '$sharedWalletVcApi?walletId=$walletId&${_buildVcIdsQuery(vcIds)}';
 
-      if (kDebugMode) {
-        print("Wallet Base Url ==>$urlWithParams");
-        print('urlWithParams $urlWithParams');
-        print('share wallet request $request');
-      }
+      AppUtils.printLogs("Wallet Base Url ==>$urlWithParams");
+      AppUtils.printLogs('urlWithParams $urlWithParams');
+      AppUtils.printLogs('share wallet request $request');
       final response = await dio.put(
         urlWithParams,
         data: request,
@@ -198,9 +183,7 @@ class WalletApiServiceImpl implements WalletApiService {
           "Authorization": authToken,
         }),
       );
-      if (kDebugMode) {
-        print("Wallet----> Response ${response.data}");
-      }
+      AppUtils.printLogs("Wallet----> Response ${response.data}");
 
       String restrictedUrl = "";
       var res = response.data["data"];
@@ -210,9 +193,7 @@ class WalletApiServiceImpl implements WalletApiService {
             : "${res[i]['vcDetails']['name']}: ${res[i]['restrictedUrl']}";
       }
 
-      if (kDebugMode) {
-        print('test......$restrictedUrl');
-      }
+      AppUtils.printLogs('test......$restrictedUrl');
 
       if (helper != null) {
         await helper!.setString(PrefConstKeys.sharedId, restrictedUrl);
@@ -222,13 +203,12 @@ class WalletApiServiceImpl implements WalletApiService {
 
       return restrictedUrl;
     } catch (e) {
-      if (kDebugMode) {
-        print("Wallet----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("Wallet----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
+  /// Method to delete wallet vc data.
   @override
   Future<void> deletedVcIds(
     List<String> vcIds,
@@ -249,10 +229,8 @@ class WalletApiServiceImpl implements WalletApiService {
         for (int i = 0; i < vcIds.length; i++) 'vcIds[$i]': vcIds[i],
       };
 
-      if (kDebugMode) {
-        print("Wallet Base Url ==>$deletedWalletVcApi");
-        print("Wallet Base Url ==>$queryParams");
-      }
+      AppUtils.printLogs("Wallet Base Url ==>$deletedWalletVcApi");
+      AppUtils.printLogs("Wallet Base Url ==>$queryParams");
       final response = await dio.delete(
         deletedWalletVcApi,
         queryParameters: queryParams,
@@ -260,23 +238,18 @@ class WalletApiServiceImpl implements WalletApiService {
           "Authorization": authToken,
         }),
       );
-      if (kDebugMode) {
-        print("Wallet----> Response ${response.data}");
-      }
+      AppUtils.printLogs("Wallet----> Response ${response.data}");
     } catch (e) {
-      if (kDebugMode) {
-        print("Wallet----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("Wallet----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
+  /// Method to get my consents.
   @override
   Future<List<SharedVcDataEntity>> getMyConsents() async {
     try {
-      if (kDebugMode) {
-        print("Wallet Base Url ==>$getWalletApi");
-      }
+      AppUtils.printLogs("Wallet Base Url ==>$getWalletApi");
       String? authToken;
       String? walletId;
 
@@ -306,19 +279,16 @@ class WalletApiServiceImpl implements WalletApiService {
       List<SharedVcDataEntity> sharedDataEntity = data.map((json) => SharedVcDataEntity.fromJson(json)).toList();
       return sharedDataEntity;
     } catch (e) {
-      if (kDebugMode) {
-        print("getMyConsents----> Catch $e");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("getMyConsents----> Catch $e");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
+  /// Method to get my previous consents.
   @override
   Future<List<PreviousConsentEntity>> getMyPrevConsents() async {
     try {
-      if (kDebugMode) {
-        print("Wallet Base Url ==>$getWalletApi");
-      }
+      AppUtils.printLogs("Wallet Base Url ==>$getWalletApi");
       String? authToken;
       String? walletId;
 
@@ -348,21 +318,18 @@ class WalletApiServiceImpl implements WalletApiService {
       List<PreviousConsentEntity> sharedDataEntity = data.map((json) => PreviousConsentEntity.fromJson(json)).toList();
       return sharedDataEntity;
     } catch (e) {
-      if (kDebugMode) {
-        print("getMyConsents----> Catch $e");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("getMyConsents----> Catch $e");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
+  /// Method to update consent.
   @override
   Future<bool> updateConsent(UpdateConsentEntity entity, String requestId) async {
     try {
       var jsonData = json.encode(entity.toJson());
 
-      if (kDebugMode) {
-        print("updateConsentWallet Body Data $jsonData");
-      }
+      AppUtils.printLogs("updateConsentWallet Body Data $jsonData");
 
       String? authToken;
       String? walletId;
@@ -380,9 +347,7 @@ class WalletApiServiceImpl implements WalletApiService {
         'requestId': requestId,
       };
 
-      if (kDebugMode) {
-        print(queryParams);
-      }
+      AppUtils.printLogs(queryParams.toString());
 
       // Construct the URL with query parameters
       final Uri url = Uri.parse(updateConsentApi).replace(queryParameters: queryParams);
@@ -397,14 +362,13 @@ class WalletApiServiceImpl implements WalletApiService {
 
       return true;
     } catch (e) {
-      if (kDebugMode) {
-        print("assignRoleOnBoarding----> Catch ${handleError(e)}");
-        return false;
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("assignRoleOnBoarding----> Catch ${AppUtils.handleError(e)}");
+      //return false;
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
+  /// Method to revoke consent.
   @override
   Future<bool> revokeConsent(SharedVcDataEntity entity) async {
     try {
@@ -426,9 +390,7 @@ class WalletApiServiceImpl implements WalletApiService {
         'action': 'REJECTED',
       };
 
-      if (kDebugMode) {
-        print(queryParams);
-      }
+      AppUtils.printLogs(queryParams.toString());
 
       // Construct the URL with query parameters
       final Uri url = Uri.parse(revokeConsentApi).replace(queryParameters: queryParams);
@@ -441,14 +403,13 @@ class WalletApiServiceImpl implements WalletApiService {
       );
       return true;
     } catch (e) {
-      if (kDebugMode) {
-        print("assignRoleOnBoarding----> Catch ${handleError(e)}");
-        return false;
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("assignRoleOnBoarding----> Catch ${AppUtils.handleError(e)}");
+      //return false;
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
+  /// Method to add document to wallet.
   @override
   Future<void> addDocumentWallet(WalletAddDocumentEntity entity) async {
     try {
@@ -489,9 +450,7 @@ class WalletApiServiceImpl implements WalletApiService {
         formData.fields.add(MapEntry('tags[$index]', value));
       });
 
-      if (kDebugMode) {
-        print("addDocumentWallet----> Form Data ${formData.fields}");
-      }
+      AppUtils.printLogs("addDocumentWallet----> Form Data ${formData.fields}");
 
       final response = await dio.post(
         addDocumentApi,
@@ -504,64 +463,14 @@ class WalletApiServiceImpl implements WalletApiService {
         ),
       );
 
-      if (kDebugMode) {
-        print("addDocumentWallet----> Success 200 not found  ${response.statusCode}");
-      }
+      AppUtils.printLogs("addDocumentWallet----> Success 200 not found  ${response.statusCode}");
     } catch (e) {
-      if (kDebugMode) {
-        print("addDocumentWallet----> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("addDocumentWallet----> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
-  String handleError(Object error) {
-    String errorDescription = "";
-
-    if (error is DioException) {
-      DioException dioError = error;
-      switch (dioError.type) {
-        case DioExceptionType.cancel:
-          errorDescription = ExceptionErrors.requestCancelError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.connectionTimeout:
-          errorDescription = ExceptionErrors.connectionTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.unknown:
-          errorDescription = ExceptionErrors.unknownConnectionError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.receiveTimeout:
-          errorDescription = ExceptionErrors.receiveTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.badResponse:
-          if (kDebugMode) {
-            print("${ExceptionErrors.badResponseError}  ${dioError.response!.data}");
-          }
-          return dioError.response!.data['message'];
-
-        case DioExceptionType.sendTimeout:
-          errorDescription = ExceptionErrors.sendTimeOutError.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.badCertificate:
-          errorDescription = ExceptionErrors.badCertificate.stringToString;
-
-          return errorDescription;
-        case DioExceptionType.connectionError:
-          errorDescription = ExceptionErrors.serverConnectingIssue.stringToString;
-
-          return errorDescription;
-      }
-    } else {
-      errorDescription = ExceptionErrors.unexpectedErrorOccurred.stringToString;
-      return errorDescription;
-    }
-  }
-
+  /// Method to verify mpin.
   @override
   Future<bool> verifyMpin(String pin) async {
     final authToken = helper == null
@@ -573,10 +482,8 @@ class WalletApiServiceImpl implements WalletApiService {
       };
       String jsonData = json.encode(data);
 
-      if (kDebugMode) {
-        print("verifyMpin api: $jsonData");
-        print("verifyMpin api: $verifyMpinApi");
-      }
+      AppUtils.printLogs("verifyMpin api: $jsonData");
+      AppUtils.printLogs("verifyMpin api: $verifyMpinApi");
 
       final response = await dio.put(
         verifyMpinApi,
@@ -588,18 +495,16 @@ class WalletApiServiceImpl implements WalletApiService {
           contentType: Headers.jsonContentType,
         ),
       );
-      if (kDebugMode) {
-        print("Verify mPin success ${response.data["data"]}");
-      }
+      AppUtils.printLogs("Verify mPin success ${response.data["data"]}");
+
       return true;
     } catch (e) {
-      if (kDebugMode) {
-        print("Verify MPin failed---> Catch ${handleError(e)}");
-      }
-      throw Exception(handleError(e));
+      AppUtils.printLogs("Verify MPin failed---> Catch ${AppUtils.handleError(e)}");
+      throw Exception(AppUtils.handleError(e));
     }
   }
 
+  /// Method to build vc ids query.
   String _buildVcIdsQuery(List<String> vcIds) {
     String query = '';
     for (int i = 0; i < vcIds.length; i++) {

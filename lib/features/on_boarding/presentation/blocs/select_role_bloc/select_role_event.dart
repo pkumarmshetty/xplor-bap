@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-
 import '../../../domain/entities/on_boarding_assign_role_entity.dart';
 
 /// Event class for the SelectRoleBloc.
