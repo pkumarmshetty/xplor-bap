@@ -106,6 +106,7 @@ class LanguageTranslationRemoteImpl extends LanguageTranslationRemote {
 
       return true;
     } catch (e) {
+      AppUtils.printLogs("Save language api Response====>${e}");
       throw Exception(AppUtils.handleError(e));
     }
   }

@@ -7,7 +7,8 @@ bool loader = false;
 
 WebViewController webViewController = WebViewController()
   ..setJavaScriptMode(JavaScriptMode.unrestricted)
-  ..setBackgroundColor(AppColors.white);
+  ..setBackgroundColor(AppColors.white)
+  ..setUserAgent("random");
 
 /// Method to show the KYC confirmation dialog
 void _showKYCConfirmationDialog(BuildContext context) {
@@ -103,7 +104,7 @@ Widget buildMainContentBasedOnState(KycState state, BuildContext context) {
             },
             child: const Icon(Icons.close, color: AppColors.black),
           )),
-    if (state is WebLoadingState || loader || state is AuthProviderLoadingState) const LoadingAnimation(),
+    // if (state is WebLoadingState || loader || state is AuthProviderLoadingState) const LoadingAnimation(),
     if (state is KycWebLoadingState) const KycLoaderWidget()
   ]);
 }

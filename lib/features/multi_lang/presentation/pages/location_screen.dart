@@ -38,6 +38,7 @@ class _LocationPageState extends State<LocationAccessPage> {
 
   _getDeviceId() async {
     String? deviceId = await PlatformDeviceId.getDeviceId;
+    AppUtils.printLogs("Save language api Response====>${deviceId!}");
     sl<SharedPreferencesHelper>().setString(PrefConstKeys.deviceId, deviceId!);
   }
 

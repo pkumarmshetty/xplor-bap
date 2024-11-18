@@ -24,7 +24,7 @@ class DocumentVcResponse {
 
 // Define the document data class
 class DocumentVcData {
-  String? fileType;
+  String? fileType = "text/html";
   String id;
   String? did;
   String? fileId;
@@ -64,7 +64,7 @@ class DocumentVcData {
 
   factory DocumentVcData.fromJson(Map<String, dynamic> json) {
     return DocumentVcData(
-      fileType: json['fileType'],
+      fileType: 'text/html',
       id: json['_id'],
       did: json['did'],
       fileId: json['fileId'],
