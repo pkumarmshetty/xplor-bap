@@ -54,6 +54,11 @@ class _SeekerProfilePageViewState extends State<SeekerProfilePageView> {
           icon: Assets.images.editProfile,
         ),
         ProfileCardOptionsEntity(
+          title: "Create Appointment",
+          subTitle: "Appointment",
+          icon: Assets.images.editProfile,
+        ),
+        ProfileCardOptionsEntity(
           title: ProfileKeys.accountPrivacy.stringToString,
           subTitle: ProfileKeys.accountPrivacyDesc.stringToString,
           icon: Assets.images.accountPrivacy,
@@ -101,6 +106,11 @@ class _SeekerProfilePageViewState extends State<SeekerProfilePageView> {
                 ProfileCardOptionsEntity(
                   title: ProfileKeys.myAccount.stringToString,
                   subTitle: ProfileKeys.editProfile.stringToString,
+                  icon: Assets.images.editProfile,
+                ),
+                ProfileCardOptionsEntity(
+                  title: "Create Appointment",
+                  subTitle: "Appointment",
                   icon: Assets.images.editProfile,
                 ),
                 ProfileCardOptionsEntity(
@@ -181,7 +191,7 @@ class _SeekerProfilePageViewState extends State<SeekerProfilePageView> {
             itemCount: _profileCardOptions.length,
             itemBuilder: (context, index) {
               final item = _profileCardOptions[index];
-              return ProfileOptionWidget(item: item, index: index, userData: state.userData);
+               return ProfileOptionWidget(item: item, index: index, userData: state.userData);
             },
           ),
         AppDimensions.medium.verticalSpace,

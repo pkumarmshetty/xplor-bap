@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'Registration_Page.dart';
 import 'app/xplorapp.dart';
 import 'utils/app_utils/app_utils.dart';
 import 'const/bootstrap.dart';
@@ -20,6 +21,13 @@ void main() async {
       designSize: const Size(393, 852),
       builder: (context, child) {
         return XplorApp(isLoggedIn: isLoggedIn);
+        // return MaterialApp(
+        //   debugShowCheckedModeBanner: false,
+        //   title: 'Xplor App',
+        //   initialRoute: isLoggedIn ? '/home' : '/registration', // Navigate based on login status
+        //
+        //   home: const RegistrationPage(), // Show RegistrationPage if not logged in
+        // );
       },
     );
   });
