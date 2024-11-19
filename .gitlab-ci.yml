@@ -1,0 +1,31 @@
+stages:
+   - build:android
+  
+variables:
+  APP_NAME:
+    value: "Xplor-App"      
+
+  # infoplist_name:
+  #   value: ""
+  #   description: "Enter your ios info.plist_name Ex.Trial_App or project name"
+    
+flutter_android:
+  stage: build:android
+  when: manual
+  before_script:
+    - flutter clean
+    - flutter packages get
+  script:
+    - flutter analyze && flutter build apk
+    - echo "Build the apk"
+    - python3 /Users/$DEV_SERVER_USER/script/diawi-cli.py ./build/app/outputs/apk/release/app-release.apk  > log_file.txt
+    # - python3 /Users/$DEV_SERVER_USER/script/diawi-cli.py ./build/app/outputs/flutter-apk/app-release.apk  > log_file.txt
+    - cat log_file.txt
+    - URL=$(cat log_file.txt | grep downloaded | cut -c7- )
+    - echo $URL
+   # - |
+   #   curl -X POST -H 'Content-Type: application/json' 'https://chat.googleapis.com/v1/spaces/AAAAnz1M8bI/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=pOJUviSU2W2_XsQliJ7gXAjdCsxWkrDgCSXP1NRzOek' -d ''{"text": "'"${APP_NAME} Android Build\nBuild executed by: ${GITLAB_USER_NAME}\n${URL}"'"}''
+  artifacts:
+    paths:
+      - ./build/app/outputs/apk/release/app-release.apk
+      # - ./build/app/outputs/flutter-apk/app-release.apk
