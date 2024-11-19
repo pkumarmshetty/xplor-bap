@@ -85,6 +85,8 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
         body: json.encode(appointmentData),
       );
 
+
+      
       if (response.statusCode == 200) {
         setState(() {
           _appointmentDetails = 'Appointment successfully booked!';
