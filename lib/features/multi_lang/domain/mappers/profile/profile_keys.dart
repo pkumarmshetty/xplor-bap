@@ -62,4 +62,6 @@ class ProfileKeys {
   static const uploadFailed = "Upload failed";
   static const checkProgress = "Check Progress";
   static const unableToAdd = "Unable to add certificate in wallet";
+
+  static const createAppointment = "Create Appointment";
 }

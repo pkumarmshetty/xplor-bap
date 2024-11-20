@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xplor/features/my_orders/domain/entities/certificate_view_arguments.dart';
-import '../../Registration_Page.dart';
+import '../../features/appointmet/presentation/pages/create_appointment/create_appointment.dart';
 import '../../features/apply_course/presentation/screens/apply_course_screen.dart';
 import '../../features/apply_course/presentation/screens/course_documents_screen.dart';
 import '../../features/apply_course/presentation/screens/thanks_for_applying_screen.dart';
@@ -48,8 +48,9 @@ class AppRoutes {
 
       case Routes.welcomePage:
         return customPageRoute(const WelcomePage());
-      case Routes.registrationPage:
-        return customPageRoute(const RegistrationPage());
+      case Routes.createAppointmentsPage:
+        final userData = settings.arguments as UserDataEntity?;
+        return customPageRoute(CreateAppointment(userData: userData));
       case Routes.walkThrough:
         // Return a material route for the main route, displaying HomeTabs widget.
         return customPageRoute(const WalkThroughPages());

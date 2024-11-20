@@ -36,9 +36,9 @@ class ProfileOptionWidget extends StatelessWidget {
       /// [onTap] defines the action to be taken when the profile option is tapped.
       /// It navigates to the edit profile page if the index is 0.
       onTap: () {
-        if (index == 0) {
-          Navigator.pushNamed(context, Routes.editProfile, arguments: userData);
-        }
+        // if (index == 0) {
+          Navigator.pushNamed(context, item.route ?? Routes.editProfile, arguments: userData);
+        // }
       },
       child: Container(
         decoration: BoxDecoration(

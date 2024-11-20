@@ -9,16 +9,25 @@ import '../../../../utils/widgets/build_button.dart';
 import '../../../multi_lang/domain/mappers/wallet/wallet_keys.dart';
 
 class DatePickerWidget extends StatefulWidget {
-  const DatePickerWidget({
+  DatePickerWidget({
     super.key,
     required this.onDateTimeChanged,
     this.selectedDate,
     this.onOkPressed,
-  });
+    this.mode = CupertinoDatePickerMode.date,
+    this.showActionButtons = true,
+    DateTime? minimumDate
+  }) : minimumDate = minimumDate ?? DateTime.now().add(const Duration(days: 4));
 
   final DateTime? selectedDate;
   final Function(DateTime) onDateTimeChanged;
   final Function()? onOkPressed;
+
+  final CupertinoDatePickerMode mode;
+
+  final bool showActionButtons;
+
+  final DateTime minimumDate;
 
   @override
   State<DatePickerWidget> createState() => _DatePickerWidgetState();
@@ -39,15 +48,15 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
           height: 200,
           child: CupertinoDatePicker(
             initialDateTime: widget.selectedDate ?? DateTime.now().add(const Duration(days: 5)),
-            minimumDate: DateTime.now().add(const Duration(days: 4)),
+            minimumDate: widget.minimumDate,
             maximumDate: DateTime.now().add(const Duration(days: 365)),
             // Limit to one year from today
-            mode: CupertinoDatePickerMode.date,
+            mode: widget.mode,
             onDateTimeChanged: widget.onDateTimeChanged,
           ),
         ),
         // OK and Cancel buttons
-        Row(
+        widget.showActionButtons ? Row(
           children: [
             Expanded(
               child: ButtonWidget(
@@ -69,7 +78,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
               ).symmetricPadding(horizontal: 10),
             ),
           ],
-        ),
+        ) : AppDimensions.smallXL.verticalSpace,
         AppDimensions.smallXL.verticalSpace,
       ],
     );

@@ -1,31 +1,35 @@
-import 'dart:convert';  // For encoding data into JSON
+import 'dart:convert'; // For encoding data into JSON
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart'; // For formatting dates
-import 'package:http/http.dart' as http; // For HTTP requests
+import 'package:http/http.dart' as http;
+import 'package:xplor/features/wallet/presentation/widgets/date_picker_widget.dart';
+import 'package:xplor/utils/app_colors.dart';
+import 'package:xplor/utils/app_dimensions.dart';
+import 'package:xplor/utils/common_top_header.dart';
+import 'package:xplor/utils/extensions/padding.dart';
+import 'package:xplor/utils/extensions/string_to_string.dart';
+import 'package:xplor/utils/widgets/build_button.dart';
+import 'package:xplor/utils/widgets/custom_text_form_fields.dart';
 
-class RegistrationPage extends StatelessWidget {
-  const RegistrationPage({Key? key}) : super(key: key);
+import '../../../../multi_lang/domain/mappers/profile/profile_keys.dart';
+import '../../../../on_boarding/domain/entities/user_data_entity.dart';
+import '../../../../../utils/widgets/app_background_widget.dart'; // For HTTP requests
+
+/// A screen widget to edit user profile details.
+class CreateAppointment extends StatefulWidget {
+  /// The user data entity containing profile details.
+  final UserDataEntity? userData;
+
+  /// Constructor for SeekerEditProfile.
+  const CreateAppointment({super.key, required this.userData});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Create Appointment',
-      theme: ThemeData(
-        primarySwatch: Colors.lightGreen,
-      ),
-      home: const AppointmentBookingPage(),
-    );
-  }
+  State<CreateAppointment> createState() => _CreateAppointmentState();
 }
 
-class AppointmentBookingPage extends StatefulWidget {
-  const AppointmentBookingPage({Key? key}) : super(key: key);
-
-  @override
-  _AppointmentBookingPageState createState() => _AppointmentBookingPageState();
-}
-
-class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
+class _CreateAppointmentState extends State<CreateAppointment> {
   final TextEditingController _abhaIdController = TextEditingController();
   final TextEditingController _patientNameController = TextEditingController();
   final TextEditingController _linkController = TextEditingController();
@@ -60,12 +64,10 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
         _emailController.text.isEmpty ||
         _prescriptionController.text.isEmpty ||
         _selectedDate == null) {
-      setState(() {
-        _appointmentDetails = 'Please fill in all the details.';
-      });
+      print('Please fill in all the details.');
       return;
     }
-
+    print(' all the details.');
     // Prepare the data to send in the request body
     final appointmentData = {
       "abhaId": _abhaIdController.text,
@@ -84,10 +86,8 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
         headers: {'Content-Type': 'application/json'},
         body: json.encode(appointmentData),
       );
-
-
-      
       if (response.statusCode == 200) {
+
         setState(() {
           _appointmentDetails = 'Appointment successfully booked!';
         });
@@ -104,10 +104,12 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
         });
       } else {
         setState(() {
-          _appointmentDetails = 'Failed to book appointment. Please try again later.';
+          _appointmentDetails =
+              'Failed to book appointment. Please try again later.';
         });
       }
     } catch (e) {
+      print(e);
       setState(() {
         _appointmentDetails = 'Error occurred: $e';
       });
@@ -116,6 +118,78 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: AppBackgroundDecoration(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+                child: Column(
+              children: [
+                CommonTopHeader(
+                  title: ProfileKeys.createAppointment.stringToString,
+                  isTitleOnly: false,
+                  dividerColor: AppColors.checkBoxDisableColor,
+                  onBackButtonPressed: () => Navigator.of(context).pop(),
+                ),
+                _buildProfileBody(),
+                ButtonWidget(
+                  onPressed: _submitAppointment,
+                  title: ProfileKeys.saveChanges.stringToString,
+                  isValid: true,
+                ).symmetricPadding(horizontal: AppDimensions.medium),
+              ],
+            )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileBody() {
+    return Column(children: [
+      // Name input field, read-only.
+      CustomTextFormField(
+        controller: _abhaIdController,
+        label: "ABHA ID",
+      ),
+      CustomTextFormField(
+        controller: _patientNameController,
+        label: "Name",
+      ),
+      CustomTextFormField(
+        controller: _linkController,
+        label: "Link",
+      ),
+      CustomTextFormField(
+        controller: _mobileController,
+        label: "Mobile",
+      ),
+      CustomTextFormField(
+        controller: _emailController,
+        label: "Email",
+      ),
+      CustomTextFormField(
+        controller: _prescriptionController,
+        label: "Prescription",
+      ),
+      DatePickerWidget(
+          onDateTimeChanged: (DateTime date) {
+            setState(() {
+              _selectedDate = date;
+            });
+          },
+          selectedDate: DateTime.now().add(const Duration(minutes: 5)),
+          minimumDate: DateTime.now(),
+          mode: CupertinoDatePickerMode.dateAndTime,
+          showActionButtons: false,
+          onOkPressed: () {
+
+          }),
+      AppDimensions.small.verticalSpace, // Add vertical space.
+    ]).paddingAll(padding: AppDimensions.medium); // Add padding to the form.
+  }
+
+  Widget build1(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Appointment Booking'),

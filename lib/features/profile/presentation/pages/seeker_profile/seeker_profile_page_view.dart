@@ -47,31 +47,36 @@ class _SeekerProfilePageViewState extends State<SeekerProfilePageView> {
     } else {
       // Initialize profile card options for the default language (English).
       _profileCardOptions.clear();
-      _profileCardOptions = [
-        ProfileCardOptionsEntity(
-          title: ProfileKeys.myAccount.stringToString,
-          subTitle: ProfileKeys.editProfile.stringToString,
-          icon: Assets.images.editProfile,
-        ),
-        ProfileCardOptionsEntity(
-          title: "Create Appointment",
-          subTitle: "Appointment",
-          icon: Assets.images.editProfile,
-        ),
-        ProfileCardOptionsEntity(
-          title: ProfileKeys.accountPrivacy.stringToString,
-          subTitle: ProfileKeys.accountPrivacyDesc.stringToString,
-          icon: Assets.images.accountPrivacy,
-        ),
-        ProfileCardOptionsEntity(
-          title: ProfileKeys.settings.stringToString,
-          subTitle: ProfileKeys.settingsDesc.stringToString,
-          icon: Assets.images.profileSetting,
-        ),
-      ];
+      _profileCardOptions = __profileCardOptions();
     }
     // Trigger an event to load user data for the profile.
     context.read<SeekerProfileBloc>().add(const ProfileUserDataEvent());
+  }
+
+  List<ProfileCardOptionsEntity> __profileCardOptions() {
+    return [
+      ProfileCardOptionsEntity(
+        title: ProfileKeys.myAccount.stringToString,
+        subTitle: ProfileKeys.editProfile.stringToString,
+        icon: Assets.images.editProfile,
+      ),
+      ProfileCardOptionsEntity(
+        title: "Create Appointment",
+        subTitle: "Appointment",
+        icon: Assets.images.editProfile,
+        route: Routes.createAppointmentsPage
+      ),
+      ProfileCardOptionsEntity(
+        title: ProfileKeys.accountPrivacy.stringToString,
+        subTitle: ProfileKeys.accountPrivacyDesc.stringToString,
+        icon: Assets.images.accountPrivacy,
+      ),
+      ProfileCardOptionsEntity(
+        title: ProfileKeys.settings.stringToString,
+        subTitle: ProfileKeys.settingsDesc.stringToString,
+        icon: Assets.images.profileSetting,
+      ),
+    ];
   }
 
   @override
@@ -102,28 +107,7 @@ class _SeekerProfilePageViewState extends State<SeekerProfilePageView> {
           listener: (context, state) {
             if (state is TranslationLoaded && state.isNavigation) {
               _profileCardOptions.clear();
-              _profileCardOptions = [
-                ProfileCardOptionsEntity(
-                  title: ProfileKeys.myAccount.stringToString,
-                  subTitle: ProfileKeys.editProfile.stringToString,
-                  icon: Assets.images.editProfile,
-                ),
-                ProfileCardOptionsEntity(
-                  title: "Create Appointment",
-                  subTitle: "Appointment",
-                  icon: Assets.images.editProfile,
-                ),
-                ProfileCardOptionsEntity(
-                  title: ProfileKeys.accountPrivacy.stringToString,
-                  subTitle: ProfileKeys.accountPrivacyDesc.stringToString,
-                  icon: Assets.images.accountPrivacy,
-                ),
-                ProfileCardOptionsEntity(
-                  title: ProfileKeys.settings.stringToString,
-                  subTitle: ProfileKeys.settingsDesc.stringToString,
-                  icon: Assets.images.profileSetting,
-                ),
-              ];
+              _profileCardOptions = __profileCardOptions();
               context.read<SeekerProfileBloc>().add(const ProfileAndTranslationEvent(isTranslationDone: true));
             }
           },

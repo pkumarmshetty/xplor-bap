@@ -12,7 +12,7 @@ class Routes {
 
   static const String shareDocument = "/shareDoc";
 
-  static const String registrationPage = "/RegistrationPage";
+  static const String createAppointmentsPage = "/createAppointments";
 
   /// Represents the main or home route, likely the initial route when the app starts.
   static const String login = "/login";
