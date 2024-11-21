@@ -1,4 +1,5 @@
 import 'dart:convert'; // For encoding data into JSON
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,52 +31,39 @@ class CreateAppointment extends StatefulWidget {
 }
 
 class _CreateAppointmentState extends State<CreateAppointment> {
-  final TextEditingController _abhaIdController = TextEditingController();
-  final TextEditingController _patientNameController = TextEditingController();
   final TextEditingController _linkController = TextEditingController();
-  final TextEditingController _mobileController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _prescriptionController = TextEditingController();
   DateTime? _selectedDate;
 
   String _appointmentDetails = ''; // To show confirmation after submission
 
   // Function to pick a date
-  Future<void> _pickDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2025),
-    );
-    if (pickedDate != null && pickedDate != _selectedDate) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
-    }
+
+  String generateRandomString(int length) {
+    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    Random random = Random();
+
+    // Generate a random string by selecting characters from the 'characters' string
+    return List.generate(length, (index) => characters[random.nextInt(characters.length)]).join();
   }
 
+
   // Function to send appointment data to the API
-  Future<void> _submitAppointment() async {
-    if (_abhaIdController.text.isEmpty ||
-        _patientNameController.text.isEmpty ||
-        _linkController.text.isEmpty ||
-        _mobileController.text.isEmpty ||
-        _emailController.text.isEmpty ||
-        _prescriptionController.text.isEmpty ||
-        _selectedDate == null) {
+  Future<void> _submitAppointment(BuildContext context) async {
+    if ( _selectedDate == null) {
       print('Please fill in all the details.');
       return;
     }
     print(' all the details.');
     // Prepare the data to send in the request body
     final appointmentData = {
-      "abhaId": _abhaIdController.text,
-      "patientName": _patientNameController.text,
-      "link": _linkController.text,
+      "abhaId": widget.userData?.kyc?.provider.id,
+      "patientName": widget.userData?.kyc?.firstName,
+      "link":
+          "https://8x8.vc/vpaas-magic-cookie-cf5217ce8a4048d89baa3f88ab649551/${widget.userData?.kyc?.firstName}-TeleConsultation-${generateRandomString(10)}",
       "appointmentDate": DateFormat('yyyy-MM-dd').format(_selectedDate!),
-      "mobile": _mobileController.text,
-      "email": _emailController.text,
+      "mobile": widget.userData?.phoneNumber,
+      "email": widget.userData?.kyc?.email,
       "prescription": _prescriptionController.text,
     };
 
@@ -87,18 +75,14 @@ class _CreateAppointmentState extends State<CreateAppointment> {
         body: json.encode(appointmentData),
       );
       if (response.statusCode == 200) {
-
         setState(() {
           _appointmentDetails = 'Appointment successfully booked!';
         });
 
         // Optionally, reset the form after submission
-        _abhaIdController.clear();
-        _patientNameController.clear();
         _linkController.clear();
-        _mobileController.clear();
-        _emailController.clear();
         _prescriptionController.clear();
+        Navigator.of(context).pop();
         setState(() {
           _selectedDate = null;
         });
@@ -118,6 +102,9 @@ class _CreateAppointmentState extends State<CreateAppointment> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.userData?.kyc?.firstName);
+    print(widget.userData?.phoneNumber);
+    print(widget.userData?.kyc?.email);
     return Scaffold(
       body: AppBackgroundDecoration(
         child: CustomScrollView(
@@ -133,7 +120,7 @@ class _CreateAppointmentState extends State<CreateAppointment> {
                 ),
                 _buildProfileBody(),
                 ButtonWidget(
-                  onPressed: _submitAppointment,
+                  onPressed: () => _submitAppointment(context),
                   title: ProfileKeys.saveChanges.stringToString,
                   isValid: true,
                 ).symmetricPadding(horizontal: AppDimensions.medium),
@@ -148,29 +135,31 @@ class _CreateAppointmentState extends State<CreateAppointment> {
   Widget _buildProfileBody() {
     return Column(children: [
       // Name input field, read-only.
-      CustomTextFormField(
-        controller: _abhaIdController,
-        label: "ABHA ID",
+      DropdownButtonFormField(
+        onChanged: (value) => {},
+        items: [DropdownMenuItem<String>(
+          value: "value",
+          child: Text("h1"),
+        ), DropdownMenuItem<String>(
+          value: "value2",
+          child: Text("h2"),
+        )],
+        decoration: InputDecoration(
+          labelText: "Select Hospital",
+        ),
       ),
-      CustomTextFormField(
-        controller: _patientNameController,
-        label: "Name",
-      ),
-      CustomTextFormField(
-        controller: _linkController,
-        label: "Link",
-      ),
-      CustomTextFormField(
-        controller: _mobileController,
-        label: "Mobile",
-      ),
-      CustomTextFormField(
-        controller: _emailController,
-        label: "Email",
-      ),
-      CustomTextFormField(
-        controller: _prescriptionController,
-        label: "Prescription",
+      DropdownButtonFormField(
+        onChanged: (value) => {},
+        items: [DropdownMenuItem<String>(
+          value: "value",
+          child: Text("d1"),
+        ), DropdownMenuItem<String>(
+          value: "value2",
+          child: Text("d2"),
+        )],
+        decoration: InputDecoration(
+          labelText: "Select Doctor",
+        ),
       ),
       DatePickerWidget(
           onDateTimeChanged: (DateTime date) {
@@ -182,97 +171,8 @@ class _CreateAppointmentState extends State<CreateAppointment> {
           minimumDate: DateTime.now(),
           mode: CupertinoDatePickerMode.dateAndTime,
           showActionButtons: false,
-          onOkPressed: () {
-
-          }),
+          onOkPressed: () {}),
       AppDimensions.small.verticalSpace, // Add vertical space.
     ]).paddingAll(padding: AppDimensions.medium); // Add padding to the form.
-  }
-
-  Widget build1(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Appointment Booking'),
-        backgroundColor: Colors.blue,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Enter your details:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            // ABHA ID
-            TextField(
-              controller: _abhaIdController,
-              decoration: const InputDecoration(labelText: 'ABHA ID'),
-            ),
-            const SizedBox(height: 16),
-            // Patient Name
-            TextField(
-              controller: _patientNameController,
-              decoration: const InputDecoration(labelText: 'Patient Name'),
-            ),
-            const SizedBox(height: 16),
-            // Link
-            TextField(
-              controller: _linkController,
-              decoration: const InputDecoration(labelText: 'Link'),
-            ),
-            const SizedBox(height: 16),
-            // Mobile
-            TextField(
-              controller: _mobileController,
-              decoration: const InputDecoration(labelText: 'Mobile'),
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 16),
-            // Email
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 16),
-            // Prescription
-            TextField(
-              controller: _prescriptionController,
-              decoration: const InputDecoration(labelText: 'Prescription'),
-            ),
-            const SizedBox(height: 16),
-            // Date Picker
-            Row(
-              children: [
-                Text(
-                  _selectedDate == null
-                      ? 'Select Appointment Date'
-                      : 'Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate!)}',
-                  style: const TextStyle(fontSize: 16),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.calendar_today),
-                  onPressed: () => _pickDate(context),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            // Submit Button
-            ElevatedButton(
-              onPressed: _submitAppointment,
-              child: const Text('Submit Appointment'),
-            ),
-            const SizedBox(height: 16),
-            // Display appointment details or error messages
-            if (_appointmentDetails.isNotEmpty) ...[
-              const Divider(),
-              Text(_appointmentDetails, style: const TextStyle(fontSize: 16)),
-            ]
-          ],
-        ),
-      ),
-    );
   }
 }
