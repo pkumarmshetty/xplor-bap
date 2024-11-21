@@ -17,6 +17,8 @@ class Routes {
   /// Represents the main or home route, likely the initial route when the app starts.
   static const String login = "/login";
 
+  static const String HealthRecordsPage = "/HealthRecordsPage";
+
   /// Route for the OTP Screen
   static const String otp = "/otp";
 

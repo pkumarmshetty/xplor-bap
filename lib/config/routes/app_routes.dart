@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xplor/HealthRecords_Page.dart';
 import 'package:xplor/features/my_orders/domain/entities/certificate_view_arguments.dart';
 import '../../features/appointmet/presentation/pages/create_appointment/create_appointment.dart';
 import '../../features/apply_course/presentation/screens/apply_course_screen.dart';
@@ -48,6 +49,10 @@ class AppRoutes {
 
       case Routes.welcomePage:
         return customPageRoute(const WelcomePage());
+
+      case Routes.HealthRecordsPage:
+        return customPageRoute(HealthRecordsPage());
+
       case Routes.createAppointmentsPage:
         final userData = settings.arguments as UserDataEntity?;
         return customPageRoute(CreateAppointment(userData: userData));
