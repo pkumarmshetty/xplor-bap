@@ -3,14 +3,19 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import '../../../../on_boarding/domain/entities/user_data_entity.dart';
+class ViewAppointment extends StatefulWidget {
+  final UserDataEntity? userData;
 
-class HealthRecordsPage extends StatefulWidget {
+  /// Constructor for SeekerEditProfile.
+  const ViewAppointment({super.key, required this.userData});
+
   @override
-  _HealthRecordsPageState createState() => _HealthRecordsPageState();
+  _ViewAppointmentState createState() => _ViewAppointmentState();
 }
 
-class _HealthRecordsPageState extends State<HealthRecordsPage> {
+class _ViewAppointmentState extends State<ViewAppointment> {
   List<Map<String, dynamic>> dataList = [];
   bool _isLoading = true;
 
@@ -22,7 +27,7 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
   }
 
   Future<void> _fetchHealthRecords() async {
-    final url = Uri.parse('https://testfr1.dpgongcp.com/registry/api/v1/Appointment/search'); // Replace with actual API endpoint
+    final url = Uri.parse('https://testspar.dpgongcp.com/registry/api/v1/Appointment/search'); // Replace with actual API endpoint
 
     try {
       final response = await http.post(
@@ -35,7 +40,11 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
         body: json.encode({
           'offset': 0,
           'limit': 500,
-          'filters': {},
+          'filters': {
+            "mobile": {
+              "eq": widget.userData?.phoneNumber
+            }
+          },
         }),
       );
       print("pavan,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
@@ -74,17 +83,6 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
     }
   }
 
-  // Function to launch the URL in the browser
-  Future<void> _launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not launch $url')),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -170,19 +168,21 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
                     ),
                   ),
                   DataCell(
-                    Container(
-                      padding: EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          _launchURL(data['url']);
-                        },
-                        child: Text(
-                          data['url'],
-                          style: TextStyle(
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline,
+                    InkWell(
+                      onTap: () {
+                        // Navigate to WebViewPage when name is clicked
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WebViewPage(url: data['url']!),
                           ),
-                          textAlign: TextAlign.left,
+                        );
+                      },
+                      child: Text(
+                        "Appointment Link",
+                        style: TextStyle(
+                          color: Colors.blue, // Indicate link by color
+                          decoration: TextDecoration.underline, // Underline text
                         ),
                       ),
                     ),
@@ -194,6 +194,53 @@ class _HealthRecordsPageState extends State<HealthRecordsPage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+
+
+class WebViewPage extends StatefulWidget {
+  final String url;
+  WebViewPage({required this.url});
+
+  @override
+  _WebViewPageState createState() => _WebViewPageState();
+}
+
+class _WebViewPageState extends State<WebViewPage> {
+  late WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize WebViewController
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted) // Enable JavaScript
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (String url) {
+            print("Loading: $url");
+          },
+          onPageFinished: (String url) {
+            print("Finished loading: $url");
+          },
+          onWebResourceError: (WebResourceError error) {
+            print("Error: ${error.description}");
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url)); // Load the URL passed from DataTablePage
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('WebView'),
+      ),
+      body: WebViewWidget(controller: _controller), // Display the WebView
     );
   }
 }

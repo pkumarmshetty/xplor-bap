@@ -70,7 +70,7 @@ class _SeekerProfilePageViewState extends State<SeekerProfilePageView> {
           title: "Health Records",
           subTitle: "Records",
           icon: Assets.images.editProfile,
-          route: Routes.HealthRecordsPage
+          route: Routes.ViewAppointmentPage
       ),
       ProfileCardOptionsEntity(
         title: ProfileKeys.accountPrivacy.stringToString,

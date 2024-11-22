@@ -8,6 +8,9 @@ class Routes {
 
   static const String accessLocationPage = "/accessLocation";
 
+  static const String ViewAppointmentPage = "/ViewAppointmentPage";
+  // static const String DataTablePage = "/DataTablePage";
+
   static const String walkThrough = "/walkThrough";
 
   static const String shareDocument = "/shareDoc";

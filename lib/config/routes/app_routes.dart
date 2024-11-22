@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:xplor/HealthRecords_Page.dart';
 import 'package:xplor/features/my_orders/domain/entities/certificate_view_arguments.dart';
+import '../../DataTable_Page.dart';
 import '../../features/appointmet/presentation/pages/create_appointment/create_appointment.dart';
 import '../../features/apply_course/presentation/screens/apply_course_screen.dart';
 import '../../features/apply_course/presentation/screens/course_documents_screen.dart';
 import '../../features/apply_course/presentation/screens/thanks_for_applying_screen.dart';
+import '../../features/appointmet/presentation/pages/create_appointment/view_appointment.dart';
 import '../../features/my_orders/presentation/pages/my_orders_view.dart';
 import '../../features/on_boarding/presentation/pages/choose_domain/choose_domain_screen.dart';
 import '../../features/home/presentation/widgets/tab_bar_widget.dart';
@@ -53,9 +55,16 @@ class AppRoutes {
       case Routes.HealthRecordsPage:
         return customPageRoute(HealthRecordsPage());
 
+      // case Routes.DataTablePage:
+      //   return customPageRoute(DataTablePage());
+
       case Routes.createAppointmentsPage:
         final userData = settings.arguments as UserDataEntity?;
         return customPageRoute(CreateAppointment(userData: userData));
+
+      case Routes.ViewAppointmentPage:
+        final userData = settings.arguments as UserDataEntity?;
+        return customPageRoute(ViewAppointment(userData: userData));
       case Routes.walkThrough:
         // Return a material route for the main route, displaying HomeTabs widget.
         return customPageRoute(const WalkThroughPages());

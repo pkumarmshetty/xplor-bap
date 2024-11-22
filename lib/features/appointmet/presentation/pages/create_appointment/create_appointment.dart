@@ -70,7 +70,7 @@ class _CreateAppointmentState extends State<CreateAppointment> {
     try {
       // Send the data as a POST request
       final response = await http.post(
-        Uri.parse('https://testfr.dpgongcp.com/registry/api/v1/Appointment'),
+        Uri.parse('https://testspar.dpgongcp.com/registry/api/v1/Appointment'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(appointmentData),
       );
