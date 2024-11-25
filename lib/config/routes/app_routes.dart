@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:xplor/HealthRecords_Page.dart';
+// import 'package:xplor/HealthRecords_Page.dart';
 import 'package:xplor/features/my_orders/domain/entities/certificate_view_arguments.dart';
-import '../../DataTable_Page.dart';
+// import '../../DataTable_Page.dart';
 import '../../features/appointmet/presentation/pages/create_appointment/create_appointment.dart';
 import '../../features/apply_course/presentation/screens/apply_course_screen.dart';
 import '../../features/apply_course/presentation/screens/course_documents_screen.dart';
@@ -52,8 +52,8 @@ class AppRoutes {
       case Routes.welcomePage:
         return customPageRoute(const WelcomePage());
 
-      case Routes.HealthRecordsPage:
-        return customPageRoute(HealthRecordsPage());
+      // case Routes.HealthRecordsPage:
+      //   return customPageRoute(HealthRecordsPage());
 
       // case Routes.DataTablePage:
       //   return customPageRoute(DataTablePage());
@@ -67,6 +67,12 @@ class AppRoutes {
         return customPageRoute(ViewAppointment(userData: userData));
       case Routes.walkThrough:
         // Return a material route for the main route, displaying HomeTabs widget.
+        return customPageRoute(const WalkThroughPages());
+
+
+
+      case Routes.walkThrough:
+      // Return a material route for the main route, displaying HomeTabs widget.
         return customPageRoute(const WalkThroughPages());
 
       case Routes.accessLocationPage:
