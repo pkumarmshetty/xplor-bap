@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xplor/features/appointmet/domain/entities/CreateAppointmentArgs.dart';
 // import 'package:xplor/HealthRecords_Page.dart';
 import 'package:xplor/features/my_orders/domain/entities/certificate_view_arguments.dart';
 // import '../../DataTable_Page.dart';
@@ -59,10 +60,10 @@ class AppRoutes {
       //   return customPageRoute(DataTablePage());
 
       case Routes.createAppointmentsPage:
-        final userData = settings.arguments as UserDataEntity?;
-        return customPageRoute(CreateAppointment(userData: userData));
+        final args = settings.arguments as CreateAppointmentArgs?;
+        return customPageRoute(CreateAppointment(createAppointmentArgs: args));
 
-      case Routes.ViewAppointmentPage:
+      case Routes.viewAppointmentPage:
         final userData = settings.arguments as UserDataEntity?;
         return customPageRoute(ViewAppointment(userData: userData));
       case Routes.walkThrough:
