@@ -64,4 +64,5 @@ class ProfileKeys {
   static const unableToAdd = "Unable to add certificate in wallet";
 
   static const createAppointment = "Create Appointment";
+  static const appointment = "Appointments";
 }

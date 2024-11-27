@@ -60,17 +60,12 @@ class _SeekerProfilePageViewState extends State<SeekerProfilePageView> {
         subTitle: ProfileKeys.editProfile.stringToString,
         icon: Assets.images.editProfile,
       ),
+
       ProfileCardOptionsEntity(
-        title: "Create Appointment",
-        subTitle: "Appointment",
-        icon: Assets.images.editProfile,
-        route: Routes.createAppointmentsPage
-      ),
-      ProfileCardOptionsEntity(
-          title: "Health Records",
-          subTitle: "Records",
+          title: "View Appointments",
+          subTitle: "Appointment",
           icon: Assets.images.editProfile,
-          route: Routes.ViewAppointmentPage
+          route: Routes.viewAppointmentPage
       ),
       ProfileCardOptionsEntity(
           title: "Health Records",

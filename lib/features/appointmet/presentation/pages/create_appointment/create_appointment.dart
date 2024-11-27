@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart'; // For formatting dates
 import 'package:http/http.dart' as http;
+import 'package:xplor/config/routes/path_routing.dart';
+import 'package:xplor/features/appointmet/domain/entities/CreateAppointmentArgs.dart';
 import 'package:xplor/features/wallet/presentation/widgets/date_picker_widget.dart';
 import 'package:xplor/utils/app_colors.dart';
 import 'package:xplor/utils/app_dimensions.dart';
@@ -21,10 +23,11 @@ import '../../../../../utils/widgets/app_background_widget.dart'; // For HTTP re
 /// A screen widget to edit user profile details.
 class CreateAppointment extends StatefulWidget {
   /// The user data entity containing profile details.
-  final UserDataEntity? userData;
+  // final UserDataEntity? userData;
+  final CreateAppointmentArgs? createAppointmentArgs;
 
   /// Constructor for SeekerEditProfile.
-  const CreateAppointment({super.key, required this.userData});
+  const CreateAppointment({super.key, required this.createAppointmentArgs});
 
   @override
   State<CreateAppointment> createState() => _CreateAppointmentState();
@@ -44,30 +47,32 @@ class _CreateAppointmentState extends State<CreateAppointment> {
     Random random = Random();
 
     // Generate a random string by selecting characters from the 'characters' string
-    return List.generate(length, (index) => characters[random.nextInt(characters.length)]).join();
+    return List.generate(
+            length, (index) => characters[random.nextInt(characters.length)])
+        .join();
   }
-
 
   // Function to send appointment data to the API
   Future<void> _submitAppointment(BuildContext context) async {
-    if ( _selectedDate == null) {
+    if (_selectedDate == null) {
       print('Please fill in all the details.');
       return;
     }
     print(' all the details.');
+    var userData = widget.createAppointmentArgs?.userDataEntity;
     // Prepare the data to send in the request body
     final appointmentData = {
-      "abhaId": widget.userData?.kyc?.provider.id,
-      "patientName": widget.userData?.kyc?.firstName,
+      "abhaId": userData?.kyc?.provider.id,
+      "patientName": userData?.kyc?.firstName,
       "link":
-          "https://8x8.vc/vpaas-magic-cookie-cf5217ce8a4048d89baa3f88ab649551/${widget.userData?.kyc?.firstName}-TeleConsultation-${generateRandomString(10)}",
-      "appointmentDate": DateFormat('yyyy-MM-dd').format(_selectedDate!),
-      "mobile": widget.userData?.phoneNumber,
-      "email": widget.userData?.kyc?.email,
+          "https://8x8.vc/vpaas-magic-cookie-cf5217ce8a4048d89baa3f88ab649551/${userData?.kyc?.firstName}-TeleConsultation-${DateFormat('yyyy-MM-dd-HH-mm').format(_selectedDate!)}",
+      "appointmentDate": DateFormat('yyyy-MM-dd HH:mm').format(_selectedDate!),
+      "mobile": userData?.phoneNumber,
+      "email": userData?.kyc?.email,
       "prescription": _prescriptionController.text,
-      "doctorOsid": "1-e05ecf86-d2d5-4fb3-b1db-d4c6a30477dd",
+      "doctorOsid": widget.createAppointmentArgs?.doctorOsid,
       "status": "new",
-      "walletId": widget.userData?.wallet
+      "walletId": userData?.wallet
     };
 
     try {
@@ -105,9 +110,11 @@ class _CreateAppointmentState extends State<CreateAppointment> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.userData?.kyc?.firstName);
-    print(widget.userData?.phoneNumber);
-    print(widget.userData?.kyc?.email);
+    var userData = widget.createAppointmentArgs?.userDataEntity;
+    print(widget.createAppointmentArgs?.doctorOsid);
+    print(userData?.kyc?.firstName);
+    print(userData?.phoneNumber);
+    print(userData?.kyc?.email);
     return Scaffold(
       body: AppBackgroundDecoration(
         child: CustomScrollView(
@@ -138,32 +145,6 @@ class _CreateAppointmentState extends State<CreateAppointment> {
   Widget _buildProfileBody() {
     return Column(children: [
       // Name input field, read-only.
-      DropdownButtonFormField(
-        onChanged: (value) => {},
-        items: [DropdownMenuItem<String>(
-          value: "value",
-          child: Text("h1"),
-        ), DropdownMenuItem<String>(
-          value: "value2",
-          child: Text("h2"),
-        )],
-        decoration: InputDecoration(
-          labelText: "Select Hospital",
-        ),
-      ),
-      DropdownButtonFormField(
-        onChanged: (value) => {},
-        items: [DropdownMenuItem<String>(
-          value: "value",
-          child: Text("d1"),
-        ), DropdownMenuItem<String>(
-          value: "value2",
-          child: Text("d2"),
-        )],
-        decoration: InputDecoration(
-          labelText: "Select Doctor",
-        ),
-      ),
       DatePickerWidget(
           onDateTimeChanged: (DateTime date) {
             setState(() {
