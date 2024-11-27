@@ -65,6 +65,9 @@ class _CreateAppointmentState extends State<CreateAppointment> {
       "mobile": widget.userData?.phoneNumber,
       "email": widget.userData?.kyc?.email,
       "prescription": _prescriptionController.text,
+      "doctorOsid": "1-e05ecf86-d2d5-4fb3-b1db-d4c6a30477dd",
+      "status": "new",
+      "walletId": widget.userData?.wallet
     };
 
     try {

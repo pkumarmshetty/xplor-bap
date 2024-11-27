@@ -20,7 +20,7 @@ class PDFViewWidget extends StatefulWidget {
 
 class _PDFViewWidgetState extends State<PDFViewWidget> {
   // Flag to track the loading state of the document
-  bool _isLoading = true;
+  bool _isLoading = false;
 
   WebViewController controller = WebViewController();
 
@@ -75,9 +75,9 @@ class _PDFViewWidgetState extends State<PDFViewWidget> {
             SfPdfViewer.network(
               '${widget.doc.restrictedUrl}?viewType=preview',
               onDocumentLoaded: (document) {
-                setState(() {
-                  _isLoading = false;
-                });
+                // setState(() {
+                //   _isLoading = false;
+                // });
               },
             )
           else if (widget.doc.fileType == 'text/html')
