@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../../../../../utils/common_top_header.dart';
 import '../../../../on_boarding/domain/entities/user_data_entity.dart';
 class ViewAppointment extends StatefulWidget {
   final UserDataEntity? userData;
@@ -82,56 +83,20 @@ class _ViewAppointmentState extends State<ViewAppointment> {
       });
     }
   }
-
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(56.0),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20.0),
-              bottomRight: Radius.circular(20.0),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          child: AppBar(
-            title: const Text(
-              'Health Records',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            backgroundColor: Colors.blue,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(3.0),
-                bottomRight: Radius.circular(3.0),
-              ),
-            ),
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
+        preferredSize: Size.fromHeight(100),  // Adjust height as needed
+        child: CommonTopHeader(
+          title: 'Health Details',
+          isTitleOnly: false,
+          dividerColor: Colors.grey, // Use appropriate color
+          onBackButtonPressed: () => Navigator.of(context).pop(),
         ),
       ),
+
       backgroundColor: Colors.white,
       body: _isLoading
           ? Center(child: CircularProgressIndicator())

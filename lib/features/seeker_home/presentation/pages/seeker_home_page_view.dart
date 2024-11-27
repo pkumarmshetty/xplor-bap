@@ -4,7 +4,7 @@ import 'dart:convert';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:xplor/features/seeker_home/presentation/pages/routes.dart';
+// import 'package:xplor/features/seeker_home/presentation/pages/routes.dart';
 
 import '../../../../config/routes/path_routing.dart';
 class SeekerHomePageView extends StatefulWidget {

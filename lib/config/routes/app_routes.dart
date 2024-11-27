@@ -6,6 +6,7 @@ import '../../features/appointmet/presentation/pages/create_appointment/create_a
 import '../../features/apply_course/presentation/screens/apply_course_screen.dart';
 import '../../features/apply_course/presentation/screens/course_documents_screen.dart';
 import '../../features/apply_course/presentation/screens/thanks_for_applying_screen.dart';
+import '../../features/appointmet/presentation/pages/create_appointment/health_documents.dart';
 import '../../features/appointmet/presentation/pages/create_appointment/view_appointment.dart';
 import '../../features/my_orders/presentation/pages/my_orders_view.dart';
 import '../../features/on_boarding/presentation/pages/choose_domain/choose_domain_screen.dart';
@@ -68,7 +69,9 @@ class AppRoutes {
       case Routes.walkThrough:
         // Return a material route for the main route, displaying HomeTabs widget.
         return customPageRoute(const WalkThroughPages());
-
+      case Routes.HealthDocuments:
+      // Return a material route for the main route, displaying HomeTabs widget.
+        return customPageRoute(HealthDocumentsPage());
 
 
       case Routes.walkThrough:

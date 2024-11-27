@@ -34,6 +34,8 @@ class Routes {
   static const String chooseRole = "/chooseRole";
 
   /// Route for the Home Screen
+  static const String HealthDocuments = "/HealthDocuments";
+
   static const String home = "/home";
 
   static const String wallet = "/wallet";
