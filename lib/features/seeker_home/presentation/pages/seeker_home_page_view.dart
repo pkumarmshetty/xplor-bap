@@ -208,7 +208,7 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                                         image: DecorationImage(
                                           image: NetworkImage(
                                               record['doctorPhoto'] ?? ''),
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.fill,
                                         ),
                                       ),
                                     ),
