@@ -8,7 +8,7 @@ class Routes {
 
   static const String accessLocationPage = "/accessLocation";
 
-  static const String ViewAppointmentPage = "/ViewAppointmentPage";
+  static const String viewAppointmentPage = "/viewAppointmentPage";
   // static const String DataTablePage = "/DataTablePage";
 
   static const String walkThrough = "/walkThrough";
