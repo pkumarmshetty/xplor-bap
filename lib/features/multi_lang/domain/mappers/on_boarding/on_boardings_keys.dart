@@ -78,7 +78,7 @@ class OnBoardingKeys {
   static const exitMessage = "Are you sure you want to exit? If you do, you'll lose your progress.";
   static const cancel = "Cancel";
 
-  static const discover = "Discover Your Journey to Success";
+  static const discover = "Unlock Your Path to Wellness";
   static const discoverDescription = "Navigate, Achieve, and Thrive with our comprehensive platform.";
   static const alreadyAccount = "Already Registered?";
 

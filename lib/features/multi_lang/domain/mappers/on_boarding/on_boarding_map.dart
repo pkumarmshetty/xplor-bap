@@ -78,7 +78,7 @@ final Map<String, dynamic> originalOnBoardingMap = {
   OnBoardingKeys.exitString: "Exit",
   OnBoardingKeys.exitMessage: "Are you sure you want to exit? If you do, you'll lose your progress.",
   OnBoardingKeys.cancel: "Cancel",
-  OnBoardingKeys.discover: "Discover Your Journey to Success",
+  OnBoardingKeys.discover: "Unlock Your Path to Wellness",
   OnBoardingKeys.discoverDescription: "Navigate, Achieve, and Thrive with our comprehensive platform.",
 
   OnBoardingKeys.alreadyAccount: "Already Registered?",
