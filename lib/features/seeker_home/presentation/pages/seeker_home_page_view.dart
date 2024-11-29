@@ -91,21 +91,28 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
           child: Text(
             "Home",
             style: TextStyle(
-                color: Colors.green), // Green text color for the title
+              color: Colors.black, // Green text color for the title
+              fontSize: 30, // Increased text size
+              fontWeight: FontWeight.bold, // Optional: makes the title bold
+            ),
           ),
         ),
-        backgroundColor: Color(0xFFFefefe),
-        // Light gray background color
-        centerTitle: true,
-        // Ensures the title is centered
+        backgroundColor: const Color(0xFFFefefe), // Light gray background color
+        centerTitle: true, // Ensures the title is centered
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(3), // Border radius for the bottom
           ),
         ),
-        toolbarHeight: kToolbarHeight + 5,
-        // Increases the height of the AppBar by 5px
+        toolbarHeight: kToolbarHeight + 25, // Increases the height of the AppBar by 25px
         elevation: 0, // Set to 0 to avoid shadow
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(4.0), // Height of the border line
+          child: Container(
+            color: Colors.grey, // Black color for the bottom border
+            height: 1, // Thickness of the bottom border
+          ),
+        ),
       ),
 
 
