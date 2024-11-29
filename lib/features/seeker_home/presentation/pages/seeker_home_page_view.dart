@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:xplor/features/appointmet/presentation/pages/doctor/appointment_screen.dart';
 // <<<<<<< HEAD
 // =======
 // import 'package:xplor/features/appointmet/domain/entities/CreateAppointmentArgs.dart';
@@ -13,6 +14,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../../config/routes/path_routing.dart';
 import '../../../appointmet/domain/entities/CreateAppointmentArgs.dart';
+import '../../../appointmet/presentation/pages/doctor/doctor.dart';
 import '../../../profile/presentation/bloc/seeker_profile_bloc/seeker_profile_bloc.dart';
 
 class SeekerHomePageView extends StatefulWidget {
@@ -85,7 +87,7 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
+        title: const Center(
           child: Text(
             "Home",
             style: TextStyle(
@@ -96,7 +98,7 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
         // Light gray background color
         centerTitle: true,
         // Ensures the title is centered
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(3), // Border radius for the bottom
           ),
@@ -115,7 +117,7 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                     // Border radius for rounded corners
 
@@ -142,7 +144,7 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(7.0),
                         // Border radius for the focused state
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           // Border color when focused
                           // width: 2.0, // Border width when focused
                         ),
@@ -157,11 +159,11 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
 
             // If loading show a progress indicator, else show records or error
             _isLoading
-                ? CircularProgressIndicator() // Show loading indicator while fetching data
+                ? const CircularProgressIndicator() // Show loading indicator while fetching data
                 : _errorMessage.isNotEmpty
                 ? Text(
               _errorMessage,
-              style: TextStyle(fontSize: 18, color: Colors.red),
+              style: const TextStyle(fontSize: 18, color: Colors.red),
             ) // Show error message
                 : Expanded(
               child: BlocBuilder<SeekerProfileBloc, SeekerProfileState>(
@@ -176,14 +178,14 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                             !(record['doctorName'] ?? '')
                                 .toLowerCase()
                                 .contains(_searchQuery.toLowerCase())) {
-                          return SizedBox
+                          return const SizedBox
                               .shrink(); // Skip this record if it doesn't match search query
                         }
 
                         return Card(
                           color: Colors.white,
                           // Set the card background color to white
-                          margin: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 15),
                           elevation: 5,
                           shape: RoundedRectangleBorder(
@@ -196,7 +198,14 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // Doctor's Photo and Name in Row
-                                Row(
+                                InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(context,
+                                      Routes.doctorDetail, arguments: Doctor(name:record['doctorName'] ?? '', specialty:record['doctorSpecialization'] ??
+                                      '', imageUrl:record['doctorPhoto'] ?? '', hospital:record['hospitalName'] ??
+                                      'Hospital Name'));
+                              },
+                             child:    Row(
                                   children: [
                                     // Left side: Doctor's Photo (with square and border radius)
                                     Container(
@@ -252,8 +261,9 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                                       ),
                                     ),
                                   ],
-                                ),
 
+                                ),
+                                ),
                                 SizedBox(height: 10),
 
                                 // Full-width Button with Green Border and Text
@@ -263,16 +273,12 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       // Handle button press
+                                      var selectedDoctor=_healthRecords[index];
                                       Navigator.pushNamed(context,
-                                          Routes.createAppointmentsPage, arguments: CreateAppointmentArgs(state.userData!, record["osid"]));
+                                          Routes.createAppointmentsPage, arguments:Doctor(name: selectedDoctor['doctorName'] ?? '', specialty: selectedDoctor['doctorSpecialization'] ??
+                                              'Specialization', hospital: selectedDoctor['hospitalName'] ??
+                                              'Hospital Name', imageUrl: selectedDoctor['doctorPhoto'] ?? '') ,);
                                     },
-                                    child: Text(
-                                      'Book Appointment',
-                                      style: TextStyle(
-                                        color: Colors
-                                            .green, // Set text color to green
-                                      ),
-                                    ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.white,
                                       // Set background color to white
@@ -283,6 +289,13 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(
                                             6), // Border radius for button
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'Book Appointment',
+                                      style: TextStyle(
+                                        color: Colors
+                                            .green, // Set text color to green
                                       ),
                                     ),
                                   ),

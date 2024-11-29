@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xplor/features/appointmet/domain/entities/CreateAppointmentArgs.dart';
+import 'package:xplor/features/appointmet/presentation/pages/doctor/appointment_screen.dart';
+import 'package:xplor/features/appointmet/presentation/pages/doctor/doctor.dart';
 // import 'package:xplor/HealthRecords_Page.dart';
 import 'package:xplor/features/my_orders/domain/entities/certificate_view_arguments.dart';
 // import '../../DataTable_Page.dart';
@@ -9,6 +11,7 @@ import '../../features/apply_course/presentation/screens/course_documents_screen
 import '../../features/apply_course/presentation/screens/thanks_for_applying_screen.dart';
 import '../../features/appointmet/presentation/pages/create_appointment/health_documents.dart';
 import '../../features/appointmet/presentation/pages/create_appointment/view_appointment.dart';
+import '../../features/appointmet/presentation/pages/doctor/doctor_detail_screen.dart';
 import '../../features/my_orders/presentation/pages/my_orders_view.dart';
 import '../../features/on_boarding/presentation/pages/choose_domain/choose_domain_screen.dart';
 import '../../features/home/presentation/widgets/tab_bar_widget.dart';
@@ -61,8 +64,8 @@ class AppRoutes {
       //   return customPageRoute(DataTablePage());
 
       case Routes.createAppointmentsPage:
-        final args = settings.arguments as CreateAppointmentArgs?;
-        return customPageRoute(CreateAppointment(createAppointmentArgs: args));
+        final doctor = settings.arguments as Doctor;
+        return customPageRoute(AppointmentScreen(doctor: doctor));
 
       case Routes.viewAppointmentPage:
         final userData = settings.arguments as UserDataEntity?;
@@ -144,6 +147,9 @@ class AppRoutes {
         return customPageRoute(const ThanksForApplyingScreen());
       case Routes.myOrders:
         return customPageRoute(const MyOrdersView());
+      case Routes.doctorDetail:
+        final doctor = settings.arguments as Doctor;
+        return customPageRoute(DoctorDetailScreen(doctor: doctor,));
 
       case Routes.certificate:
         final arguments = settings.arguments as CertificateViewArguments;

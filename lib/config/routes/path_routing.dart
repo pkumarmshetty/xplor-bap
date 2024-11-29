@@ -14,6 +14,7 @@ class Routes {
   static const String walkThrough = "/walkThrough";
 
   static const String shareDocument = "/shareDoc";
+  static const String doctorDetail = "/doctorDetail";
 
   static const String createAppointmentsPage = "/createAppointments";
 
