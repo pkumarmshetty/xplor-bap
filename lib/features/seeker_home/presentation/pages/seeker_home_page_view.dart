@@ -13,6 +13,7 @@ import 'package:xplor/features/appointmet/presentation/pages/doctor/appointment_
 // import 'package:xplor/features/seeker_home/presentation/pages/routes.dart';
 
 import '../../../../config/routes/path_routing.dart';
+import '../../../../utils/common_top_header.dart';
 import '../../../appointmet/domain/entities/CreateAppointmentArgs.dart';
 import '../../../appointmet/presentation/pages/doctor/doctor.dart';
 import '../../../profile/presentation/bloc/seeker_profile_bloc/seeker_profile_bloc.dart';
@@ -86,32 +87,14 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: Text(
-            "Home",
-            style: TextStyle(
-              color: Colors.black, // Green text color for the title
-              fontSize: 30, // Increased text size
-              fontWeight: FontWeight.bold, // Optional: makes the title bold
-            ),
-          ),
-        ),
-        backgroundColor: const Color(0xFFFefefe), // Light gray background color
-        centerTitle: true, // Ensures the title is centered
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(3), // Border radius for the bottom
-          ),
-        ),
-        toolbarHeight: kToolbarHeight + 25, // Increases the height of the AppBar by 25px
-        elevation: 0, // Set to 0 to avoid shadow
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(4.0), // Height of the border line
-          child: Container(
-            color: Colors.grey, // Black color for the bottom border
-            height: 1, // Thickness of the bottom border
-          ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(91),  // Adjust height as needed
+        child: CommonTopHeader(
+          title: 'HOME',
+          isTitleOnly: false,
+          dividerColor: Colors.grey, // Use appropriate color
+          onBackButtonPressed: () => Navigator
+
         ),
       ),
 
