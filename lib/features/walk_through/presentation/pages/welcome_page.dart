@@ -82,11 +82,13 @@ class WelcomePage extends StatelessWidget {
           ),
           isValid: true,
           onPressed: () => Navigator.pushNamed(context, Routes.walkThrough),
-        ).symmetricPadding(horizontal: AppDimensions.medium),
+        ).
+
+        symmetricPadding(horizontal: AppDimensions.medium),
         AppDimensions.small.verticalSpace,
         GestureDetector(
           onTap: () =>
-              Navigator.pushNamed(context, Routes.login, arguments: true),
+              Navigator.pushNamed(context, Routes.seekerHome, arguments: true),
           child: Center(
             child: OnBoardingKeys.alreadyAccount.stringToString
                 .titleSemiBold(

@@ -65,9 +65,9 @@ sliderViewItemsWidget(WalkThroughModel model, BuildContext context, int pos,
                   onTap: () {
                     if (sl<SharedPreferencesHelper>()
                         .getBoolean(PrefConstKeys.appForBelem)) {
-                      Navigator.pushNamed(context, Routes.chooseDomain);
+                      Navigator.pushNamed(context, Routes.seekerHome);
                     } else {
-                      Navigator.pushNamed(context, Routes.chooseRole);
+                      Navigator.pushNamed(context, Routes.seekerHome);
                     }
                   },
                   child: Container(

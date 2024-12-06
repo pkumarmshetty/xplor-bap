@@ -126,9 +126,9 @@ class _WalkThroughPagesState extends State<WalkThroughPages> {
                   if (position == 2) {
                     if (sl<SharedPreferencesHelper>()
                         .getBoolean(PrefConstKeys.appForBelem)) {
-                      Navigator.pushNamed(context, Routes.chooseDomain);
+                      Navigator.pushNamed(context, Routes.seekerHome);
                     } else {
-                      Navigator.pushNamed(context, Routes.chooseRole);
+                      Navigator.pushNamed(context, Routes.seekerHome);
                     }
                   } else {
                     controller.nextPage(
