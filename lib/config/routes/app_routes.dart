@@ -64,8 +64,8 @@ class AppRoutes {
       //   return customPageRoute(DataTablePage());
 
       case Routes.createAppointmentsPage:
-        final doctor = settings.arguments as Doctor;
-        return customPageRoute(AppointmentScreen(doctor: doctor));
+        final args = settings.arguments as CreateAppointmentArgs?;
+        return customPageRoute(CreateAppointment(createAppointmentArgs: args,));
 
       case Routes.viewAppointmentPage:
         final userData = settings.arguments as UserDataEntity?;

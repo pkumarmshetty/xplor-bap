@@ -148,6 +148,12 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                     decoration: InputDecoration(
                       labelText: 'Search by Doctor Name',
                       prefixIcon: Icon(Icons.search),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xFF1581BF), // Bottom border color when not focused
+                          width: 2.0, // Border width
+                        ),
+                      ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(7.0),
                         // Border radius for the focused state
@@ -255,7 +261,7 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                                           SizedBox(height: 5),
                                           Divider(
                                             thickness: 1,
-                                            color: Colors.grey,
+                                            color: Color(0xFF1581BF),
                                           ),
                                           SizedBox(height: 5),
                                           Text(
@@ -282,14 +288,16 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                                       // Handle button press
                                       var selectedDoctor=_healthRecords[index];
                                       Navigator.pushNamed(context,
-                                          Routes.createAppointmentsPage, arguments:Doctor(name: selectedDoctor['doctorName'] ?? '', specialty: selectedDoctor['doctorSpecialization'] ??
-                                              'Specialization', hospital: selectedDoctor['hospitalName'] ??
-                                              'Hospital Name', imageUrl: selectedDoctor['doctorPhoto'] ?? '') ,);
+                                          Routes.createAppointmentsPage, arguments: CreateAppointmentArgs(state.userData!, record["osid"]));
+                                      // Navigator.pushNamed(context,
+                                      //     Routes.createAppointmentsPage, arguments:Doctor(name: selectedDoctor['doctorName'] ?? '', specialty: selectedDoctor['doctorSpecialization'] ??
+                                      //         'Specialization', hospital: selectedDoctor['hospitalName'] ??
+                                      //         'Hospital Name', imageUrl: selectedDoctor['doctorPhoto'] ?? '') ,);
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.white,
                                       // Set background color to white
-                                      side: BorderSide(color: Colors.green),
+                                      side: BorderSide(color: Color(0xFF1581BF)),
                                       // Set border color to green
                                       padding: EdgeInsets.all(12),
                                       // Padding inside the button
@@ -301,8 +309,7 @@ class _SeekerHomePageViewState extends State<SeekerHomePageView> {
                                     child: const Text(
                                       'Book Appointment',
                                       style: TextStyle(
-                                        color: Colors
-                                            .green, // Set text color to green
+                                        color: Color(0xFF1581BF) // Set text color to green
                                       ),
                                     ),
                                   ),

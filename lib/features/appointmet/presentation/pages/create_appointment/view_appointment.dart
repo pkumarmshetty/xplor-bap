@@ -196,7 +196,7 @@ class _ViewAppointmentState extends State<ViewAppointment> {
                                         SizedBox(height: 5),
                                         Divider(
                                           thickness: 1,
-                                          color: Colors.grey,
+                                          color: Color(0xFF1581BF),
                                         ),
                                         SizedBox(height: 5),
                                         Text(
@@ -257,7 +257,7 @@ class _ViewAppointmentState extends State<ViewAppointment> {
                                           color: isFutureAppointment(
                                               record)
                                               ? Colors.red
-                                              : Colors.green),
+                                              : Color(0xFF1581BF)),
                                       padding: EdgeInsets.all(12),
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
@@ -274,7 +274,7 @@ class _ViewAppointmentState extends State<ViewAppointment> {
                                         isFutureAppointment(
                                             record)
                                             ? Colors.red
-                                            : Colors.green,
+                                            : Color(0xFF1581BF),
                                       ),
                                     ),
                                   ),

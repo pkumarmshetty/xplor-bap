@@ -82,18 +82,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
             // Doctor Details
             Center(
               child: Column(
-                children: [
-                  Image.network(widget.doctor.imageUrl, height: 180),
-                  SizedBox(height: 8.0),
-                  Text(
-                    widget.doctor.name,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    widget.doctor.specialty,
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                ],
+
               ),
             ),
             SizedBox(height: 16.0),

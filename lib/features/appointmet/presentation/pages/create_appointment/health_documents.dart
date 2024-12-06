@@ -200,12 +200,12 @@ class HealthDocumentsPage extends StatelessWidget {
                               child: Text(
                                 'View Details',
                                 style: TextStyle(
-                                  color: Colors.green, // Green text color
+                                  color: Color(0xFF1581BF), // Green text color
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white, // White background for the button
-                                side: BorderSide(color: Colors.green), // Green border color
+                                side: BorderSide(color: Color(0xFF1581BF)), // Green border color
                                 padding: EdgeInsets.all(12), // Padding inside the button
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6), // Rounded corners for button
@@ -275,37 +275,58 @@ class HealthDetailsPage extends StatelessWidget {
               // Hospital Name Section
               Text('Hospital Name:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               Text(record['hospitalName'], style: TextStyle(fontSize: 16)),
-              Divider(),
+              Divider(
+                color: Color(0xFF1581BF),  // Set the color to the specified blue
+                thickness: 1.5,  // Optional: You can adjust the thickness of the divider
+              ),
 
               // Doctor Name Section
               Text('Doctor:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               Text(record['doctorName'], style: TextStyle(fontSize: 16)),
-              Divider(),
+              Divider(
+                color: Color(0xFF1581BF),  // Set the color to the specified blue
+                thickness: 1.5,  // Optional: You can adjust the thickness of the divider
+              ),
 
               // Document Title Section
               Text('Document Title:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               Text(record['title'], style: TextStyle(fontSize: 16)),
-              Divider(),
+              Divider(
+                color: Color(0xFF1581BF),  // Set the color to the specified blue
+                thickness: 1.5,  // Optional: You can adjust the thickness of the divider
+              ),
 
               // Document Description Section
               Text('Document Description:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               Text(record['description'], style: TextStyle(fontSize: 16)),
-              Divider(),
+              Divider(
+                color: Color(0xFF1581BF),  // Set the color to the specified blue
+                thickness: 1.5,  // Optional: You can adjust the thickness of the divider
+              ),
 
               // Date of Record Section
               Text('Date:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               Text(DateFormat('yyyy-MM-dd HH:mm').format(record['date']), style: TextStyle(fontSize: 16)),
-              Divider(),
+              Divider(
+                color: Color(0xFF1581BF),  // Set the color to the specified blue
+                thickness: 1.5,  // Optional: You can adjust the thickness of the divider
+              ),
 
               // Laboratory Record Section
               Text('Laboratory Record:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               Text(record['laboratoryRecord'], style: TextStyle(fontSize: 16)),
-              Divider(),
+              Divider(
+                color: Color(0xFF1581BF),  // Set the color to the specified blue
+                thickness: 1.5,  // Optional: You can adjust the thickness of the divider
+              ),
 
               // Lab Description Section (using the labDescription safely)
               Text('Lab Description:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               Text(labDescription, style: TextStyle(fontSize: 16)),
-              Divider(),
+              Divider(
+                color: Color(0xFF1581BF),  // Set the color to the specified blue
+                thickness: 1.5,  // Optional: You can adjust the thickness of the divider
+              ),
             ],
           ),
         ),
