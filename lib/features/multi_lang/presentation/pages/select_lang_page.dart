@@ -56,7 +56,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                     );
                   }
                   if (state is LangListLoaded && state.message != null) {
-                    AppUtils.showSnackBar(context, state.message.toString());
+                    // AppUtils.showSnackBar(context, state.message.toString());
                   }
                 }, child: BlocBuilder<TranslationBloc, TranslateState>(
                   builder: (context, state) {
