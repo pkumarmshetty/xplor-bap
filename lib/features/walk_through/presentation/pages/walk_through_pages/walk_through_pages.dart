@@ -47,7 +47,8 @@ class _WalkThroughPagesState extends State<WalkThroughPages> {
     walkThroughModel.add(WalkThroughModel(
         image: Assets.images.infoFirst,
         title: OnBoardingKeys.titleStep1.stringToString,
-        subTitle: OnBoardingKeys.titleDesStep1.stringToString));
+        subTitle: OnBoardingKeys.titleDesStep1.stringToString
+    ));
     walkThroughModel.add(WalkThroughModel(
         image: Assets.images.infoSecond,
         title: OnBoardingKeys.titleStep2.stringToString,

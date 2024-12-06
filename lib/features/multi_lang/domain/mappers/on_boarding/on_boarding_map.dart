@@ -55,13 +55,13 @@ final Map<String, dynamic> originalOnBoardingMap = {
   OnBoardingKeys.next: "Next",
 
   ///Walk through page
-  OnBoardingKeys.titleStep1: "Create your\ndigital Profile",
+  OnBoardingKeys.titleStep1: "Create your\ndigital health Profile",
   OnBoardingKeys.titleDesStep1: "Discover empowers you to effortlessly craft and tailor your digital profile",
 
-  OnBoardingKeys.titleStep2: "Get all your\ndocuments",
+  OnBoardingKeys.titleStep2: "Get all your\nhealth documents",
   OnBoardingKeys.titleDesStep2: "With Discover, users gain full control over your digital assets",
 
-  OnBoardingKeys.titleStep3: "Access products\nServices",
+  OnBoardingKeys.titleStep3: "Access health \n products And Services",
   OnBoardingKeys.titleDesStep3: "Access products Services  & appointments as per your needs",
 
   OnBoardingKeys.skip: "Skip",
