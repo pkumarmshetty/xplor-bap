@@ -9,6 +9,7 @@ import 'package:xplor/utils/app_colors.dart';
 import 'package:xplor/utils/common_top_header.dart';
 
 import '../../../domain/entities/CreateAppointmentArgs.dart';
+import 'package:intl/intl.dart';
 
 class CreateAppointment extends StatefulWidget {
   final CreateAppointmentArgs? createAppointmentArgs;
@@ -46,21 +47,32 @@ class _CreateAppointmentState extends State<CreateAppointment> {
   }
 
   String _appointmentDetails = '';
+  String convertTo24HourFormat(String time12Hour) {
+    // Parse the 12-hour format time
+    final format12 = DateFormat("h:mm a");
+    final dateTime = format12.parse(time12Hour);
 
+    // Convert it to 24-hour format
+    final format24 = DateFormat("HH:mm");
+    return format24.format(dateTime);
+  }
   Future<void> _submitAppointment(BuildContext context) async {
     print('All the details.');
     var userData = widget.createAppointmentArgs?.userDataEntity;
-    print(userData);
+    // print(userData);
     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
-    String selectedTime = selectedTimeSlot;
-    String appointment = "$formattedDate $selectedTimeSlot";
+    String selectedTime = convertTo24HourFormat(selectedTimeSlot);
+
+    String timeFmt = selectedTime.replaceAll(":", "-");
+    String appointment = "$formattedDate-$timeFmt";
+    String appointmentDate = "$formattedDate $selectedTime";
 
     final appointmentData = {
       "abhaId": userData?.kyc?.provider.id,
       "patientName": userData?.kyc?.firstName,
       "link":
       "https://8x8.vc/vpaas-magic-cookie-cf5217ce8a4048d89baa3f88ab649551/${userData?.kyc?.firstName}-TeleConsultation-${appointment}",
-      "appointmentDate": appointment,
+      "appointmentDate": appointmentDate,
       "mobile": userData?.phoneNumber,
       "email": userData?.kyc?.email,
       "prescription": "",
@@ -83,7 +95,6 @@ class _CreateAppointmentState extends State<CreateAppointment> {
         Navigator.of(context).pop();
       } else {
         setState(() {
-          _appointmentDetails =
           'Failed to book appointment. Please try again later.';
         });
       }
