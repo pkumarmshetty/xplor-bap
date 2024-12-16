@@ -232,11 +232,11 @@ class _CreateAppointmentState extends State<CreateAppointment> {
     // Exclude the selected time slot from being disabled
     List<String> availableSlots = slots.where((slot) => slot != selectedTimeSlot).toList();
 
-    if (availableSlots.length > 1) {
+    if (availableSlots.length > 2) {
       final random = Random();
       // Randomly select two slots from the available ones
-      final index1 = random.nextInt(availableSlots.length);
-      int index2 = random.nextInt(availableSlots.length);
+      final index1 = random.nextInt(availableSlots.length) + 1;
+      int index2 = random.nextInt(availableSlots.length) + 1;
 
       // Ensure both selected slots are different
       while (index2 == index1) {
