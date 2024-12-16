@@ -106,6 +106,7 @@ class $AssetsImagesGen {
   /// File path: assets/images/ic_add_doc.svg
   String get icAddDoc => 'assets/images/ic_add_doc.svg';
 
+
   /// File path: assets/images/ic_avtar_female.svg
   String get icAvtarFemale => 'assets/images/ic_avtar_male.svg';
 
