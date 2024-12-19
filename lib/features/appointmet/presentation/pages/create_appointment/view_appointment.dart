@@ -12,7 +12,6 @@ import '../../../../on_boarding/domain/entities/user_data_entity.dart';
 class ViewAppointment extends StatefulWidget {
   final UserDataEntity? userData;
 
-  /// Constructor for SeekerEditProfile.
   const ViewAppointment({super.key, required this.userData});
 
   @override
@@ -129,7 +128,7 @@ class _ViewAppointmentState extends State<ViewAppointment> {
                 ),
                 Expanded(
                   child: dataList.isEmpty
-                      ? Center(child: Text('No appointments found'))
+                      ? Center(child: Text('No appointments available'))
                       : ListView.builder(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppDimensions.medium,
@@ -155,7 +154,14 @@ class _ViewAppointmentState extends State<ViewAppointment> {
                             children: [
                               Row(
                                 children: [
-                                  Container(
+                                  doctor == null
+                                      ? Container(
+                                    width: 70,
+                                    height: 70,
+                                    color: Colors.grey,
+                                    child: Icon(Icons.person),
+                                  )
+                                      : Container(
                                     width: 70,
                                     height: 70,
                                     decoration: BoxDecoration(
@@ -176,8 +182,9 @@ class _ViewAppointmentState extends State<ViewAppointment> {
                                       CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          doctor['doctorName'] ??
-                                              'N/A',
+                                          doctor != null
+                                              ? doctor['doctorName'] ?? 'N/A'
+                                              : 'N/A',
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontWeight:
@@ -186,9 +193,10 @@ class _ViewAppointmentState extends State<ViewAppointment> {
                                         ),
                                         SizedBox(height: 5),
                                         Text(
-                                          doctor[
-                                          'doctorSpecialization'] ??
-                                              'Specialization',
+                                          doctor != null
+                                              ? doctor['doctorSpecialization'] ??
+                                              'Specialization'
+                                              : 'Specialization',
                                           style: TextStyle(
                                               fontSize: 14,
                                               color: Colors.grey),
@@ -200,18 +208,18 @@ class _ViewAppointmentState extends State<ViewAppointment> {
                                         ),
                                         SizedBox(height: 5),
                                         Text(
-                                          doctor['hospitalName'] ??
-                                              'Hospital Name',
-                                          style: TextStyle(
-                                              fontSize: 14),
+                                          doctor != null
+                                              ? doctor['hospitalName'] ??
+                                              'Hospital Name'
+                                              : 'Hospital Name',
+                                          style: TextStyle(fontSize: 14),
                                         ),
                                         SizedBox(height: 5),
                                         Text(
                                           "Appointment Time: " +
                                               record['appointmentDate'] ??
                                               'N/A',
-                                          style: TextStyle(
-                                              fontSize: 14),
+                                          style: TextStyle(fontSize: 14),
                                         ),
                                       ],
                                     ),

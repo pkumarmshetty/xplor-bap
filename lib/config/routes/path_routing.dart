@@ -25,6 +25,11 @@ class Routes {
 
   static const String HealthRecordsPage = "/HealthRecordsPage";
 
+  static const String AddBeneficiaryPage = "/AddBeneficiaryPage";
+
+  static const String ViewBeneficiaryPage = "/ViewBeneficiaryPage";
+
+
   /// Route for the OTP Screen
   static const String otp = "/otp";
 

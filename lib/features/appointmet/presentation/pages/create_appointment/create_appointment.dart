@@ -1,15 +1,50 @@
-
 import 'dart:convert'; // For encoding data into JSON
 import 'dart:math';    // For generating random numbers
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For formatting dates
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:xplor/utils/app_colors.dart';
 import 'package:xplor/utils/common_top_header.dart';
-
 import '../../../domain/entities/CreateAppointmentArgs.dart';
-import 'package:intl/intl.dart';
+
+class Beneficiary {
+  final String name;
+  final String relationship;
+  final int age;
+  final String abhaId;
+
+  Beneficiary({
+    required this.name,
+    required this.relationship,
+    required this.age,
+    required this.abhaId,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'relationship': relationship,
+      'age': age,
+      'abhaId': abhaId,
+    };
+  }
+
+  factory Beneficiary.fromMap(Map<String, dynamic> map) {
+    return Beneficiary(
+      name: map['name'] ?? '',
+      relationship: map['relationship'] ?? '',
+      age: map['age'] ?? 0,
+      abhaId: map['abhaId'] ?? '',
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Beneficiary.fromJson(String jsonStr) =>
+      Beneficiary.fromMap(json.decode(jsonStr));
+}
 
 class CreateAppointment extends StatefulWidget {
   final CreateAppointmentArgs? createAppointmentArgs;
@@ -24,7 +59,29 @@ class _CreateAppointmentState extends State<CreateAppointment> {
   DateTime selectedDate = DateTime.now();
   String consultationType = '';
   String selectedTimeSlot = '';
-  Set<String> disabledSlots = Set<String>(); // To track disabled slots
+  Set<String> disabledSlots = Set<String>();
+  List<Beneficiary> _beneficiaries = [];
+  Beneficiary? _selectedBeneficiary;
+  bool isLoading = false; // Track loading state
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBeneficiaries();
+  }
+
+  Future<void> _loadBeneficiaries() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String>? beneficiariesJson = prefs.getStringList('beneficiaries');
+
+    if (beneficiariesJson != null) {
+      setState(() {
+        _beneficiaries = beneficiariesJson
+            .map((jsonStr) => Beneficiary.fromJson(jsonStr))
+            .toList();
+      });
+    }
+  }
 
   List<String> _generateTimeSlots(TimeOfDay startTime, TimeOfDay endTime) {
     List<String> timeSlots = [];
@@ -46,20 +103,39 @@ class _CreateAppointmentState extends State<CreateAppointment> {
     return timeSlots;
   }
 
-  String _appointmentDetails = '';
   String convertTo24HourFormat(String time12Hour) {
-    // Parse the 12-hour format time
-    final format12 = DateFormat("h:mm a");
-    final dateTime = format12.parse(time12Hour);
+    try {
+      final format12 = DateFormat("h:mm a");
+      final dateTime = format12.parse(time12Hour);
 
-    // Convert it to 24-hour format
-    final format24 = DateFormat("HH:mm");
-    return format24.format(dateTime);
+      final format24 = DateFormat("HH:mm");
+      return format24.format(dateTime);
+    } catch (e) {
+      return time12Hour;
+    }
   }
+
   Future<void> _submitAppointment(BuildContext context) async {
-    print('All the details.');
+    // Validate if all fields are selected
+    if (_selectedBeneficiary == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select a beneficiary')),
+      );
+      return;
+    }
+
+    if (selectedTimeSlot.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select a time slot')),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true; // Show loader
+    });
+
     var userData = widget.createAppointmentArgs?.userDataEntity;
-    // print(userData);
     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
     String selectedTime = convertTo24HourFormat(selectedTimeSlot);
 
@@ -68,10 +144,9 @@ class _CreateAppointmentState extends State<CreateAppointment> {
     String appointmentDate = "$formattedDate $selectedTime";
 
     final appointmentData = {
-      "abhaId": userData?.kyc?.provider.id,
-      "patientName": userData?.kyc?.firstName,
-      "link":
-      "https://8x8.vc/vpaas-magic-cookie-cf5217ce8a4048d89baa3f88ab649551/${userData?.kyc?.firstName}-TeleConsultation-${appointment}",
+      "abhaId": _selectedBeneficiary?.abhaId ?? userData?.kyc?.provider.id,
+      "patientName": _selectedBeneficiary?.name ?? userData?.kyc?.firstName,
+      "link": "https://8x8.vc/vpaas-magic-cookie-cf5217ce8a4048d89baa3f88ab649551/${_selectedBeneficiary?.name ?? userData?.kyc?.firstName}-TeleConsultation-${appointment}",
       "appointmentDate": appointmentDate,
       "mobile": userData?.phoneNumber,
       "email": userData?.kyc?.email,
@@ -80,172 +155,51 @@ class _CreateAppointmentState extends State<CreateAppointment> {
       "status": "new",
       "walletId": userData?.wallet
     };
-    print(appointmentData);
+
     try {
-      print("Sending data...");
       final response = await http.post(
         Uri.parse('https://testspar.dpgongcp.com/registry/api/v1/Appointment'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(appointmentData),
       );
+
+      setState(() {
+        isLoading = false;  // Hide loader
+      });
+
       if (response.statusCode == 200) {
-        setState(() {
-          _appointmentDetails = 'Appointment successfully booked!';
-        });
-        Navigator.of(context).pop();
+        // Redirect to the home page after a successful appointment booking
+        Navigator.of(context).pop();  // Close the current screen
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Appointment successfully booked!')),
+        );
+
       } else {
-        setState(() {
-          'Failed to book appointment. Please try again later.';
-        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to book appointment. Please try again.')),
+        );
       }
     } catch (e) {
-      print(e);
       setState(() {
-        _appointmentDetails = 'Error occurred: $e';
+        isLoading = false;  // Hide loader on error
       });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error occurred: $e')),
+      );
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    TimeOfDay now = TimeOfDay.now();
-    TimeOfDay morningStart = TimeOfDay(hour: 9, minute: 0);
-    TimeOfDay morningEnd = TimeOfDay(hour: 11, minute: 0);
-    TimeOfDay eveningStart = TimeOfDay(hour: 11, minute: 0);
-    TimeOfDay eveningEnd = TimeOfDay(hour: 21, minute: 0);
-
-    List<String> morningSlots = [];
-    List<String> eveningSlots = [];
-
-    // Generate available slots based on current time
-    if (selectedDate.day == DateTime.now().day) {
-      if (now.hour < morningEnd.hour || (now.hour == morningEnd.hour && now.minute < morningEnd.minute)) {
-        morningSlots = _generateTimeSlots(now.hour >= morningStart.hour ? now : morningStart, morningEnd);
-      }
-      if (now.hour < eveningEnd.hour || (now.hour == eveningEnd.hour && now.minute < eveningEnd.minute)) {
-        eveningSlots = _generateTimeSlots(now.hour >= eveningStart.hour ? now : eveningStart, eveningEnd);
-      }
-    } else {
-      morningSlots = _generateTimeSlots(morningStart, morningEnd);
-      eveningSlots = _generateTimeSlots(eveningStart, eveningEnd);
-    }
-
-    // Randomly disable two slots (excluding selected time)
-    _disableRandomSlots(morningSlots);
-    _disableRandomSlots(eveningSlots);
-
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
-        child: CommonTopHeader(
-          title: 'Book Appointment',
-          isTitleOnly: false,
-          dividerColor: Colors.grey,
-          onBackButtonPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 16.0),
-
-            ListTile(
-              title: Text("Select Date"),
-              subtitle: Text("${selectedDate.toLocal()}".split(' ')[0]),
-              trailing: Icon(Icons.calendar_today),
-              onTap: () => _selectDate(context),
-            ),
-            SizedBox(height: 16.0),
-            Text("Select Morning Slot"),
-            morningSlots.isNotEmpty
-                ? Wrap(
-              spacing: 8.0,
-              children: morningSlots.map((String time) {
-                return ChoiceChip(
-                  label: Text(time, style: TextStyle(color: Colors.white)),
-                  selected: selectedTimeSlot == time,
-                  onSelected: disabledSlots.contains(time)
-                      ? null
-                      : (bool selected) {
-                    setState(() {
-                      selectedTimeSlot = time;
-                    });
-                  },
-                  selectedColor: Colors.blue,
-                  backgroundColor: Colors.blue,
-                  disabledColor: Colors.grey,  // Disabled color
-                );
-              }).toList(),
-            )
-                : Text("No morning slots available"),
-            SizedBox(height: 16.0),
-            Text("Select Evening Slot"),
-            eveningSlots.isNotEmpty
-                ? Wrap(
-              spacing: 8.0,
-              children: eveningSlots.map((String time) {
-                return ChoiceChip(
-                  label: Text(time, style: TextStyle(color: Colors.white)),
-                  selected: selectedTimeSlot == time,
-                  onSelected: disabledSlots.contains(time)
-                      ? null
-                      : (bool selected) {
-                    setState(() {
-                      selectedTimeSlot = time;
-                    });
-                  },
-                  selectedColor: Colors.blue,
-                  backgroundColor: Colors.blue,
-                  disabledColor: Colors.grey,  // Disabled color
-                );
-              }).toList(),
-            )
-                : Text("No evening slots available"),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                _submitAppointment(context);
-              },
-              child: Text('Book Appointment'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,        // Text color
-                backgroundColor: Colors.blue,        // Button background color
-                minimumSize: Size(double.infinity, 50), // Full width with a height of 50
-              ).copyWith(
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),  // No border radius
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   void _disableRandomSlots(List<String> slots) {
-    // Exclude the selected time slot from being disabled
     List<String> availableSlots = slots.where((slot) => slot != selectedTimeSlot).toList();
 
     if (availableSlots.length > 2) {
       final random = Random();
-      // Randomly select two slots from the available ones
       int index1 = random.nextInt(availableSlots.length);
       int index2 = random.nextInt(availableSlots.length);
-      if (index1 == 0) {
-        index1 +=1;
-      }
-      if (index2 == 0) {
-        index2 +=1;
-      }
 
-      // Ensure both selected slots are different
-      while (index2 == index1) {
+      // Ensure different indices and not zero
+      while (index2 == index1 || index1 == 0 || index2 == 0) {
         index2 = random.nextInt(availableSlots.length);
       }
 
@@ -268,5 +222,222 @@ class _CreateAppointmentState extends State<CreateAppointment> {
         selectedDate = picked;
       });
   }
+  void _showBeneficiariesPopup() {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10),  // Top left corner radius
+          topRight: Radius.circular(10), // Top right corner radius
+        ),
+      ),
+      backgroundColor: Colors.transparent,  // Set background color to transparent to allow rounded corners to show
+      builder: (BuildContext context) {
+        return ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10),  // Top left corner radius
+            topRight: Radius.circular(10), // Top right corner radius
+          ),
+          child: Container(
+            color: Colors.white,  // Set background color to white
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Select Beneficiary", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                SizedBox(height: 16.0),
+                _beneficiaries.isEmpty
+                    ? Text("No beneficiaries added")
+                    : Expanded(
+                  child: ListView.builder(
+                    itemCount: _beneficiaries.length,
+                    itemBuilder: (context, index) {
+                      final beneficiary = _beneficiaries[index];
+                      return ListTile(
+                        title: Text(beneficiary.name),
+                        subtitle: Text(beneficiary.relationship),
+                        leading: Radio<Beneficiary>(
+                          value: beneficiary,
+                          groupValue: _selectedBeneficiary,
+                          onChanged: (Beneficiary? value) {
+                            setState(() {
+                              _selectedBeneficiary = value;
+                            });
+                            Navigator.of(context).pop();  // Close the modal after selection
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    TimeOfDay now = TimeOfDay.now();
+    TimeOfDay morningStart = TimeOfDay(hour: 9, minute: 0);
+    TimeOfDay morningEnd = TimeOfDay(hour: 11, minute: 0);
+    TimeOfDay eveningStart = TimeOfDay(hour: 11, minute: 0);
+    TimeOfDay eveningEnd = TimeOfDay(hour: 21, minute: 0);
+
+    List<String> morningSlots = [];
+    List<String> eveningSlots = [];
+
+    if (selectedDate.day == DateTime.now().day) {
+      if (now.hour < morningEnd.hour || (now.hour == morningEnd.hour && now.minute < morningEnd.minute)) {
+        morningSlots = _generateTimeSlots(now.hour >= morningStart.hour ? now : morningStart, morningEnd);
+      }
+      if (now.hour < eveningEnd.hour || (now.hour == eveningEnd.hour && now.minute < eveningEnd.minute)) {
+        eveningSlots = _generateTimeSlots(now.hour >= eveningStart.hour ? now : eveningStart, eveningEnd);
+      }
+    } else {
+      morningSlots = _generateTimeSlots(morningStart, morningEnd);
+      eveningSlots = _generateTimeSlots(eveningStart, eveningEnd);
+    }
+
+    _disableRandomSlots(morningSlots);
+    _disableRandomSlots(eveningSlots);
+
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100),
+        child: CommonTopHeader(
+          title: 'Book Appointment',
+          isTitleOnly: false,
+          dividerColor: Colors.grey,
+          onBackButtonPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      backgroundColor: Colors.white,
+      body: isLoading
+          ? Center(child: CircularProgressIndicator()) // Show loader
+          : SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 16.0),
+
+            ListTile(
+              title: Text("Select Date"),
+              subtitle: Text("${selectedDate.toLocal()}".split(' ')[0]),
+              trailing: Icon(Icons.calendar_today),
+              onTap: () => _selectDate(context),
+            ),
+            SizedBox(height: 16.0),
+
+            // Morning Slots
+            Text("Select Morning Slot", style: TextStyle(fontWeight: FontWeight.bold)),
+            morningSlots.isNotEmpty
+                ? Wrap(
+              spacing: 8.0,
+              children: morningSlots.map((String time) {
+                return ChoiceChip(
+                  label: Text(time, style: TextStyle(color: Colors.white)),
+                  selected: selectedTimeSlot == time,
+                  onSelected: disabledSlots.contains(time)
+                      ? null
+                      : (bool selected) {
+                    setState(() {
+                      selectedTimeSlot = time;
+                    });
+                  },
+                  selectedColor: Colors.blue,
+                  backgroundColor: Colors.blue,
+                  disabledColor: Colors.grey,
+                );
+              }).toList(),
+            )
+                : Text("No morning slots available"),
+            SizedBox(height: 16.0),
+
+            // Evening Slots
+            Text("Select Evening Slot", style: TextStyle(fontWeight: FontWeight.bold)),
+            eveningSlots.isNotEmpty
+                ? Wrap(
+              spacing: 8.0,
+              children: eveningSlots.map((String time) {
+                return ChoiceChip(
+                  label: Text(time, style: TextStyle(color: Colors.white)),
+                  selected: selectedTimeSlot == time,
+                  onSelected: disabledSlots.contains(time)
+                      ? null
+                      : (bool selected) {
+                    setState(() {
+                      selectedTimeSlot = time;
+                    });
+                  },
+                  selectedColor: Colors.blue,
+                  backgroundColor: Colors.blue,
+                  disabledColor: Colors.grey,
+                );
+              }).toList(),
+            )
+                : Text("No evening slots available"),
+            SizedBox(height: 16.0),
+
+            // Select Beneficiary Button
+            ElevatedButton(
+              onPressed: () {
+                _showBeneficiariesPopup();  // Show beneficiary selection popup
+              },
+              child: Text(_selectedBeneficiary == null
+                  ? 'Select Beneficiary'
+                  : _selectedBeneficiary!.name),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue,
+                minimumSize: Size(double.infinity, 50),
+              ).copyWith(
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () => _submitAppointment(context),
+              child: Text('Book Appointment', style: TextStyle(color:Color(
+                  0xFF1581BF))), // Black text
+              style: ElevatedButton.styleFrom(
+                side: BorderSide(color: Color(
+                    0xFF1581BF), width: 2), // Blue border
+                backgroundColor: Colors.white, // No background color
+                minimumSize: Size(double.infinity, 50),
+
+              ).copyWith(
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5), // No rounded corners
+                  ),
+                ),
+              ),
+            ),
+            // Book Appointment Button
+            // ElevatedButton(
+            //   onPressed: () => _submitAppointment(context),
+            //   child: Text('Book Appointment'),
+            //   style: ElevatedButton.styleFrom(
+            //     foregroundColor: Colors.white,
+            //     backgroundColor: Colors.green,
+            //     minimumSize: Size(double.infinity, 50),
+            //   ),
+            // ),
+          ],
+        ),
+      ),
+    );
+  }
 }
+
+
+
 
